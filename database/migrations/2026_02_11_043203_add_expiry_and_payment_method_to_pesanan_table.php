@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('layanan_branding', function (Blueprint $table) {
-            $table->renameColumn('jaringan_id', 'mitra_id');
+        Schema::table('pesanan', function (Blueprint $table) {
+            $table->string('metode_pembayaran')->nullable()->after('total_harga');
+            $table->timestamp('expired_at')->nullable()->after('metode_pembayaran');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('layanan_branding', function (Blueprint $table) {
-            $table->renameColumn('mitra_id', 'jaringan_id');
+        Schema::table('pesanan', function (Blueprint $table) {
+            $table->dropColumn(['metode_pembayaran', 'expired_at']);
         });
     }
 };

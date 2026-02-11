@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Mitra extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
     protected $table = 'mitra';
 
@@ -17,6 +16,7 @@ class Mitra extends Authenticatable
         'email',
         'password',
         'deskripsi',
+        'foto_profil',
         'kota',
         'provinsi',
         'status',
@@ -36,5 +36,15 @@ class Mitra extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function layanan()
+    {
+        return $this->hasMany(Layanan::class, 'mitra_id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'mitra_id');
     }
 }

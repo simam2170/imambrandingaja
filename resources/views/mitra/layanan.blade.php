@@ -12,25 +12,58 @@
         nama_layanan: '',
         kategori: 'Desain Grafis',
         harga: '',
+        estimasi_hari: 1,
         deskripsi: '',
         thumbnail: '',
         paket: [{ nama: '', harga: '', deskripsi: '' }]
     },
 
-    addService() {
+    async addService() {
         if (!this.newService.nama_layanan || !this.newService.harga) return;
         
-        const service = {
-            id: Date.now(),
-            ...this.newService,
-            status: 'aktif',
-            thumbnail: this.newService.thumbnail || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80'
-        };
-        
-        this.services.push(service);
-        this.resetForm();
-        this.openAddModal = false;
-        alert('Layanan berhasil ditambahkan (Frontend Only)!');
+        try {
+            const formData = new FormData();
+            formData.append('nama_layanan', this.newService.nama_layanan);
+            formData.append('kategori', this.newService.kategori);
+            formData.append('harga', this.newService.harga);
+            formData.append('estimasi_hari', this.newService.estimasi_hari);
+            formData.append('deskripsi', this.newService.deskripsi);
+            
+            // Handle file or URL
+            const fileInput = document.getElementById('thumbnail_file');
+            if (fileInput.files.length > 0) {
+                formData.append('thumbnail', fileInput.files[0]);
+            } else if (this.newService.thumbnail) {
+                formData.append('thumbnail_url', this.newService.thumbnail);
+            }
+
+            // Append packages
+            this.newService.paket.forEach((pkg, index) => {
+                formData.append(`paket[${index}][nama]`, pkg.nama);
+                formData.append(`paket[${index}][harga]`, pkg.harga);
+                formData.append(`paket[${index}][deskripsi]`, pkg.deskripsi);
+            });
+
+            const response = await fetch('{{ route('mitra.layanan.store') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Refresh services list
+                window.location.reload();
+            } else {
+                alert(data.message || 'Gagal menambahkan layanan');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan koneksi');
+        }
     },
 
     resetForm() {
@@ -38,6 +71,7 @@
             nama_layanan: '',
             kategori: 'Desain Grafis',
             harga: '',
+            estimasi_hari: 1,
             deskripsi: '',
             thumbnail: '',
             paket: [{ nama: '', harga: '', deskripsi: '' }]
@@ -151,9 +185,14 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Harga Mulai (Rp)</label>
-                                <input type="number" x-model="newService.harga" required class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm" placeholder="500000">
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Estimasi Hari Kerja</label>
+                                <input type="number" x-model="newService.estimasi_hari" min="1" required class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm" placeholder="1">
                             </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Harga Mulai (Rp)</label>
+                            <input type="number" x-model="newService.harga" required class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm" placeholder="500000">
                         </div>
 
                         <div>
@@ -183,8 +222,19 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Thumbnail URL</label>
-                            <input type="text" x-model="newService.thumbnail" class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm" placeholder="https://unsplash.com/...">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Thumbnail Layanan</label>
+                            <div class="space-y-3">
+                                <input type="file" id="thumbnail_file" accept="image/*" class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm">
+                                <div class="relative">
+                                    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center px-4 pointer-events-none">
+                                        <div class="w-full border-t border-gray-100"></div>
+                                    </div>
+                                    <div class="relative flex justify-center text-[10px] uppercase font-bold text-gray-400">
+                                        <span class="bg-white px-2">Atau gunakan URL</span>
+                                    </div>
+                                </div>
+                                <input type="text" x-model="newService.thumbnail" class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm" placeholder="https://unsplash.com/...">
+                            </div>
                         </div>
                     </div>
                 </div>

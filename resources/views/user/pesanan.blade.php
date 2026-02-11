@@ -1,7 +1,7 @@
 @extends('layouts.user')
 @section('title', 'Pesanan')
 @section('content')
-    <div x-data="{ activeStatus: 'direview' }" class="mx-auto space-y-6 max-w-7xl">
+    <div x-data="{ activeStatus: 'menunggu_pembayaran' }" class="mx-auto space-y-6 max-w-7xl">
 
         {{-- HEADER --}}
         <div>
@@ -13,7 +13,7 @@
         <div class="border-b border-gray-200">
 
             <nav class="flex -mb-px space-x-8" aria-label="Tabs">
-                @foreach (['direview' => 'Direview', 'diproses' => 'Diproses', 'selesai' => 'Selesai', 'ditolak' => 'Ditolak'] as $key => $label)
+                @foreach (['menunggu_pembayaran' => 'Belum Bayar', 'direview' => 'Direview', 'diproses' => 'Diproses', 'selesai' => 'Selesai', 'ditolak' => 'Ditolak', 'dibatalkan' => 'Dibatalkan'] as $key => $label)
                     <button @click="activeStatus = '{{ $key }}'" :class="activeStatus === '{{ $key }}' 
                                     ? 'border-primary text-primary' 
                                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
@@ -62,18 +62,19 @@
                 {{-- STATUS HEADER (Dynamic based on Tab) --}}
                 <div class="mb-6">
                     <span class="px-6 py-2 text-sm font-bold text-white capitalize rounded-full shadow-sm" :class="{
+                                  'bg-gray-500': activeStatus === 'menunggu_pembayaran',
                                   'bg-yellow-500': activeStatus === 'direview',
                                   'bg-primary': activeStatus === 'diproses',
                                   'bg-green-500': activeStatus === 'selesai',
-                                  'bg-red-500': activeStatus === 'ditolak'
-                              }" x-text="activeStatus === 'direview' ? 'Menunggu Review' : activeStatus">
+                                  'bg-red-500': activeStatus === 'ditolak' || activeStatus === 'dibatalkan'
+                              }" x-text="activeStatus === 'menunggu_pembayaran' ? 'Menunggu Pembayaran' : (activeStatus === 'direview' ? 'Menunggu Review Admin' : activeStatus)">
                     </span>
                 </div>
 
                 <div class="max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
 
-                    @foreach (['direview', 'diproses', 'selesai', 'ditolak'] as $status)
-                        <div x-show="activeStatus === '{{ $status }}'" class="space-y-4" @if($status !== 'direview') style="display: none;" @endif>
+                    @foreach (['menunggu_pembayaran', 'direview', 'diproses', 'selesai', 'ditolak', 'dibatalkan'] as $status)
+                        <div x-show="activeStatus === '{{ $status }}'" class="space-y-4" @if($status !== 'menunggu_pembayaran') style="display: none;" @endif>
                             @forelse($orders->get($status, []) as $order)
                                 <div class="relative flex items-center gap-6 p-6 overflow-hidden transition-all bg-white border border-gray-100 shadow-sm cursor-pointer group rounded-xl hover:shadow-md hover:border-primary/50">
                                     <div class="flex flex-col gap-4 sm:flex-row w-full">
@@ -85,10 +86,14 @@
                                                 <h3 class="text-base font-bold text-gray-800">
                                                     {{ $order->layanan->nama_layanan ?? 'Layanan Tidak Diketahui' }}
                                                     <span class="text-sm font-normal text-gray-600 block sm:inline sm:ml-2">
-                                                        @if($order->status === 'direview') Menunggu konfirmasi admin.
+                                                        @if($order->isExpired() && !$order->bukti_pembayaran)
+                                                            <span class="text-red-500 font-bold">Waktu Pembayaran Habis (Hangus)</span>
+                                                        @elseif($order->status === 'menunggu_pembayaran') Menunggu pembayaran Anda.
+                                                        @elseif($order->status === 'direview') Menunggu konfirmasi admin.
                                                         @elseif($order->status === 'diproses') Sedang dikerjakan oleh mitra.
                                                         @elseif($order->status === 'selesai') Pesanan telah selesai.
-                                                        @elseif($order->status === 'ditolak') Pesanan dibatalkan.
+                                                        @elseif($order->status === 'ditolak') Pesanan ditolak oleh admin.
+                                                        @elseif($order->status === 'dibatalkan') Pesanan dibatalkan.
                                                         @endif
                                                     </span>
                                                 </h3>
@@ -101,7 +106,7 @@
                                                         <p class="text-[10px] text-gray-400 uppercase font-bold">Total Pembayaran</p>
                                                         <div class="text-lg font-bold text-primary">Rp {{ number_format($order->layanan->harga ?? 0, 0, ',', '.') }}</div>
                                                     </div>
-                                                    <a href="{{ route('user.invoice') }}?order_id={{ $order->order_number }}" class="px-4 py-2 bg-gray-50 text-gray-700 text-xs font-bold rounded-lg border border-gray-200 hover:bg-primary hover:text-white hover:border-primary transition-all">Detail</a>
+                                                    <a href="{{ route('user.invoice', $order->id) }}" class="px-4 py-2 bg-gray-50 text-gray-700 text-xs font-bold rounded-lg border border-gray-200 hover:bg-primary hover:text-white hover:border-primary transition-all">Detail</a>
                                                 </div>
                                             </div>
                                         </div>

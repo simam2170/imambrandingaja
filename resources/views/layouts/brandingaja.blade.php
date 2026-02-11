@@ -14,7 +14,7 @@
 <body class="bg-white">
 
     {{-- NAVBAR --}}
-    @include('layouts.user-navbar')
+    @include('layouts.landing-navbar')
 
     {{-- CONTENT --}}
     <main>

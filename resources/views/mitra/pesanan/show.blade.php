@@ -16,7 +16,7 @@
     {{-- BACK BUTTON & STATUS --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <a href="{{ route('mitra.pesanan') }}" class="p-2 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-primary transition-colors shadow-sm">
+            <a href="{{ route('mitra.pesanan', $mitra->id ?? 0) }}" class="p-2 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-primary transition-colors shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -79,7 +79,7 @@
             </div>
 
             {{-- UPLOAD AREA (Fitur Utama) --}}
-            @if(in_array($order->status, ['direview', 'diproses']))
+            @if($order->status == 'diproses')
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-6 border-b border-gray-50 flex items-center justify-between">
                     <h3 class="font-bold text-gray-800 flex items-center gap-2">
@@ -90,78 +90,74 @@
                     </h3>
                     <span class="text-xs text-gray-400 font-medium">Bisa upload gambar, PDF, ZIP, atau link</span>
                 </div>
-                <div class="p-6 space-y-6">
-                    {{-- DROPZONE --}}
-                    <div class="relative group">
-                        <input type="file" multiple @change="addFiles" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                        <div class="p-10 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-4 group-hover:border-primary/50 group-hover:bg-primary/5 transition-all">
-                            <div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                </svg>
-                            </div>
-                            <div class="text-center">
-                                <p class="font-bold text-gray-800">Klik atau seret file ke sini</p>
-                                <p class="text-xs text-gray-500 mt-1">Maksimal ukuran file 10MB per unit</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FILE PREVIEW --}}
-                    <div x-show="files.length > 0" class="space-y-3" x-cloak>
-                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">File Terpilih:</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <template x-for="(file, index) in files" :key="index">
-                                <div class="flex items-center justify-between p-3 bg-gray-50 border border-gray-100 rounded-xl">
-                                    <div class="flex items-center gap-3 overflow-hidden">
-                                        <div class="w-10 h-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                        </div>
-                                        <div class="truncate">
-                                            <p class="text-sm font-bold text-gray-800 truncate" x-text="file.name"></p>
-                                            <p class="text-[10px] text-gray-500" x-text="(file.size / 1024 / 1024).toFixed(2) + ' MB'"></p>
-                                        </div>
-                                    </div>
-                                    <button @click="removeFile(index)" class="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-
-                    {{-- CATATAN & SUBMIT --}}
-                    <form action="{{ route('mitra.pesanan.upload', $order->id) }}" method="POST">
+                    {{-- FILE SELECTION --}}
+                    <form action="{{ route('mitra.pesanan.complete', $order->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Catatan untuk Admin (Opsional):</label>
-                                <textarea name="catatan_mitra" rows="3" class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm" placeholder="Tuliskan keterangan mengenai hasil pekerjaan..."></textarea>
+                        <div class="space-y-6">
+                            <div class="relative group">
+                                <input type="file" name="bukti_selesai" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="document.getElementById('file-name-display').innerText = this.files[0].name">
+                                <div class="p-10 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-4 group-hover:border-primary/50 group-hover:bg-primary/5 transition-all">
+                                    <div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="font-bold text-gray-800">Klik untuk pilih bukti pekerjaan selesai</p>
+                                        <p id="file-name-display" class="text-sm text-primary font-bold mt-2"></p>
+                                    </div>
+                                </div>
                             </div>
+
                             <button type="submit" class="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
-                                Kirim Hasil Pekerjaan
+                                Selesaikan Pesanan & Kirim Bukti
                             </button>
                         </div>
                     </form>
-                </div>
             </div>
             @else
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="p-12 text-center">
-                    <div class="w-20 h-20 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800">Pekerjaan Selesai</h3>
-                    <p class="text-gray-500 mt-2 max-w-sm mx-auto">Pesanan ini telah selesai atau ditolak, sehingga fitur upload tidak lagi tersedia.</p>
+                    @if($order->status == 'direview')
+                        <div class="w-20 h-20 bg-blue-50 text-blue-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Menunggu Review Admin</h3>
+                        <p class="text-gray-500 mt-2 max-w-sm mx-auto">Silahkan tunggu admin mereview pesanan. Fitur upload akan tersedia setelah pesanan diproses.</p>
+                    @else
+                        <div class="w-20 h-20 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Pekerjaan Selesai</h3>
+                        <p class="text-gray-500 mt-2 max-w-sm mx-auto">Pesanan ini telah selesai atau ditolak, sehingga fitur upload tidak lagi tersedia.</p>
+                        
+                        @if($order->bukti_selesai)
+                        <div class="mt-8 p-4 bg-green-50 rounded-xl border border-green-100 inline-block">
+                            <p class="text-xs font-bold text-green-600 uppercase mb-2">Bukti Pekerjaan Terkirim</p>
+                            <a href="{{ asset('uploads/completion_proofs/' . $order->bukti_selesai) }}" target="_blank" class="flex items-center gap-3 bg-white p-3 rounded-lg border border-green-200 hover:shadow-md transition-all group">
+                                <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-sm font-bold text-gray-800 group-hover:text-green-700 transition-colors">Lihat Bukti Pekerjaan</p>
+                                    <p class="text-xs text-green-500">Klik untuk melihat file</p>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-green-600 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
+                        @endif
+                    @endif
                 </div>
             </div>
             @endif

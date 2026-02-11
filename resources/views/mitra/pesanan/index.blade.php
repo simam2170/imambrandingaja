@@ -45,8 +45,12 @@
                             <p class="text-xs text-gray-500 truncate max-w-xs mt-0.5">{{ Str::limit($order->catatan ?? '', 50) }}</p>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full mr-2">Default</span>
-                            <span class="text-sm text-gray-700">x1</span>
+                            @foreach($order->items as $item)
+                                <div class="flex items-center text-xs">
+                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-600 font-bold rounded-full mr-2">{{ $item->jenis_layanan ?? 'Standard' }}</span>
+                                    <span class="text-gray-700">x{{ $item->qty }}</span>
+                                </div>
+                            @endforeach
                         </td>
                         <td class="px-6 py-4">
                             @php

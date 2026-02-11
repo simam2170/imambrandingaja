@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
         'mitra' => [
             'driver' => 'session',
             'provider' => 'mitra',
@@ -70,14 +75,15 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
         'mitra' => [
             'driver' => 'eloquent',
             'model' => App\Models\Mitra::class,
         ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

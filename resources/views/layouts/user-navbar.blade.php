@@ -58,10 +58,14 @@
             <div class="relative" x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center gap-3 transition-opacity hover:opacity-80">
                     <div class="hidden text-right xl:block">
-                        <p class="text-sm font-bold transition-colors" :class="scrolled ? 'text-gray-800' : 'text-white'">Hi, Username</p>
+                        <p class="text-sm font-bold transition-colors" :class="scrolled ? 'text-gray-800' : 'text-white'">Hi, {{ $user->name ?? Auth::user()->name ?? 'Username' }}</p>
                     </div>
                     <div class="w-10 h-10 overflow-hidden transition-all border rounded-full bg-white/20 border-white/30 ring-2 ring-transparent hover:ring-secondary">
-                        <img src="https://ui-avatars.com/api/?name=User+Name&background=random" alt="Avatar" class="object-cover w-full h-full">
+                        @if(($user->foto_profil ?? Auth::user()->foto_profil ?? null))
+                            <img src="{{ asset('uploads/profile_photos/' . ($user->foto_profil ?? Auth::user()->foto_profil)) }}" alt="Avatar" class="object-cover w-full h-full">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name ?? Auth::user()->name ?? 'User Name') }}&background=random" alt="Avatar" class="object-cover w-full h-full">
+                        @endif
                     </div>
                     <svg class="w-4 h-4 transition-transform" :class="[open ? 'rotate-180' : '', scrolled ? 'text-gray-400' : 'text-white/80']" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -72,8 +76,8 @@
                     class="absolute right-0 w-48 mt-3 overflow-hidden bg-white border border-gray-100 shadow-xl rounded-xl ring-1 ring-black ring-opacity-5">
                     <div class="py-1">
                         <div class="px-4 py-3 border-b border-gray-50">
-                            <p class="text-sm font-bold leading-none text-gray-900">Username</p>
-                            <p class="mt-1 text-xs text-gray-500">user@example.com</p>
+                            <p class="text-sm font-bold leading-none text-gray-900">{{ $user->name ?? Auth::user()->name ?? 'Username' }}</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ $user->email ?? Auth::user()->email ?? 'user@example.com' }}</p>
                         </div>
                         
                         <a href="{{ route('user.profile') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-primary/10 hover:text-primary">
@@ -109,11 +113,15 @@
             <a href="{{ route('user.profile') }}" @click="mobileOpen=false">
             <div class="flex items-center gap-3 px-4 py-3 mb-4 border border-gray-100 bg-gray-50 rounded-xl">
                 <div class="w-10 h-10 overflow-hidden bg-white border border-gray-200 rounded-full">
-                    <img src="https://ui-avatars.com/api/?name=User+Name&background=random" class="object-cover w-full h-full">
+                    @if(($user->foto_profil ?? Auth::user()->foto_profil ?? null))
+                        <img src="{{ asset('uploads/profile_photos/' . ($user->foto_profil ?? Auth::user()->foto_profil)) }}" class="object-cover w-full h-full">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name ?? Auth::user()->name ?? 'User Name') }}&background=random" class="object-cover w-full h-full">
+                    @endif
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-gray-800">Hi, Username</p>
-                    <p class="text-xs text-gray-500">Client</p>
+                    <p class="text-sm font-bold text-gray-800">Hi, {{ $user->name ?? Auth::user()->name ?? 'Username' }}</p>
+                    <p class="text-xs text-gray-500">{{ $user->email ?? Auth::user()->email ?? 'user@example.com' }}</p>
                 </div>
             </div>
             </a>    

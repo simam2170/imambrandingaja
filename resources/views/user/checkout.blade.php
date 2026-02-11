@@ -5,9 +5,9 @@
 <div class="max-w-5xl mx-auto space-y-8" x-data="{
     items: JSON.parse(localStorage.getItem('checkoutItems') || '[]'),
     user: {
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        whatsapp: '',
+        name: '{{ $user->name ?? '' }}',
+        email: '{{ $user->email ?? '' }}',
+        whatsapp: '{{ $user->whatsapp ?? '' }}',
         note: ''
     },
     paymentMethods: [
@@ -36,20 +36,47 @@
         if (!this.selectedPayment) return alert('Silakan pilih metode pembayaran.');
         this.submit();
     },
-    submit() {
-        // Mock order creation
-        const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        const orderData = {
-            id: orderId,
-            items: this.items,
-            user: this.user,
-            payment: this.selectedPayment,
-            total: this.totalPrice,
-            status: 'direview',
-            timestamp: new Date().toISOString()
-        };
-        localStorage.setItem('currentOrder', JSON.stringify(orderData));
-        window.location.href = '{{ route('user.invoice') }}';
+    async submit() {
+        try {
+            const response = await fetch('{{ route('user.checkout.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    items: this.items,
+                    user: this.user,
+                    payment: this.selectedPayment
+                })
+            });
+
+            const contentType = response.headers.get('content-type');
+            let message = 'Unknown error';
+            
+            if (contentType && contentType.includes('application/json')) {
+                const result = await response.json();
+                message = result.message || message;
+                
+                if (response.ok) {
+                    localStorage.removeItem('checkoutItems');
+                    if (result.redirect_url) {
+                        window.location.href = result.redirect_url;
+                    } else {
+                        alert('Pesanan berhasil dibuat!');
+                        window.location.href = '{{ route('user.dashboard') }}';
+                    }
+                    return;
+                }
+            } else {
+                message = 'Server Error (' + response.status + ')';
+            }
+            
+            alert('Gagal membuat pesanan: ' + message);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memproses pesanan: ' + (error.message || 'Harap cek koneksi atau hubungi admin.'));
+        }
     }
 }">
     

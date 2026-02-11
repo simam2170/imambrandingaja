@@ -20,7 +20,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'whatsapp',
+        'bidang',
+        'role',
         'password',
+        'foto_profil',
     ];
 
     /**
@@ -43,6 +47,22 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'bidang' => 'array',
         ];
+    }
+    /**
+     * Relationship to Mitra/Jaringan
+     */
+    public function mitra()
+    {
+        return $this->hasOne(Jaringan::class);
+    }
+
+    /**
+     * Relationship to Orders (Pesanan)
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

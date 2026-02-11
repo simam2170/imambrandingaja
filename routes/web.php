@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Models\User;
+use App\Models\Jaringan;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,59 +19,68 @@ Route::get('/hal-tentangkami', function () {
 
 /*
 |--------------------------------------------------------------------------
+| REDIRECTS & SHORTCUTS
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', function () {
+    return redirect()->route('beranda');
+})->name('login');
+
+/*
+|--------------------------------------------------------------------------
 | USER AREA
 |--------------------------------------------------------------------------
 */
-Route::prefix('user')->group(function () {
-
-    Route::get('/dashboard', function () {
-        return view('user.dashboard');
-    })->name('user.dashboard');
-
-    Route::get('/profile', function () {
-        return view('user.profile');
-    })->name('user.profile');
-
-    Route::get('/pesanan', [App\Http\Controllers\User\PesananController::class, 'index'])->name('user.pesanan');
-
-    Route::get('/keranjang', function () {
-        return view('user.keranjang');
-    })->name('user.keranjang');
-
+Route::prefix('user')->group(function () { 
+    Route::get('/orders', [App\Http\Controllers\User\UserOrderController::class, 'index'])->name('user.pesanan');
+    Route::post('/checkout', [App\Http\Controllers\User\UserOrderController::class, 'store'])->name('user.checkout.store');
+    
+    // Maintain existing for UI compatibility
+    Route::get('/dashboard/{id?}', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/profile/{id?}', [App\Http\Controllers\User\ProfileController::class, 'index'])->name('user.profile');
+    Route::post('/profile/{id?}', [App\Http\Controllers\User\ProfileController::class, 'update'])->name('user.profile.update');
+    Route::get('/keranjang', [App\Http\Controllers\User\CartController::class, 'index'])->name('user.keranjang');
+    Route::post('/cart/add', [App\Http\Controllers\User\CartController::class, 'store'])->name('user.cart.add');
+    Route::patch('/cart/update/{id}', [App\Http\Controllers\User\CartController::class, 'update'])->name('user.cart.update');
+    Route::delete('/cart/delete/{id}', [App\Http\Controllers\User\CartController::class, 'destroy'])->name('user.cart.delete');
     Route::get('/checkout', function () {
-        return view('user.checkout');
-    })->name('user.checkout');
-
-    Route::get('/invoice', function () {
-        return view('user.invoice');
-    })->name('user.invoice');
-
-    Route::get('/jaringan/{id}', function ($id) {
-        return view('user.jaringan.' . $id);
-    })->name('user.jaringan');
-
-    Route::get('/jaringan/layanan/1YTpodcast', function () {
-        return view('user.jaringan.layanan.1YTpodcast');
-    })->name('user.jaringan.layanan.1YTpodcast');
-
-
+        $user = Auth::user() ?? \App\Models\User::where('role', 'user')->first();
+        return view('user.checkout', compact('user'));
+    })->name('user.checkout'); 
+    Route::get('/invoice/{id}', [App\Http\Controllers\User\UserOrderController::class, 'show'])->name('user.invoice'); 
+    Route::post('/invoice/{id}/upload', [App\Http\Controllers\PaymentController::class, 'upload'])->name('user.payment.upload');
+    Route::post('/invoice/{id}/cancel', [App\Http\Controllers\User\UserOrderController::class, 'cancel'])->name('user.order.cancel');
+    Route::get('/mitra/{id}', [App\Http\Controllers\User\JaringanController::class, 'show'])->name('user.mitra');
+    Route::get('/layanan/{id}', [App\Http\Controllers\User\LayananController::class, 'show'])->name('user.layanan.show');
 });
 
 /*
 |--------------------------------------------------------------------------
-| MITRA AREA (SERVICE PROVIDER)
+| MITRA (JARINGAN) AREA
 |--------------------------------------------------------------------------
 */
-Route::prefix('mitra')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\Mitra\DashboardController::class, 'index'])->name('mitra.dashboard');
-    Route::get('/pesanan', [App\Http\Controllers\Mitra\PesananController::class, 'index'])->name('mitra.pesanan');
-    Route::get('/pesanan/{id}', [App\Http\Controllers\Mitra\PesananController::class, 'show'])->name('mitra.pesanan.show');
+Route::prefix('mitra')->group(function () { 
+    Route::get('/{id}/orders', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'index'])->name('mitra.pesanan'); 
+    Route::post('/orders/{id}/complete', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'complete'])->name('mitra.pesanan.complete');
+
+    // Maintain existing for UI compatibility
+    Route::get('/dashboard/{id?}', [App\Http\Controllers\Mitra\DashboardController::class, 'index'])->name('mitra.dashboard');
+    Route::get('/pesanan/detail/{id}', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'show'])->name('mitra.pesanan.show');
     Route::get('/layanan-saya', [App\Http\Controllers\Mitra\ProfilController::class, 'layanan'])->name('mitra.layanan');
     Route::post('/layanan-saya', [App\Http\Controllers\Mitra\ProfilController::class, 'storeLayanan'])->name('mitra.layanan.store');
     Route::get('/pendapatan', [App\Http\Controllers\Mitra\ProfilController::class, 'pendapatan'])->name('mitra.pendapatan');
     Route::get('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'index'])->name('mitra.profil');
     Route::post('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'update'])->name('mitra.profil.update');
+});
 
-    // Action: Upload Hasil
-    Route::post('/pesanan/{id}/upload', [App\Http\Controllers\Mitra\PesananController::class, 'upload'])->name('mitra.pesanan.upload');
+/*
+|--------------------------------------------------------------------------
+| ADMIN AREA
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->group(function () { 
+    Route::get('/orders', [App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('admin.pesanan.index');
+    Route::get('/orders/{id}', [App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.pesanan.show');
+    Route::post('/orders/{id}/review/{status}', [App\Http\Controllers\Admin\AdminOrderController::class, 'verifyPayment'])->name('admin.payment.verify');
+    Route::post('/orders/{id}/payout', [App\Http\Controllers\Admin\AdminOrderController::class, 'uploadPayoutProof'])->name('admin.payout.upload');
 });

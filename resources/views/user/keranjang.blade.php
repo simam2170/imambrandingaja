@@ -3,12 +3,9 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6" x-data="{
-    items: [],
+    items: {{ json_encode($cartItems) }},
     init() {
-        this.items = JSON.parse(localStorage.getItem('cartItems') || '[]');
-        this.$watch('items', (val) => {
-            localStorage.setItem('cartItems', JSON.stringify(val));
-        }, { deep: true });
+        // Source of truth is now database
     },
     get allChecked() {
         return this.items.length > 0 && this.items.every(i => i.checked);
@@ -25,11 +22,44 @@
     formatPrice(value) {
         return 'Rp' + value.toLocaleString('id-ID');
     },
-    decreaseQty(item) {
-        if (item.qty > 1) item.qty--;
+    async updateQty(item, delta) {
+        const newQty = item.qty + delta;
+        if (newQty < 1) return;
+        
+        try {
+            const response = await fetch(`/user/cart/update/${item.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ qty: newQty })
+            });
+            
+            if (response.ok) {
+                item.qty = newQty;
+            }
+        } catch (error) {
+            console.error('Failed to update qty:', error);
+        }
     },
-    removeItem(id) {
-        this.items = this.items.filter(i => i.id !== id);
+    async removeItem(id) {
+        if (!confirm('Hapus item dari keranjang?')) return;
+        
+        try {
+            const response = await fetch(`/user/cart/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+            
+            if (response.ok) {
+                this.items = this.items.filter(i => i.id !== id);
+            }
+        } catch (error) {
+            console.error('Failed to remove item:', error);
+        }
     }
 }">
     
@@ -65,7 +95,9 @@
                             
                             <div class="flex flex-col sm:flex-row gap-4">
                                 {{-- IMAGE --}}
-                                <div class="w-full sm:w-24 h-24 bg-gray-400 rounded shrink-0"></div>
+                                <div class="w-full sm:w-24 h-24 bg-gray-50 rounded shrink-0 overflow-hidden border border-gray-100">
+                                    <img :src="item.thumbnail" class="w-full h-full object-cover">
+                                </div>
                                 
                                 {{-- DETAILS --}}
                                 <div class="flex-1">
@@ -84,9 +116,9 @@
                                         </button>
                                         
                                         <div class="flex items-center bg-gray-300 rounded overflow-hidden">
-                                            <button @click="decreaseQty(item)" class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">-</button>
-                                            <input type="text" x-model="item.qty" class="w-8 py-1 text-center bg-transparent border-none text-xs font-bold text-gray-700 p-0 focus:ring-0" readonly>
-                                            <button @click="item.qty++" class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">+</button>
+                                            <button @click="updateQty(item, -1)" class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">-</button>
+                                            <input type="text" :value="item.qty" class="w-8 py-1 text-center bg-transparent border-none text-xs font-bold text-gray-700 p-0 focus:ring-0" readonly>
+                                            <button @click="updateQty(item, 1)" class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">+</button>
                                         </div>
                                     </div>
                                 </div>
@@ -108,6 +140,19 @@
         {{-- RIGHT: SUMMARY --}}
         <div class="w-full lg:w-96 bg-yellow-50/50 border border-yellow-100 rounded-xl p-6 h-fit backdrop-blur-sm sticky top-24 transition-all duration-300">
             <h3 class="font-bold text-gray-900 text-center mb-6">Ringkasan belanja</h3>
+            
+            {{-- SELECTED ITEMS LIST --}}
+            <div class="space-y-3 mb-6 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                <template x-for="item in items.filter(i => i.checked)" :key="'summary-' + item.id">
+                    <div class="flex justify-between text-xs text-gray-600 gap-4">
+                        <span class="truncate flex-1" x-text="item.name + (item.pkgLabel ? ' (' + item.pkgLabel + ')' : '')"></span>
+                        <span class="font-bold shrink-0 text-gray-800" x-text="formatPrice(item.price * item.qty)"></span>
+                    </div>
+                </template>
+                <div x-show="selectedCount === 0" class="text-center text-[10px] text-gray-400 italic">
+                    Belum ada item dipilih
+                </div>
+            </div>
             
             <div class="flex items-end justify-between border-t border-gray-300 pt-4 mb-8">
                 <span class="text-sm text-gray-600">Total :</span>

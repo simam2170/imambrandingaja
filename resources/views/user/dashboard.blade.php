@@ -78,15 +78,15 @@
         </div>
 
         {{-- MARKETPLACE SECTION (Merged from Order Layanan) --}}
-        <div class="pt-8 border-t border-gray-100 space-y-6">
+        <div class="pt-8 border-t border-gray-100 space-y-10">
             
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                  <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Marketplace Layanan</h2>
-                    <p class="text-gray-500">Temukan jaringan terbaik untuk kebutuhan branding Anda.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Layanan Populer</h2>
+                    <p class="text-gray-500">Layanan pilihan untuk percepat pertumbuhan bisnis Anda.</p>
                 </div>
 
-                {{-- SEARCH --}}
+                {{-- SEARCH (Moved to top of marketplace section) --}}
                 <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-200 w-full md:w-auto">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -96,120 +96,121 @@
                 </div>
             </div>
 
-             {{-- GRID LAYANAN (MANUAL / HARDCODED CARDS) --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {{-- HORIZONTAL SCROLL SERVICES --}}
+            <div x-data="{ 
+                scrollNext() { this.$refs.container.scrollBy({ left: 300, behavior: 'smooth' }); },
+                scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); }
+            }" class="relative group">
+                
+                {{-- Navigation Buttons --}}
+                <button @click="scrollPrev()" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-2 bg-white rounded-full shadow-lg border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                <button @click="scrollNext()" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-2 bg-white rounded-full shadow-lg border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
 
-                {{-- CARD 1: Jaringan 1 --}}
-                <a href="/user/jaringan/jaringan1" class="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+                <style>
+                    .no-scrollbar::-webkit-scrollbar { display: none; }
+                    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+                </style>
+
+                <div x-ref="container" class="flex overflow-x-auto gap-6 no-scrollbar scroll-smooth pb-4">
+                    
+                    @foreach($popularServices as $service)
+                    <div class="flex-none w-64 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="aspect-square bg-gray-50 relative">
+                            <!-- Real Thumbnail -->
+                            <img src="{{ $service->thumbnail ?: 'https://ui-avatars.com/api/?name='.urlencode($service->nama_layanan).'&background=random' }}" class="w-full h-full object-cover">
+                            <!-- Discount badge handled dynamically if exists, else removed -->
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-center gap-1">
+                                <span class="text-sm font-bold text-gray-900">Rp {{ number_format($service->harga, 0, ',', '.') }}</span>
+                                <!-- Strike price logic if needed -->
+                            </div>
+                            <h4 class="text-sm text-gray-700 leading-snug line-clamp-2">{{ $service->nama_layanan }}</h4>
+                            <a href="{{ route('user.layanan.show', $service->id) }}" class="text-xs text-primary font-bold hover:underline mt-2 block">Lihat Detail</a>
+                        </div>
+                    </div>
+                    @endforeach
+
+                </div>
+            </div>
+
+            {{-- PROMOTIONAL BANNER --}}
+            <a href="/user/jaringan/jaringan1" class="block relative w-full h-32 md:h-40 rounded-3xl overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-transparent z-10"></div>
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                <div class="relative z-20 h-full flex items-center justify-between px-8 md:px-12">
+                    <div class="text-white space-y-1">
+                        <h3 class="text-lg md:text-2xl font-black">Tetap Kreatif dan Stylish</h3>
+                        <p class="text-sm md:text-base text-gray-300 font-medium">Layanan Digital dari Jaringan Alpha</p>
+                    </div>
+                    <div class="flex items-center gap-4 md:gap-10">
+                        <div class="text-center">
+                            <div class="text-[10px] md:text-xs text-gray-400 line-through">Rp249.000</div>
+                            <div class="text-xl md:text-4xl font-black text-yellow-400">Rp165.700</div>
+                        </div>
+                        <div class="px-4 py-2 md:px-6 md:py-3 border border-white/30 rounded-xl text-white text-xs md:text-sm font-bold hover:bg-white hover:text-gray-900 transition-all">
+                            Cek Sekarang
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            {{-- JARINGAN LIST (Original Marketplace) --}}
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Marketplace Layanan</h2>
+                    <p class="text-gray-500">Temukan jaringan terbaik untuk kebutuhan branding Anda.</p>
+                </div>
+
+                {{-- GRID LAYANAN (MANUAL / HARDCODED CARDS) --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                @foreach($mitraList as $mitra)
+                {{-- CARD: {{ $mitra->nama_mitra }} --}}
+                <a href="{{ route('user.mitra', $mitra->id) }}" class="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
                     <div class="h-40 bg-gray-100 flex items-center justify-center p-6 relative overflow-hidden">
                         <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <img src="{{ asset('img/jaringan/jaringan1.png') }}" alt="Jaringan Alpha" class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300 mix-blend-multiply">
+                        <!-- Placeholder or Mitra Image -->
+                        @if($mitra->foto_profil)
+                            <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}" alt="{{ $mitra->nama_mitra }}" class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra) }}&background=random&size=200" alt="{{ $mitra->nama_mitra }}" class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300 mix-blend-multiply">
+                        @endif
                     </div>
                     <div class="px-4 pt-3 flex items-center gap-2">
                          <div class="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
-                             <img src="https://ui-avatars.com/api/?name=Jaringan+Alpha&background=random" class="w-full h-full object-cover">
+                             @if($mitra->foto_profil)
+                                 <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}" class="w-full h-full object-cover">
+                             @else
+                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra) }}&background=random" class="w-full h-full object-cover">
+                             @endif
                          </div>
-                         <span class="text-xs font-semibold text-gray-700">Jaringan Alpha</span>
+                         <span class="text-xs font-semibold text-gray-700">{{ $mitra->nama_mitra }}</span>
                     </div>
                     <div class="p-4 flex flex-col flex-1">
                         <h3 class="font-bold text-gray-800 group-hover:text-primary transition-colors">
-                           Layanan Branding Profesional oleh Jaringan Alpha
+                           {{ $mitra->deskripsi ?? 'Layanan Profesional' }}
                         </h3>
                         <div class="flex items-center gap-1 mb-3">
                             <span class="text-accent text-sm font-bold">★</span>
                             <span class="font-bold text-gray-800 text-sm">5.0</span>
-                            <span class="text-gray-400 text-sm">(120)</span>
+                            <span class="text-gray-400 text-sm">(0)</span>
                         </div>
                         <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
-                            <span class="text-xs text-gray-400 uppercase font-semibold">Mulai Dari</span>
-                            <span class="text-gray-800 font-bold">Rp 500k</span>
+                            <span class="text-xs text-gray-400 uppercase font-semibold">Lokasi</span>
+                            <span class="text-gray-800 font-bold">{{ $mitra->kota ?? 'Indonesia' }}</span>
                         </div>
                     </div>
                 </a>
-
-                {{-- CARD 2: Jaringan 2 --}}
-                <a href="/user/jaringan/jaringan2" class="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-                    <div class="h-40 bg-gray-100 flex items-center justify-center p-6 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <img src="{{ asset('img/jaringan/jaringan2.png') }}" alt="Jaringan Beta" class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300 mix-blend-multiply">
-                    </div>
-                    <div class="px-4 pt-3 flex items-center gap-2">
-                         <div class="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
-                             <img src="https://ui-avatars.com/api/?name=Jaringan+Beta&background=random" class="w-full h-full object-cover">
-                         </div>
-                         <span class="text-xs font-semibold text-gray-700">Jaringan Beta</span>
-                    </div>
-                    <div class="p-4 flex flex-col flex-1">
-                        <h3 class="font-bold text-gray-800 group-hover:text-primary transition-colors">
-                           Solusi Kreatif Multimedia & Desain oleh Jaringan Beta
-                        </h3>
-                        <div class="flex items-center gap-1 mb-3">
-                            <span class="text-accent text-sm font-bold">★</span>
-                            <span class="font-bold text-gray-800 text-sm">4.8</span>
-                            <span class="text-gray-400 text-sm">(85)</span>
-                        </div>
-                        <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
-                            <span class="text-xs text-gray-400 uppercase font-semibold">Mulai Dari</span>
-                            <span class="text-gray-800 font-bold">Rp 300k</span>
-                        </div>
-                    </div>
-                </a>
-
-                {{-- CARD 3: Jaringan 3 --}}
-                <a href="/user/jaringan/jaringan3" class="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-                    <div class="h-40 bg-gray-100 flex items-center justify-center p-6 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <img src="{{ asset('img/jaringan/jaringan3.png') }}" alt="Jaringan Gamma" class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300 mix-blend-multiply">
-                    </div>
-                    <div class="px-4 pt-3 flex items-center gap-2">
-                         <div class="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
-                             <img src="https://ui-avatars.com/api/?name=Jaringan+Gamma&background=random" class="w-full h-full object-cover">
-                         </div>
-                         <span class="text-xs font-semibold text-gray-700">Jaringan Gamma</span>
-                    </div>
-                    <div class="p-4 flex flex-col flex-1">
-                        <h3 class="font-bold text-gray-800 group-hover:text-primary transition-colors">
-                           Video Production & Corporate Branding oleh Jaringan Gamma
-                        </h3>
-                        <div class="flex items-center gap-1 mb-3">
-                            <span class="text-accent text-sm font-bold">★</span>
-                            <span class="font-bold text-gray-800 text-sm">4.9</span>
-                            <span class="text-gray-400 text-sm">(200+)</span>
-                        </div>
-                        <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
-                            <span class="text-xs text-gray-400 uppercase font-semibold">Mulai Dari</span>
-                            <span class="text-gray-800 font-bold">Rp 1jt</span>
-                        </div>
-                    </div>
-                </a>
-
-                {{-- CARD 4: Jaringan 4 --}}
-                <a href="/user/jaringan/jaringan4" class="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-                    <div class="h-40 bg-gray-100 flex items-center justify-center p-6 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <img src="{{ asset('img/jaringan/jaringan3.png') }}" alt="Jaringan Delta" class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300 mix-blend-multiply">
-                    </div>
-                    <div class="px-4 pt-3 flex items-center gap-2">
-                         <div class="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
-                             <img src="https://ui-avatars.com/api/?name=Jaringan+Delta&background=random" class="w-full h-full object-cover">
-                         </div>
-                         <span class="text-xs font-semibold text-gray-700">Jaringan Delta</span>
-                    </div>
-                    <div class="p-4 flex flex-col flex-1">
-                        <h3 class="font-bold text-gray-800 group-hover:text-primary transition-colors">
-                           Jasa Penulisan Konten SEO & Copywriting oleh Jaringan Delta
-                        </h3>
-                        <div class="flex items-center gap-1 mb-3">
-                            <span class="text-accent text-sm font-bold">★</span>
-                            <span class="font-bold text-gray-800 text-sm">4.7</span>
-                            <span class="text-gray-400 text-sm">(50)</span>
-                        </div>
-                        <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
-                            <span class="text-xs text-gray-400 uppercase font-semibold">Mulai Dari</span>
-                            <span class="text-gray-800 font-bold">Rp 150k</span>
-                        </div>
-                    </div>
-                </a>
+                @endforeach
 
             </div>
         </div>

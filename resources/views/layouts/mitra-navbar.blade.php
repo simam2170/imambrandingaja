@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('mitra.pesanan') }}"
+                    <a href="{{ route('mitra.pesanan', $mitra->id ?? 0) }}"
                          class="transition-colors hover:text-accent {{ request()->routeIs('mitra.pesanan*') ? 'font-bold underline underline-offset-4' : '' }} "
                         :class="[scrolled ? ({{ request()->routeIs('mitra.pesanan*') ? '\'text-primary\'' : '\'hover:text-primary\'' }}) : ({{ request()->routeIs('mitra.pesanan*') ? '\'text-white\'' : '\'hover:text-white\'' }})]"
                     >
@@ -57,10 +57,14 @@
             <div class="relative" x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center gap-3 transition-opacity hover:opacity-80">
                     <div class="hidden text-right xl:block">
-                        <p class="text-sm font-bold transition-colors" :class="scrolled ? 'text-gray-800' : 'text-white'">Hi, Creative Studio</p>
+                        <p class="text-sm font-bold transition-colors" :class="scrolled ? 'text-gray-800' : 'text-white'">Hi, {{ $mitra->nama_mitra ?? 'Username' }}</p>
                     </div>
                     <div class="w-10 h-10 overflow-hidden transition-all border rounded-full bg-white/20 border-white/30 ring-2 ring-transparent hover:ring-secondary">
-                        <img src="https://ui-avatars.com/api/?name=Creative+Studio&background=random" alt="Avatar" class="object-cover w-full h-full">
+                        @if(($mitra->foto_profil ?? null))
+                            <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}" alt="Avatar" class="object-cover w-full h-full">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra ?? 'User Name') }}&background=random" alt="Avatar" class="object-cover w-full h-full">
+                        @endif
                     </div>
                     <svg class="w-4 h-4 transition-transform" :class="[open ? 'rotate-180' : '', scrolled ? 'text-gray-400' : 'text-white/80']" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -71,8 +75,8 @@
                     class="absolute right-0 w-48 mt-3 overflow-hidden bg-white border border-gray-100 shadow-xl rounded-xl ring-1 ring-black ring-opacity-5">
                     <div class="py-1">
                         <div class="px-4 py-3 border-b border-gray-50">
-                            <p class="text-sm font-bold leading-none text-gray-900">Creative Studio</p>
-                            <p class="mt-1 text-xs text-gray-500">studio@example.com</p>
+                            <p class="text-sm font-bold leading-none text-gray-900">{{ $mitra->nama_mitra ?? 'Username' }}</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ $mitra->email ?? 'studio@example.com' }}</p>
                         </div>
                         
                         <a href="{{ route('mitra.profil') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-primary/10 hover:text-primary">
@@ -112,11 +116,15 @@
             <a href="{{ route('mitra.profil') }}" @click="mobileOpen=false">
             <div class="flex items-center gap-3 px-4 py-3 mb-4 border border-gray-100 bg-gray-50 rounded-xl">
                 <div class="w-10 h-10 overflow-hidden bg-white border border-gray-200 rounded-full">
-                    <img src="https://ui-avatars.com/api/?name=Creative+Studio&background=random" class="object-cover w-full h-full">
+                    @if(($mitra->foto_profil ?? null))
+                        <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}" class="object-cover w-full h-full">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra ?? 'User Name') }}&background=random" class="object-cover w-full h-full">
+                    @endif
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-gray-800">Hi, Creative Studio</p>
-                    <p class="text-xs text-gray-500">Mitra Provider</p>
+                    <p class="text-sm font-bold text-gray-800">Hi, {{ $mitra->nama_mitra ?? 'Username' }}</p>
+                    <p class="text-xs text-gray-500">{{ $mitra->email ?? 'studio@example.com' }}</p>
                 </div>
             </div>
             </a>    
@@ -131,7 +139,7 @@
                 Dashboard
             </a>
     
-            <a href="{{ route('mitra.pesanan') }}" @click="mobileOpen=false"
+            <a href="{{ route('mitra.pesanan', $mitra->id ?? 0) }}" @click="mobileOpen=false"
                 class="block py-3 px-4 rounded-xl {{ request()->routeIs('mitra.pesanan*') ? $mobileActive : $mobileHover }}">
                 Pesanan Masuk
             </a>    
