@@ -12,7 +12,8 @@ class ProfileController extends Controller
     private function getUser($id = null)
     {
         // Prioritize ID from URL if provided, otherwise first record
-        if ($id) return \App\Models\User::findOrFail($id);
+        if ($id)
+            return \App\Models\User::findOrFail($id);
         return \App\Models\User::first();
     }
 
@@ -25,12 +26,13 @@ class ProfileController extends Controller
     public function update(Request $request, $id = null)
     {
         $user = $this->getUser($id);
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:8|confirmed',
+            'bio' => 'nullable|string|max:1000',
             'categories' => 'nullable|array',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -50,6 +52,7 @@ class ProfileController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->whatsapp = $request->phone;
+        $user->bio = $request->bio;
         $user->bidang = $request->categories;
 
         if ($request->filled('password')) {
@@ -59,5 +62,11 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function showPublic($id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        return view('user.show-public', compact('user'));
     }
 }

@@ -2,175 +2,220 @@
 @section('title', 'Keranjang')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6" x-data="{
-    items: {{ json_encode($cartItems) }},
-    init() {
-        // Source of truth is now database
-    },
-    get allChecked() {
-        return this.items.length > 0 && this.items.every(i => i.checked);
-    },
-    set allChecked(value) {
-        this.items.forEach(i => i.checked = value);
-    },
-    get selectedCount() {
-        return this.items.filter(i => i.checked).length;
-    },
-    get totalPrice() {
-        return this.items.filter(i => i.checked).reduce((sum, item) => sum + (item.price * item.qty), 0);
-    },
-    formatPrice(value) {
-        return 'Rp' + value.toLocaleString('id-ID');
-    },
-    async updateQty(item, delta) {
-        const newQty = item.qty + delta;
-        if (newQty < 1) return;
-        
-        try {
-            const response = await fetch(`/user/cart/update/${item.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ qty: newQty })
-            });
-            
-            if (response.ok) {
-                item.qty = newQty;
-            }
-        } catch (error) {
-            console.error('Failed to update qty:', error);
-        }
-    },
-    async removeItem(id) {
-        if (!confirm('Hapus item dari keranjang?')) return;
-        
-        try {
-            const response = await fetch(`/user/cart/delete/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            });
-            
-            if (response.ok) {
-                this.items = this.items.filter(i => i.id !== id);
-            }
-        } catch (error) {
-            console.error('Failed to remove item:', error);
-        }
-    }
-}">
-    
-    {{-- HEADER --}}
-    <div>
-        <span class="inline-block px-6 py-2 text-white font-bold bg-yellow-500 rounded-full shadow-sm">
-            Keranjang
-        </span>
-    </div>
+    <div class="max-w-7xl mx-auto space-y-6" x-data="{
+                                    items: {{ json_encode($cartItems) }},
+                                    init() {
+                                        // Source of truth is now database
+                                    },
+                                    get allChecked() {
+                                        return this.items.length > 0 && this.items.every(i => i.checked);
+                                    },
+                                    set allChecked(value) {
+                                        this.items.forEach(i => i.checked = value);
+                                    },
+                                    get selectedCount() {
+                                        return this.items.filter(i => i.checked).length;
+                                    },
+                                    get totalPrice() {
+                                        return this.items.filter(i => i.checked).reduce((sum, item) => sum + (item.price * item.qty), 0);
+                                    },
+                                    formatPrice(value) {
+                                        return 'Rp' + value.toLocaleString('id-ID');
+                                    },
+                                    async updateQty(item, delta) {
+                                        const newQty = item.qty + delta;
+                                        if (newQty < 1) return;
 
-    <div class="flex flex-col lg:flex-row gap-8 items-start">
-        
-        {{-- LEFT: CART ITEMS --}}
-        <div class="flex-1 space-y-6">
-            
-            {{-- SELECT ALL --}}
-            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-center gap-3">
-                <input type="checkbox" x-model="allChecked" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
-                <label class="font-bold text-gray-800 text-sm">Pilih semua <span class="text-gray-500 font-normal" x-text="'(' + items.length + ')'"></span></label>
-            </div>
+                                        try {
+                                            const response = await fetch(`/user/cart/update/${item.id}`, {
+                                                method: 'PATCH',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({ qty: newQty })
+                                            });
 
-            {{-- CART LIST --}}
-            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 space-y-8">
-                
-                {{-- ITEM LOOP --}}
-                <template x-for="(item, index) in items" :key="item.id">
-                    <div>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-2 text-primary font-bold text-sm">
-                                <input type="checkbox" x-model="item.checked" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
-                                <span x-text="item.seller"></span>
-                            </div>
-                            
-                            <div class="flex flex-col sm:flex-row gap-4">
-                                {{-- IMAGE --}}
-                                <div class="w-full sm:w-24 h-24 bg-gray-50 rounded shrink-0 overflow-hidden border border-gray-100">
-                                    <img :src="item.thumbnail" class="w-full h-full object-cover">
+                                            if (response.ok) {
+                                                item.qty = newQty;
+                                            }
+                                        } catch (error) {
+                                            console.error('Failed to update qty:', error);
+                                        }
+                                    },
+                                    async removeItem(id) {
+                                        if (!confirm('Hapus item dari keranjang?')) return;
+
+                                        try {
+                                            const response = await fetch(`/user/cart/delete/${id}`, {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                }
+                                            });
+
+                                            if (response.ok) {
+                                                this.items = this.items.filter(i => i.id !== id);
+                                            }
+                                        } catch (error) {
+                                            console.error('Failed to remove item:', error);
+                                        }
+                                    }
+                                }">
+
+        {{-- HEADER --}}
+        <div>
+            <span class="inline-block px-6 py-2 text-white font-bold bg-yellow-500 rounded-full shadow-sm">
+                Keranjang
+            </span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+
+            {{-- LEFT: CART ITEMS --}}
+            <div class="flex-1 space-y-6">
+
+                {{-- SELECT ALL --}}
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-center gap-3">
+                    <input type="checkbox" x-model="allChecked"
+                        class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                    <label class="font-bold text-gray-800 text-sm">Pilih semua <span class="text-gray-500 font-normal"
+                            x-text="'(' + items.length + ')'"></span></label>
+                </div>
+
+                {{-- CART LIST --}}
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 space-y-8">
+
+                    {{-- ITEM LOOP --}}
+                    <template x-for="(item, index) in items" :key="item.id">
+                        <div>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-2 text-primary font-bold text-sm">
+                                    <input type="checkbox" x-model="item.checked"
+                                        class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                                    <span x-text="item.seller"></span>
                                 </div>
-                                
-                                {{-- DETAILS --}}
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-start gap-4">
-                                        <div>
-                                            <h3 class="font-bold text-gray-800 text-sm leading-snug" x-text="item.name"></h3>
-                                            <p class="text-gray-500 text-xs mt-1" x-text="'Views ' + item.views"></p>
-                                        </div>
-                                        <span class="text-yellow-500 font-bold text-sm whitespace-nowrap" x-text="formatPrice(item.price * item.qty)"></span>
+
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    {{-- IMAGE --}}
+                                    <div
+                                        class="w-full sm:w-24 h-24 bg-gray-50 rounded shrink-0 overflow-hidden border border-gray-100 group">
+                                        <a :href="'/user/layanan/' + item.serviceId">
+                                            <img :src="item.thumbnail"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        </a>
                                     </div>
-                                    
-                                    {{-- ACTION --}}
-                                    <div class="flex justify-end items-center gap-4 mt-4">
-                                        <button @click="removeItem(item.id)" class="text-gray-600 hover:text-red-500 transition-colors">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                        
-                                        <div class="flex items-center bg-gray-300 rounded overflow-hidden">
-                                            <button @click="updateQty(item, -1)" class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">-</button>
-                                            <input type="text" :value="item.qty" class="w-8 py-1 text-center bg-transparent border-none text-xs font-bold text-gray-700 p-0 focus:ring-0" readonly>
-                                            <button @click="updateQty(item, 1)" class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">+</button>
+
+                                    {{-- DETAILS --}}
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-start gap-4">
+                                            <div>
+                                                <a :href="'/user/layanan/' + item.serviceId"
+                                                    class="hover:text-yellow-600 transition-colors">
+                                                    <h3 class="font-bold text-gray-800 text-sm leading-snug"
+                                                        x-text="item.name"></h3>
+                                                </a>
+                                                <div class="mt-1 space-y-1">
+                                                    <div x-show="item.pkgLabel && item.pkgCount > 1"
+                                                        class="text-xs text-gray-500">
+                                                        <span class="font-medium text-gray-700">Type:</span> <span
+                                                            x-text="item.pkgLabel"></span>
+                                                    </div>
+                                                    <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed"
+                                                        x-text="item.description"></p>
+                                                </div>
+                                                <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                                                    <span
+                                                        class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[10px] font-medium"
+                                                        x-text="item.category"></span>
+                                                    <span class="flex items-center gap-1">
+                                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        <span x-text="item.estimasi"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <span class="text-yellow-500 font-bold text-sm whitespace-nowrap"
+                                                x-text="formatPrice(item.price * item.qty)"></span>
+                                        </div>
+
+                                        {{-- ACTION --}}
+                                        <div class="flex justify-end items-center gap-4 mt-4">
+                                            <button @click="removeItem(item.id)"
+                                                class="text-gray-600 hover:text-red-500 transition-colors">
+                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+
+                                            <div class="flex items-center bg-gray-300 rounded overflow-hidden">
+                                                <button @click="updateQty(item, -1)"
+                                                    class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">-</button>
+                                                <input type="text" :value="item.qty"
+                                                    class="w-8 py-1 text-center bg-transparent border-none text-xs font-bold text-gray-700 p-0 focus:ring-0"
+                                                    readonly>
+                                                <button @click="updateQty(item, 1)"
+                                                    class="px-3 py-1 text-gray-600 hover:bg-gray-400 text-xs font-bold transition-colors">+</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="border-t border-yellow-200 mt-6 pt-6" x-show="index !== items.length - 1"></div>
                         </div>
-                        
-                        <div class="border-t border-yellow-200 mt-6 pt-6" x-show="index !== items.length - 1"></div>
-                    </div>
-                </template>
-                
-                {{-- EMPTY CART MESSAGE (OPTIONAL) --}}
-                <div x-show="items.length === 0" class="text-center py-8 text-gray-500">
-                    Keranjang kosong
-                </div>
+                    </template>
 
-            </div>
-        </div>
-
-        {{-- RIGHT: SUMMARY --}}
-        <div class="w-full lg:w-96 bg-yellow-50/50 border border-yellow-100 rounded-xl p-6 h-fit backdrop-blur-sm sticky top-24 transition-all duration-300">
-            <h3 class="font-bold text-gray-900 text-center mb-6">Ringkasan belanja</h3>
-            
-            {{-- SELECTED ITEMS LIST --}}
-            <div class="space-y-3 mb-6 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                <template x-for="item in items.filter(i => i.checked)" :key="'summary-' + item.id">
-                    <div class="flex justify-between text-xs text-gray-600 gap-4">
-                        <span class="truncate flex-1" x-text="item.name + (item.pkgLabel ? ' (' + item.pkgLabel + ')' : '')"></span>
-                        <span class="font-bold shrink-0 text-gray-800" x-text="formatPrice(item.price * item.qty)"></span>
+                    {{-- EMPTY CART MESSAGE (OPTIONAL) --}}
+                    <div x-show="items.length === 0" class="text-center py-8 text-gray-500">
+                        Keranjang kosong
                     </div>
-                </template>
-                <div x-show="selectedCount === 0" class="text-center text-[10px] text-gray-400 italic">
-                    Belum ada item dipilih
+
                 </div>
             </div>
-            
-            <div class="flex items-end justify-between border-t border-gray-300 pt-4 mb-8">
-                <span class="text-sm text-gray-600">Total :</span>
-                <span class="font-bold text-gray-900" x-text="formatPrice(totalPrice)"></span>
+
+            {{-- RIGHT: SUMMARY --}}
+            <div
+                class="w-full lg:w-96 bg-yellow-50/50 border border-yellow-100 rounded-xl p-6 h-fit backdrop-blur-sm sticky top-24 transition-all duration-300">
+                <h3 class="font-bold text-gray-900 text-center mb-6">Ringkasan belanja</h3>
+
+                {{-- SELECTED ITEMS LIST --}}
+                <div class="space-y-3 mb-6 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    <template x-for="item in items.filter(i => i.checked)" :key="'summary-' + item.id">
+                        <div class="flex justify-between text-xs text-gray-600 gap-4">
+                            <span class="truncate flex-1"
+                                x-text="item.name + (item.pkgLabel ? ' (' + item.pkgLabel + ')' : '')"></span>
+                            <span class="font-bold shrink-0 text-gray-800"
+                                x-text="formatPrice(item.price * item.qty)"></span>
+                        </div>
+                    </template>
+                    <div x-show="selectedCount === 0" class="text-center text-[10px] text-gray-400 italic">
+                        Belum ada item dipilih
+                    </div>
+                </div>
+
+                <div class="flex items-end justify-between border-t border-gray-300 pt-4 mb-8">
+                    <span class="text-sm text-gray-600">Total :</span>
+                    <span class="font-bold text-gray-900" x-text="formatPrice(totalPrice)"></span>
+                </div>
+
+                <button
+                    class="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-full shadow-lg shadow-yellow-200 transition-all transform hover:scale-105"
+                    :disabled="selectedCount === 0"
+                    :class="{'opacity-50 cursor-not-allowed transform-none shadow-none': selectedCount === 0}" @click="
+                                                    localStorage.setItem('checkoutItems', JSON.stringify(items.filter(i => i.checked)));
+                                                    window.location.href = '{{ route('user.checkout') }}';
+                                                ">
+                    <span x-text="'BELI (' + selectedCount + ')'"></span>
+                </button>
             </div>
 
-            <button class="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-full shadow-lg shadow-yellow-200 transition-all transform hover:scale-105"
-                :disabled="selectedCount === 0"
-                :class="{'opacity-50 cursor-not-allowed transform-none shadow-none': selectedCount === 0}"
-                @click="
-                    localStorage.setItem('checkoutItems', JSON.stringify(items.filter(i => i.checked)));
-                    window.location.href = '{{ route('user.checkout') }}';
-                ">
-                <span x-text="'BELI (' + selectedCount + ')'"></span>
-            </button>
         </div>
 
     </div>
-
-</div>
 @endsection

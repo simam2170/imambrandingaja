@@ -19,35 +19,40 @@ class CartController extends Controller
     {
         $user = $this->getUser();
         $cartItems = [];
-        
+
         if ($user) {
             $cartItems = CartItem::where('user_id', $user->id)
                 ->with(['layanan', 'mitra'])
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'serviceId' => $item->layanan_id,
                         'name' => $item->layanan->nama_layanan ?? 'Layanan',
-                        'price' => (float)$item->price,
+                        'price' => (float) $item->price,
                         'qty' => $item->qty,
                         'seller' => $item->mitra->nama_mitra ?? 'Mitra',
                         'mitraId' => $item->mitra_id,
-                        'pkgLabel' => $item->pkg_label,
+                        'pkgLabel' => ($item->layanan->harga_json[$item->pkg_label]['label'] ?? $item->pkg_label),
+                        'pkgCount' => count($item->layanan->harga_json ?? []),
                         'checked' => true,
                         'thumbnail' => $item->layanan->thumbnail ?? 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80',
+                        'category' => $item->layanan->kategori,
+                        'estimasi' => $item->layanan->estimasi_hari . ' Hari',
+                        'description' => \Illuminate\Support\Str::limit($item->layanan->deskripsi, 100),
                         'views' => '-',
                     ];
                 });
         }
-        
+
         return view('user.keranjang', compact('cartItems', 'user'));
     }
 
     public function store(Request $request)
     {
         $user = $this->getUser();
-        if (!$user) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$user)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         $request->validate([
             'layanan_id' => 'required|exists:layanan_branding,id',
@@ -77,7 +82,8 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         $user = $this->getUser();
-        if (!$user) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$user)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         $cartItem = CartItem::where('user_id', $user->id)->findOrFail($id);
         $cartItem->update(['qty' => $request->qty]);
@@ -88,7 +94,8 @@ class CartController extends Controller
     public function destroy($id)
     {
         $user = $this->getUser();
-        if (!$user) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$user)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         $cartItem = CartItem::where('user_id', $user->id)->findOrFail($id);
         $cartItem->delete();

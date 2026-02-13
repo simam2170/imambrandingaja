@@ -31,10 +31,10 @@ Route::get('/login', function () {
 | USER AREA
 |--------------------------------------------------------------------------
 */
-Route::prefix('user')->group(function () { 
+Route::prefix('user')->group(function () {
     Route::get('/orders', [App\Http\Controllers\User\UserOrderController::class, 'index'])->name('user.pesanan');
     Route::post('/checkout', [App\Http\Controllers\User\UserOrderController::class, 'store'])->name('user.checkout.store');
-    
+
     // Maintain existing for UI compatibility
     Route::get('/dashboard/{id?}', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/profile/{id?}', [App\Http\Controllers\User\ProfileController::class, 'index'])->name('user.profile');
@@ -46,8 +46,8 @@ Route::prefix('user')->group(function () {
     Route::get('/checkout', function () {
         $user = Auth::user() ?? \App\Models\User::where('role', 'user')->first();
         return view('user.checkout', compact('user'));
-    })->name('user.checkout'); 
-    Route::get('/invoice/{id}', [App\Http\Controllers\User\UserOrderController::class, 'show'])->name('user.invoice'); 
+    })->name('user.checkout');
+    Route::get('/invoice/{id}', [App\Http\Controllers\User\UserOrderController::class, 'show'])->name('user.invoice');
     Route::post('/invoice/{id}/upload', [App\Http\Controllers\PaymentController::class, 'upload'])->name('user.payment.upload');
     Route::post('/invoice/{id}/cancel', [App\Http\Controllers\User\UserOrderController::class, 'cancel'])->name('user.order.cancel');
     Route::get('/mitra/{id}', [App\Http\Controllers\User\JaringanController::class, 'show'])->name('user.mitra');
@@ -59,8 +59,8 @@ Route::prefix('user')->group(function () {
 | MITRA (JARINGAN) AREA
 |--------------------------------------------------------------------------
 */
-Route::prefix('mitra')->group(function () { 
-    Route::get('/{id}/orders', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'index'])->name('mitra.pesanan'); 
+Route::prefix('mitra')->group(function () {
+    Route::get('/{id}/orders', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'index'])->name('mitra.pesanan');
     Route::post('/orders/{id}/complete', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'complete'])->name('mitra.pesanan.complete');
 
     // Maintain existing for UI compatibility
@@ -71,6 +71,7 @@ Route::prefix('mitra')->group(function () {
     Route::get('/pendapatan', [App\Http\Controllers\Mitra\ProfilController::class, 'pendapatan'])->name('mitra.pendapatan');
     Route::get('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'index'])->name('mitra.profil');
     Route::post('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'update'])->name('mitra.profil.update');
+    Route::get('/user/{id}', [App\Http\Controllers\User\ProfileController::class, 'showPublic'])->name('mitra.user.profile');
 });
 
 /*
@@ -78,9 +79,10 @@ Route::prefix('mitra')->group(function () {
 | ADMIN AREA
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->group(function () { 
+Route::prefix('admin')->group(function () {
     Route::get('/orders', [App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('admin.pesanan.index');
     Route::get('/orders/{id}', [App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.pesanan.show');
     Route::post('/orders/{id}/review/{status}', [App\Http\Controllers\Admin\AdminOrderController::class, 'verifyPayment'])->name('admin.payment.verify');
     Route::post('/orders/{id}/payout', [App\Http\Controllers\Admin\AdminOrderController::class, 'uploadPayoutProof'])->name('admin.payout.upload');
+    Route::get('/user/{id}', [App\Http\Controllers\User\ProfileController::class, 'showPublic'])->name('admin.user.profile');
 });

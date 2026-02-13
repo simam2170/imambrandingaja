@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'whatsapp',
+        'bio',
         'bidang',
         'role',
         'password',
