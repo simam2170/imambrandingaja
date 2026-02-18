@@ -131,20 +131,20 @@
         {{-- SIMPLIFIED VIEW FOR UPLOADED PROOF (Only if status is still waiting payment) --}}
         <template x-if="hasProof && order.status === 'menunggu_pembayaran'">
             <div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <div class="w-full max-w-2xl p-12 bg-white border border-blue-100 shadow-xl rounded-3xl">
-                    <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-10 h-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-full max-w-2xl p-12 bg-white border border-primary-100 shadow-xl rounded-3xl">
+                    <div class="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h2 class="text-3xl font-black text-blue-600 mb-4">Pembayaran Sedang Diverifikasi</h2>
+                    <h2 class="text-3xl font-black text-primary-600 mb-4">Pembayaran Sedang Diverifikasi</h2>
                     <p class="text-gray-500 text-lg leading-relaxed">
                         Terima kasih! Bukti pembayaran Anda telah kami terima dan sedang dalam proses verifikasi oleh admin.
                     </p>
                     <div class="mt-8">
                         <a href="{{ route('user.pesanan') }}"
-                            class="inline-flex items-center justify-center px-8 py-3 text-sm font-bold text-white transition-all bg-blue-600 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200">
+                            class="inline-flex items-center justify-center px-8 py-3 text-sm font-bold text-white transition-all bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-200">
                             Lihat Pesanan Saya
                         </a>
                     </div>
@@ -162,7 +162,7 @@
                         <h2 class="text-2xl font-black text-gray-800">Menunggu Pembayaran</h2>
                     </template>
 
-                    <div class="pt-4 space-y-4 border-t border-yellow-200"
+                    <div class="pt-4 space-y-4 border-t border-accent-200"
                         x-show="!hasProof && order.status !== 'dibatalkan'">
                         <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Batas Waktu Pembayaran</p>
                         <p class="font-mono text-2xl font-black text-red-600" x-text="timeLeft"></p>
@@ -192,7 +192,7 @@
                         <section class="p-6 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl">
                             <div class="flex items-start justify-between mb-6">
                                 <h3 class="flex items-center gap-2 font-bold text-gray-800">
-                                    <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24"
+                                    <svg class="w-5 h-5 text-accent-500" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -214,7 +214,7 @@
                                                 x-text="item.layanan?.nama_layanan || 'Layanan'"></h4>
                                             <div class="flex items-center justify-between text-xs text-gray-500">
                                                 <span x-text="order.mitra?.nama_mitra || 'Mitra'"></span>
-                                                <span class="font-bold text-yellow-600"
+                                                <span class="font-bold text-accent-600"
                                                     x-text="item.qty + ' x ' + formatPrice(item.harga)"></span>
                                             </div>
                                             <p class="text-[10px] text-gray-400" x-text="item.jenis_layanan"></p>
@@ -232,7 +232,7 @@
 
                         <section class="p-6 bg-white border border-gray-100 shadow-sm rounded-3xl">
                             <h3 class="flex items-center gap-2 mb-6 font-bold text-gray-800">
-                                <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg class="w-5 h-5 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
@@ -261,8 +261,8 @@
 
                         {{-- WAITING FOR PAYMENT --}}
                         <template x-if="order.status === 'menunggu_pembayaran'">
-                            <section class="p-6 border border-yellow-100 shadow-sm bg-yellow-50 rounded-3xl">
-                                <h3 class="flex items-center gap-2 mb-4 font-bold text-yellow-800">
+                            <section class="p-6 border border-accent-100 shadow-sm bg-accent-50 rounded-3xl">
+                                <h3 class="flex items-center gap-2 mb-4 font-bold text-accent-800">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -271,24 +271,24 @@
                                 </h3>
                                 <div class="space-y-4">
                                     <template x-if="['bca', 'mandiri'].includes(order.metode_pembayaran)">
-                                        <div class="p-4 bg-white border border-yellow-200 rounded-2xl">
+                                        <div class="p-4 bg-white border border-accent-200 rounded-2xl">
                                             <p class="text-[10px] font-bold text-gray-400 uppercase mb-1"
                                                 x-text="order.metode_pembayaran"></p>
                                             <p class="mb-1 text-sm font-black text-gray-800"
                                                 x-text="'Bank ' + order.metode_pembayaran.toUpperCase()"></p>
                                             <div
-                                                class="flex items-center justify-between px-2 py-1 font-mono text-lg font-bold text-yellow-600 rounded-lg bg-yellow-50">
+                                                class="flex items-center justify-between px-2 py-1 font-mono text-lg font-bold text-accent-600 rounded-lg bg-accent-50">
                                                 <span
                                                     x-text="order.metode_pembayaran === 'bca' ? '123 456 7890' : '987 654 3210'"></span>
                                                 <button @click="alert('Copied!')"
-                                                    class="text-[10px] font-bold text-blue-500 uppercase">Copy</button>
+                                                    class="text-[10px] font-bold text-primary-500 uppercase">Copy</button>
                                             </div>
                                             <p class="text-[10px] text-gray-400 mt-2">a.n PT Branding Aja Indonesia</p>
                                         </div>
                                     </template>
 
                                     <template x-if="['qris', 'dana'].includes(order.metode_pembayaran)">
-                                        <div class="p-4 bg-white border border-yellow-200 rounded-2xl text-center">
+                                        <div class="p-4 bg-white border border-accent-200 rounded-2xl text-center">
                                             <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 text-left"
                                                 x-text="order.metode_pembayaran"></p>
                                             <div
@@ -342,7 +342,7 @@
                                                 </div>
 
                                                 <button @click="submitProof()"
-                                                    class="flex items-center justify-center w-full gap-2 py-3 font-bold text-gray-900 transition-all bg-yellow-400 shadow-lg hover:bg-yellow-500 rounded-2xl shadow-yellow-100"
+                                                    class="flex items-center justify-center w-full gap-2 py-3 font-bold text-gray-900 transition-all bg-accent-400 shadow-lg hover:bg-accent-500 rounded-2xl shadow-accent-100"
                                                     :disabled="uploadStatus === 'uploading'">
                                                     <span x-show="uploadStatus !== 'uploading'">Kirim Bukti</span>
                                                     <span x-show="uploadStatus === 'uploading'"
@@ -375,17 +375,17 @@
 
                         {{-- DIREVIEW --}}
                         <template x-if="order.status === 'direview'">
-                            <section class="p-6 border border-blue-100 shadow-sm bg-blue-50 rounded-3xl text-center">
+                            <section class="p-6 border border-primary-100 shadow-sm bg-primary-50 rounded-3xl text-center">
                                 <div
-                                    class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg class="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24"
+                                    class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-primary-600" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
-                                <h3 class="mb-2 font-bold text-blue-800">Pesanan Sedang Direview</h3>
-                                <p class="text-xs text-blue-600">Admin sedang memverifikasi bukti pembayaran Anda.</p>
+                                <h3 class="mb-2 font-bold text-primary-800">Pesanan Sedang Direview</h3>
+                                <p class="text-xs text-primary-600">Admin sedang memverifikasi bukti pembayaran Anda.</p>
                             </section>
                         </template>
 

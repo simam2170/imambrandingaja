@@ -58,13 +58,13 @@
             </div>
 
             {{-- LIST CONTAINER --}}
-            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 min-h-[400px]">
+            <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 min-h-[400px]">
 
                 {{-- STATUS HEADER (Dynamic based on Tab) --}}
                 <div class="mb-6">
                     <span class="px-6 py-2 text-sm font-bold text-white capitalize rounded-full shadow-sm" :class="{
                                                           'bg-gray-500': activeStatus === 'menunggu_pembayaran',
-                                                          'bg-yellow-500': activeStatus === 'direview',
+                                                          'bg-accent-500': activeStatus === 'direview',
                                                           'bg-primary': activeStatus === 'diproses',
                                                           'bg-green-500': activeStatus === 'selesai',
                                                           'bg-red-500': activeStatus === 'ditolak' || activeStatus === 'dibatalkan'
@@ -128,9 +128,9 @@
                                 </div>
                             @empty
                                 <div
-                                    class="flex flex-col items-center justify-center p-12 text-center bg-white/50 rounded-xl border border-dashed border-yellow-300">
+                                    class="flex flex-col items-center justify-center p-12 text-center bg-white/50 rounded-xl border border-dashed border-accent-300">
                                     <div
-                                        class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 text-yellow-400 shadow-sm">
+                                        class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 text-accent-400 shadow-sm">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                             stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

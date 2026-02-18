@@ -5,13 +5,13 @@
 @section('content')
 
 <!-- ================= HERO ================= -->
-<section class="bg-[#08b3ad] rounded-b-[60px] px-6 py-20 overflow-hidden">
+<section class="bg-primary rounded-b-[60px] px-6 py-20 overflow-hidden">
     <div class="grid items-center grid-cols-1 gap-10 mx-auto max-w-7xl lg:grid-cols-2">
 
         <!-- TEXT (KIRI) -->
         <div class="text-center lg:text-left">
             <h1 class="mb-6 text-3xl font-bold text-white lg:text-5xl">
-                Branding <span class="italic text-yellow-400">Aja</span>
+                Branding <span class="italic text-accent-400">Aja</span>
             </h1>
 
             <p class="max-w-xl mx-auto leading-relaxed text-white lg:mx-0">
@@ -39,21 +39,21 @@
     <div class="grid grid-cols-1 gap-8 mx-auto max-w-7xl md:grid-cols-3">
 
         <!-- Card 1: Jaringan -->
-        <div class="bg-[#08b3ad] text-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center h-64">
+        <div class="bg-primary text-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center h-64">
             <div class="mb-4 text-5xl">💬</div>
             <h2 class="text-4xl font-bold">999+</h2>
             <p class="mt-2 text-xl font-medium">Jaringan</p>
         </div>
 
         <!-- Card 2: User -->
-        <div class="bg-[#08b3ad] text-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center h-64">
+        <div class="bg-primary text-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center h-64">
             <div class="mb-4 text-5xl">👥</div>
             <h2 class="text-4xl font-bold">9.999+</h2>
             <p class="mt-2 text-xl font-medium">User</p>
         </div>
 
         <!-- Card 3: Orderan -->
-        <div class="bg-[#08b3ad] text-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center h-64">
+        <div class="bg-primary text-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center h-64">
             <div class="mb-4 text-5xl">🛒</div>
             <h2 class="text-4xl font-bold">20.000+</h2>
             <p class="mt-2 text-xl font-medium">Orderan Diterima</p>
@@ -177,7 +177,7 @@
 <section class="px-6 py-28 bg-gray-50">
   <!-- TITLE -->
   <div class="flex justify-center mb-16">
-    <span class="bg-[#08b3ad] text-white px-12 py-3 rounded-full text-sm tracking-widest shadow-md">
+    <span class="bg-primary text-white px-12 py-3 rounded-full text-sm tracking-widest shadow-md">
       JARINGAN KAMI
     </span>
   </div>
@@ -216,3 +216,5 @@
 </section>
 
 @endsection
+
+

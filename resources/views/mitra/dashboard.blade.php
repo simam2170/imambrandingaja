@@ -23,7 +23,7 @@
         {{-- STATS CARDS --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div class="p-3 bg-blue-50 text-blue-600 w-fit rounded-xl mb-4">
+                <div class="p-3 bg-primary-50 text-primary-600 w-fit rounded-xl mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -34,7 +34,7 @@
             </div>
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div class="p-3 bg-yellow-50 text-yellow-600 w-fit rounded-xl mb-4">
+                <div class="p-3 bg-accent-50 text-accent-600 w-fit rounded-xl mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -94,8 +94,8 @@
                                     <span class="px-2 py-0.5">
                                         @php
                                             $statusClasses = [
-                                                'direview' => 'bg-blue-50 text-blue-600 border-blue-100',
-                                                'diproses' => 'bg-yellow-50 text-yellow-600 border-yellow-100',
+                                                'direview' => 'bg-primary-50 text-primary-600 border-primary-100',
+                                                'diproses' => 'bg-accent-50 text-accent-600 border-accent-100',
                                                 'selesai' => 'bg-green-50 text-green-600 border-green-100',
                                                 'ditolak' => 'bg-red-50 text-red-600 border-red-100',
                                             ];
@@ -129,9 +129,9 @@
                     <h3 class="font-bold text-gray-800">Notifikasi</h3>
                 </div>
                 <div class="p-0">
-                    <div class="p-6 flex gap-3 bg-blue-50/50">
+                    <div class="p-6 flex gap-3 bg-primary-50/50">
                         <div
-                            class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            class="w-8 h-8 bg-primary-100 text-primary-600 rounded-lg flex items-center justify-center flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

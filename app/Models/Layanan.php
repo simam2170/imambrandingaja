@@ -15,16 +15,19 @@ class Layanan extends Model
         'mitra_id',
         'nama_layanan',
         'kategori',
+        'klasifikasi',
         'deskripsi',
         'thumbnail',
         'harga',
         'harga_json',
+        'detail_klasifikasi',
         'estimasi_hari',
         'status',
     ];
 
     protected $casts = [
         'harga_json' => 'array',
+        'detail_klasifikasi' => 'array',
     ];
 
     public function mitra()

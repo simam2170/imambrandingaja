@@ -68,7 +68,7 @@ Route::prefix('mitra')->group(function () {
     Route::get('/pesanan/detail/{id}', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'show'])->name('mitra.pesanan.show');
     Route::get('/layanan-saya', [App\Http\Controllers\Mitra\ProfilController::class, 'layanan'])->name('mitra.layanan');
     Route::post('/layanan-saya', [App\Http\Controllers\Mitra\ProfilController::class, 'storeLayanan'])->name('mitra.layanan.store');
-    Route::get('/pendapatan', [App\Http\Controllers\Mitra\ProfilController::class, 'pendapatan'])->name('mitra.pendapatan');
+    Route::get('/pendapatan', [App\Http\Controllers\Mitra\PendapatanController::class, 'index'])->name('mitra.pendapatan');
     Route::get('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'index'])->name('mitra.profil');
     Route::post('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'update'])->name('mitra.profil.update');
     Route::get('/user/{id}', [App\Http\Controllers\User\ProfileController::class, 'showPublic'])->name('mitra.user.profile');

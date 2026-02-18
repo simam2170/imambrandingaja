@@ -5,7 +5,7 @@
 @section('content')
     <div class="container mx-auto px-4 py-8">
         <div class="mb-6">
-            <a href="{{ route('admin.pesanan.index') }}" class="text-blue-500 hover:underline">&larr; Kembali</a>
+            <a href="{{ route('admin.pesanan.index') }}" class="text-primary-500 hover:underline">&larr; Kembali</a>
         </div>
 
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -16,7 +16,7 @@
                 </div>
                 <div class="text-right">
                     <span
-                        class="px-3 py-1 rounded-full text-sm font-bold {{ $order->status === 'selesai' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                        class="px-3 py-1 rounded-full text-sm font-bold {{ $order->status === 'selesai' ? 'bg-green-100 text-green-800' : 'bg-accent-100 text-accent-800' }}">
                         {{ strtoupper($order->status) }}
                     </span>
                 </div>
@@ -28,7 +28,7 @@
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             @if($order->user)
                                 <a href="{{ route('admin.user.profile', $order->user->id) }}"
-                                    class="text-blue-600 font-bold hover:underline">
+                                    class="text-primary-600 font-bold hover:underline">
                                     {{ $order->user->name }}
                                 </a>
                             @else
@@ -39,7 +39,7 @@
                     <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Profil Pemesan (Preview)</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <div class="bg-primary-50 p-4 rounded-xl border border-primary-100">
                                 <p class="text-xs font-bold text-gray-500 uppercase">Kategori Bidang:</p>
                                 <p class="mb-2">
                                     @if($order->user && $order->user->bidang)
@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Payment Verification -->
-                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border-t-4 border-blue-50">
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border-t-4 border-primary-50">
                         <dt class="text-sm font-medium text-gray-500">Bukti Pembayaran</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             @if($order->bukti_pembayaran)
@@ -133,7 +133,7 @@
                                     </span>
                                 @endif
                             @else
-                                <p class="text-yellow-600 italic">Belum ada bukti pembayaran diupload.</p>
+                                <p class="text-accent-600 italic">Belum ada bukti pembayaran diupload.</p>
                             @endif
                         </dd>
                     </div>
@@ -159,7 +159,7 @@
                                         <div class="p-4 bg-green-100 rounded-lg border border-green-200">
                                             <p class="text-xs font-bold text-green-800">BUKTI TRANSFER TERUPLOAD:</p>
                                             <a href="{{ asset('uploads/payouts/' . $order->bukti_transfer_mitra) }}" target="_blank"
-                                                class="text-blue-600 hover:underline text-xs block mt-1">
+                                                class="text-primary-600 hover:underline text-xs block mt-1">
                                                 {{ $order->bukti_transfer_mitra }}
                                             </a>
                                         </div>

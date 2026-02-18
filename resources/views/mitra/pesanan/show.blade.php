@@ -33,7 +33,7 @@
             </div>
             <div class="flex items-center gap-3">
                 <span
-                    class="px-4 py-1.5 rounded-full text-xs font-bold border uppercase bg-yellow-50 text-yellow-600 border-yellow-100">
+                    class="px-4 py-1.5 rounded-full text-xs font-bold border uppercase bg-accent-50 text-accent-600 border-accent-100">
                     {{ $order->status }}
                 </span>
             </div>
@@ -72,7 +72,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-blue-50/50 p-4 border border-blue-100 rounded-xl">
+                        <div class="bg-primary-50/50 p-4 border border-primary-100 rounded-xl">
                             <p class="text-[10px] uppercase font-bold text-gray-400 mb-1">Kategori Bidang</p>
                             <p class="text-sm text-gray-700 mb-3">
                                 @if($order->user && $order->user->bidang)
@@ -90,7 +90,7 @@
                         <div>
                             <h4 class="text-sm font-bold text-gray-700 mb-2">Catatan dari User:</h4>
                             <div
-                                class="p-4 bg-yellow-50/50 border border-yellow-100 rounded-xl text-sm text-gray-700 leading-relaxed italic">
+                                class="p-4 bg-accent-50/50 border border-accent-100 rounded-xl text-sm text-gray-700 leading-relaxed italic">
                                 "{{ $order->catatan ?? 'Tidak ada catatan.' }}"
                             </div>
                         </div>
@@ -165,7 +165,7 @@
                         <div class="p-12 text-center">
                             @if($order->status == 'direview')
                                 <div
-                                    class="w-20 h-20 bg-blue-50 text-blue-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    class="w-20 h-20 bg-primary-50 text-primary-300 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

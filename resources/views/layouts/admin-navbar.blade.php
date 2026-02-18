@@ -9,7 +9,7 @@
         <!-- Logo -->
         <a href="{{ route('admin.pesanan.index') }}" class="flex items-center gap-2">
             <span class="text-2xl font-bold tracking-tight" :class="scrolled ? 'text-gray-900' : 'text-white'">
-                Branding<span class="italic" :class="scrolled ? 'text-blue-600' : 'text-white/90'">Aja</span><span class="text-xs ml-1 px-2 py-0.5 rounded-full" :class="scrolled ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'">ADMIN</span>
+                Branding<span class="italic" :class="scrolled ? 'text-primary-600' : 'text-white/90'">Aja</span><span class="text-xs ml-1 px-2 py-0.5 rounded-full" :class="scrolled ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'">ADMIN</span>
             </span>
         </a>
 
@@ -18,8 +18,8 @@
             <ul class="flex items-center gap-6 font-medium" :class="scrolled ? 'text-gray-500' : 'text-white/90'">
                 <li>
                     <a href="{{ route('admin.pesanan.index') }}"
-                        class="transition-colors hover:text-blue-500 {{ request()->routeIs('admin.pesanan*') ? 'font-bold underline underline-offset-4 text-white' : '' }} "
-                        :class="[scrolled ? ({{ request()->routeIs('admin.pesanan*') ? '\'text-blue-600\'' : '\'hover:text-blue-600\'' }}) : ({{ request()->routeIs('admin.pesanan*') ? '\'text-white\'' : '\'hover:text-white\'' }})]"
+                        class="transition-colors hover:text-primary-500 {{ request()->routeIs('admin.pesanan*') ? 'font-bold underline underline-offset-4 text-white' : '' }} "
+                        :class="[scrolled ? ({{ request()->routeIs('admin.pesanan*') ? '\'text-primary-600\'' : '\'hover:text-primary-600\'' }}) : ({{ request()->routeIs('admin.pesanan*') ? '\'text-white\'' : '\'hover:text-white\'' }})]"
                     >
                         Pesanan Masuk
                     </a>
@@ -35,7 +35,7 @@
                     <div class="hidden text-right xl:block">
                         <p class="text-sm font-bold transition-colors" :class="scrolled ? 'text-gray-800' : 'text-white'">Admin</p>
                     </div>
-                    <div class="w-10 h-10 overflow-hidden transition-all border rounded-full bg-white/20 border-white/30 ring-2 ring-transparent hover:ring-blue-500">
+                    <div class="w-10 h-10 overflow-hidden transition-all border rounded-full bg-white/20 border-white/30 ring-2 ring-transparent hover:ring-primary-500">
                         <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Avatar" class="object-cover w-full h-full">
                     </div>
                 </button>
@@ -74,3 +74,4 @@
         </div>
     </div>
 </nav>
+

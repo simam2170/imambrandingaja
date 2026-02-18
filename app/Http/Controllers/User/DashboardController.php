@@ -15,8 +15,9 @@ class DashboardController extends Controller
     private function getUser($id = null)
     {
         // Prioritize ID from URL if provided, otherwise first record
-        if ($id) return User::findOrFail($id);
-        return User::first(); 
+        if ($id)
+            return User::findOrFail($id);
+        return User::first();
     }
 
     public function index($id = null)
@@ -25,12 +26,12 @@ class DashboardController extends Controller
         $popularServices = Layanan::with('mitra')->inRandomOrder()->take(5)->get();
         $marketplaceServices = Layanan::with('mitra')->latest()->get();
         $featuredMitra = Mitra::inRandomOrder()->first();
-        $mitraList = Mitra::take(4)->get();
+        $mitraList = Mitra::with(['layanan'])->take(6)->get();
 
         // Recent orders for widget
         $recentOrders = [];
         $user = $this->getUser($id);
-        
+
         if ($user) {
             $recentOrders = Order::where('user_id', $user->id)->latest()->take(3)->get();
         }

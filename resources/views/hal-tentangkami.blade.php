@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- ================= HERO TENTANG KAMI ================= --}}
-<section class="bg-[#08b3ad] min-h-screen px-6 py-32 text-white">
+<section class="bg-primary min-h-screen px-6 py-32 text-white">
   <div class="grid items-center grid-cols-1 gap-16 mx-auto max-w-7xl lg:grid-cols-2">
 
     <div class="flex justify-center">
@@ -16,7 +16,7 @@
 
     <div>
       <h1 class="mb-6 text-5xl font-bold">s
-        Tentang <span class="italic text-yellow-400">Kami</span>
+        Tentang <span class="italic text-accent-400">Kami</span>
       </h1>
 
       <p class="mb-4 leading-relaxed opacity-90">
@@ -43,7 +43,7 @@
 
     <!-- VISI -->
     <div class="p-8 transition bg-white shadow rounded-2xl hover:shadow-lg">
-      <h2 class="text-2xl font-bold mb-4 text-[#08b3ad]">
+      <h2 class="text-2xl font-bold mb-4 text-primary">
         Visi Kami
       </h2>
       <p class="leading-relaxed text-gray-700">
@@ -55,7 +55,7 @@
 
     <!-- MISI -->
     <div class="p-8 transition bg-white shadow rounded-2xl hover:shadow-lg">
-      <h2 class="text-2xl font-bold mb-4 text-[#08b3ad]">
+      <h2 class="text-2xl font-bold mb-4 text-primary">
         Misi Kami
       </h2>
       <ul class="space-y-2 text-gray-700 list-disc list-inside">
@@ -67,7 +67,7 @@
     </div>
 
     <!-- WHY -->
-    <div class="bg-[#08b3ad] text-white rounded-2xl p-8 shadow-lg">
+    <div class="bg-primary text-white rounded-2xl p-8 shadow-lg">
       <h2 class="mb-4 text-2xl font-bold text-white ">
         Mengapa BrandingAja?
       </h2>
@@ -83,4 +83,6 @@
 </section>
 
 @endsection
+
+
 

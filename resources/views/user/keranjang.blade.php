@@ -65,7 +65,7 @@
 
         {{-- HEADER --}}
         <div>
-            <span class="inline-block px-6 py-2 text-white font-bold bg-yellow-500 rounded-full shadow-sm">
+            <span class="inline-block px-6 py-2 text-white font-bold bg-accent-500 rounded-full shadow-sm">
                 Keranjang
             </span>
         </div>
@@ -76,7 +76,7 @@
             <div class="flex-1 space-y-6">
 
                 {{-- SELECT ALL --}}
-                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-center gap-3">
+                <div class="bg-accent-50 border border-accent-200 rounded-xl p-4 flex items-center gap-3">
                     <input type="checkbox" x-model="allChecked"
                         class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
                     <label class="font-bold text-gray-800 text-sm">Pilih semua <span class="text-gray-500 font-normal"
@@ -84,7 +84,7 @@
                 </div>
 
                 {{-- CART LIST --}}
-                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 space-y-8">
+                <div class="bg-accent-50 border border-accent-200 rounded-xl p-6 space-y-8">
 
                     {{-- ITEM LOOP --}}
                     <template x-for="(item, index) in items" :key="item.id">
@@ -111,7 +111,7 @@
                                         <div class="flex justify-between items-start gap-4">
                                             <div>
                                                 <a :href="'/user/layanan/' + item.serviceId"
-                                                    class="hover:text-yellow-600 transition-colors">
+                                                    class="hover:text-accent-600 transition-colors">
                                                     <h3 class="font-bold text-gray-800 text-sm leading-snug"
                                                         x-text="item.name"></h3>
                                                 </a>
@@ -126,7 +126,7 @@
                                                 </div>
                                                 <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
                                                     <span
-                                                        class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[10px] font-medium"
+                                                        class="bg-accent-100 text-accent-700 px-2 py-0.5 rounded text-[10px] font-medium"
                                                         x-text="item.category"></span>
                                                     <span class="flex items-center gap-1">
                                                         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
@@ -139,7 +139,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <span class="text-yellow-500 font-bold text-sm whitespace-nowrap"
+                                            <span class="text-accent-500 font-bold text-sm whitespace-nowrap"
                                                 x-text="formatPrice(item.price * item.qty)"></span>
                                         </div>
 
@@ -167,7 +167,7 @@
                                 </div>
                             </div>
 
-                            <div class="border-t border-yellow-200 mt-6 pt-6" x-show="index !== items.length - 1"></div>
+                            <div class="border-t border-accent-200 mt-6 pt-6" x-show="index !== items.length - 1"></div>
                         </div>
                     </template>
 
@@ -181,7 +181,7 @@
 
             {{-- RIGHT: SUMMARY --}}
             <div
-                class="w-full lg:w-96 bg-yellow-50/50 border border-yellow-100 rounded-xl p-6 h-fit backdrop-blur-sm sticky top-24 transition-all duration-300">
+                class="w-full lg:w-96 bg-accent-50/50 border border-accent-100 rounded-xl p-6 h-fit backdrop-blur-sm sticky top-24 transition-all duration-300">
                 <h3 class="font-bold text-gray-900 text-center mb-6">Ringkasan belanja</h3>
 
                 {{-- SELECTED ITEMS LIST --}}
@@ -205,7 +205,7 @@
                 </div>
 
                 <button
-                    class="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-full shadow-lg shadow-yellow-200 transition-all transform hover:scale-105"
+                    class="w-full py-2 bg-accent-400 hover:bg-accent-500 text-gray-900 font-bold rounded-full shadow-lg shadow-accent-200 transition-all transform hover:scale-105"
                     :disabled="selectedCount === 0"
                     :class="{'opacity-50 cursor-not-allowed transform-none shadow-none': selectedCount === 0}" @click="
                                                     localStorage.setItem('checkoutItems', JSON.stringify(items.filter(i => i.checked)));

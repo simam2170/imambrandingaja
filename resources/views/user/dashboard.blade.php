@@ -6,117 +6,396 @@
 
     <div class="max-w-7xl mx-auto space-y-10">
 
-        {{-- WELCOME SECTION --}}
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-                <p class="text-gray-500 mt-2">Selamat datang kembali! Kelola pesanan dan temukan layanan terbaik.</p>
+        {{-- PARTNER LOGOS SECTION (Fiverr Style Marquee) --}}
+        <div class="py-4 overflow-hidden relative group">
+            <div class="flex items-center justify-center mb-6">
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Mitra Kami</span>
             </div>
-            {{-- OPTIONAL: Add Date or Quick Action --}}
+
+            <div class="relative flex overflow-x-hidden">
+                <div class="animate-marquee w-full space-nowrap flex items-center gap-16 md:gap-24">
+                    {{-- Logos Group 1 --}}
+                    <div class="flex items-center gap-16 md:gap-24">
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Google</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Netflix</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">P&G</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Paypal</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Meta</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Amazon</span>
+                    </div>
+                    {{-- Logos Group 2 (Clone for infinite gapless scroll) --}}
+                    <div class="flex items-center gap-16 md:gap-24">
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Google</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Netflix</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">P&G</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Paypal</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Meta</span>
+                        <span
+                            class="text-xl md:text-2xl font-black text-gray-300/80 hover:text-gray-400 transition-colors uppercase italic tracking-tighter">Amazon</span>
+                    </div>
+                </div>
+
+                {{-- Fading Edges for smooth entry/exit --}}
+                <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent z-10"></div>
+                <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-gray-50 to-transparent z-10"></div>
+            </div>
         </div>
 
-        {{-- QUICK STATS / MENU --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <style>
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
 
-            {{-- PROFIL CARD --}}
-            <a href="/user/profile"
-                class="group p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-primary/50 flex flex-col items-center justify-center gap-4 text-center cursor-pointer relative overflow-hidden">
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .animate-marquee {
+                display: flex;
+                width: max-content;
+                animation: marquee 30s linear infinite;
+            }
+
+            .animate-marquee:hover {
+                animation-play-state: paused;
+            }
+        </style>
+
+        {{-- REVISED BANNER SECTION --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[450px]">
+            {{-- MAIN CAROUSEL (2/3 width) --}}
+            <div x-data="{ 
+                                                                                activeSlide: 0,
+                                                                                slides: [
+                                                                                    {
+                                                                                        title: 'Branding Politik & Personal Branding',
+                                                                                        desc: 'Bangun citra kepemimpinan yang kuat dan terpercaya untuk masa depan.',
+                                                                                        price: 'Layanan Eksklusif',
+                                                                                        discount: 'Konsultasi Sekarang',
+                                                                                        img: 'https://pin.it/3nyLwyYsc',
+                                                                                        cta: 'Pelajari Selengkapnya',
+                                                                                        features: ['Strategi Kemenangan', 'Manajemen Reputasi']
+                                                                                    },
+                                                                                    {
+                                                                                        title: 'Gaya Hidup & Fashion Branding',
+                                                                                        desc: 'Ciptakan tren dan koneksi emosional melalui identitas visual yang estetik.',
+                                                                                        price: 'Mulai dari Rp5jt',
+                                                                                        discount: 'Diskon 15%',
+                                                                                        img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200',
+                                                                                        cta: 'Lihat Portfolio',
+                                                                                        features: ['Visual Lookbook', 'Influencer Kit']
+                                                                                    },
+                                                                                    {
+                                                                                        title: 'Kuliner & F&B Branding',
+                                                                                        desc: 'Buat brand kuliner Anda menggugah selera dengan kemasan dan identitas ikonik.',
+                                                                                        price: 'Paket Komplit',
+                                                                                        discount: 'Rp2.500.200',
+                                                                                        img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200',
+                                                                                        cta: 'Pesan Paket',
+                                                                                        features: ['Food Photography', 'Menu Design']
+                                                                                    },
+                                                                                    {
+                                                                                        title: 'Gaming & E-Sports Branding',
+                                                                                        desc: 'Tampil dominan di dunia digital dengan identitas gaming yang dinamis.',
+                                                                                        price: 'Streamer Pack',
+                                                                                        discount: 'Mulai Rp850rb',
+                                                                                        img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200',
+                                                                                        cta: 'Cek Layanan',
+                                                                                        features: ['Overlay Custom', 'Motion Graphics']
+                                                                                    }
+                                                                                ],
+                                                                                next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },
+                                                                                prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length },
+                                                                                startAutoplay() { setInterval(() => this.next(), 6000) }
+                                                                            }" x-init="startAutoplay()"
+                class="lg:col-span-2 relative rounded-3xl overflow-hidden group h-80 lg:h-full bg-gray-100 shadow-sm border border-gray-100">
+
+                {{-- Slides --}}
+                <template x-for="(slide, index) in slides" :key="index">
+                    <div x-show="activeSlide === index" x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100 transform translate-x-0"
+                        x-transition:leave-end="opacity-0 transform -translate-x-4" class="absolute inset-0">
+                        <img :src="slide.img" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent">
+                        </div>
+
+                        <div class="relative h-full flex flex-col justify-center px-8 lg:px-16 text-white space-y-4">
+                            <span
+                                class="px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-primary-400 border border-primary/30 w-fit">
+                                Branding Scope
+                            </span>
+                            <h2 class="text-3xl lg:text-5xl font-black max-w-lg leading-tight" x-text="slide.title"></h2>
+                            <p class="text-sm lg:text-base text-gray-300 max-w-md opacity-90" x-text="slide.desc"></p>
+
+                            <div class="flex items-center gap-6 py-2">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider opacity-80"
+                                        x-text="slide.features[0]"></span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider opacity-80"
+                                        x-text="slide.features[1]"></span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-0">
+                                <p class="text-xs lg:text-sm text-gray-400 font-medium opacity-70" x-text="slide.price"></p>
+                                <p class="text-2xl lg:text-3xl font-black text-accent-400" x-text="slide.discount"></p>
+                            </div>
+
+                            <a href="#"
+                                class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 rounded-xl font-bold text-sm transition-all hover:bg-primary hover:text-white group/btn w-fit">
+                                <span x-text="slide.cta"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </template>
+
+                {{-- Navigation Buttons --}}
                 <div
-                    class="p-4 bg-primary/10 text-primary rounded-full group-hover:bg-primary group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8">
-                        <path fill-rule="evenodd"
-                            d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z"
-                            clip-rule="evenodd" />
-                    </svg>
+                    class="absolute inset-x-0 top-1/2 -translate-y-1/2 px-4 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <button @click="prev()"
+                        class="p-2 lg:p-3 bg-white/10 backdrop-blur-md rounded-full text-white pointer-events-auto hover:bg-white/30 transition-colors border border-white/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button @click="next()"
+                        class="p-2 lg:p-3 bg-white/10 backdrop-blur-md rounded-full text-white pointer-events-auto hover:bg-white/30 transition-colors border border-white/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
                 </div>
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-primary transition-colors">Profil Saya</h3>
-                    <p class="text-sm text-gray-500 mt-1">Update informasi & preferensi</p>
-                </div>
-                <div class="absolute right-6 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
-                </div>
-            </a>
 
-            {{-- PESANAN SAYA CARD --}}
-            <a href="/user/pesanan"
-                class="group p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-primary/50 flex flex-col items-center justify-center gap-4 text-center cursor-pointer relative overflow-hidden">
+                {{-- Indicators --}}
+                <div class="absolute bottom-6 right-8 flex gap-2">
+                    <template x-for="(slide, index) in slides" :key="index">
+                        <button @click="activeSlide = index"
+                            :class="activeSlide === index ? 'bg-primary w-8' : 'bg-white/40 w-2'"
+                            class="h-1.5 rounded-full transition-all duration-300"></button>
+                    </template>
+                </div>
+            </div>
+
+            {{-- SUB BANNERS (2x2 Grid) --}}
+            <div class="grid grid-cols-2 gap-4 lg:col-span-1 h-auto lg:h-full">
+                <!-- Banner 1: Berita -->
                 <div
-                    class="p-4 bg-green-50 text-green-600 rounded-full group-hover:bg-green-600 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8">
-                        <path fill-rule="evenodd"
-                            d="M6 5v1H4.667a1.75 1.75 0 0 0-1.743 1.598l-.826 9.5A1.75 1.75 0 0 0 3.84 19H16.16a1.75 1.75 0 0 0 1.743-1.902l-.826-9.5A1.75 1.75 0 0 0 15.333 6H14V5a4 4 0 0 0-8 0Zm4-2.5A2.5 2.5 0 0 0 7.5 5v1h5V5A2.5 2.5 0 0 0 10 2.5ZM7.5 10a2.5 2.5 0 0 0 5 0V8.75a.75.75 0 0 1 1.5 0V10a4 4 0 0 1-8 0V8.75a.75.75 0 0 1 1.5 0V10Z"
-                            clip-rule="evenodd" />
-                    </svg>
+                    class="relative rounded-2xl overflow-hidden group cursor-pointer bg-slate-900 aspect-square lg:aspect-auto">
+                    <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-50">
+                    <div class="absolute inset-0 bg-primary/20 group-hover:bg-primary/40 transition-colors"></div>
+                    <div class="relative p-4 lg:p-5 text-white h-full flex flex-col justify-end">
+                        <span class="text-[8px] font-black uppercase tracking-widest text-primary-300 mb-1">Media
+                            Services</span>
+                        <p class="text-xs lg:text-sm font-black leading-tight">Pembuatan Berita & Press Release</p>
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-accent-400">Pesan Sekarang</span>
+                            <div
+                                class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-white group-hover:text-primary transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-primary transition-colors">Pesanan Saya</h3>
-                    <p class="text-sm text-gray-500 mt-1">Lihat status & riwayat order</p>
-                </div>
-                <div class="absolute right-6 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
-                </div>
-            </a>
-
-            {{-- KERANJANG CARD --}}
-            <a href="/user/keranjang"
-                class="group p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-yellow-400 flex flex-col items-center justify-center gap-4 text-center cursor-pointer relative overflow-hidden">
+                <!-- Banner 2: Branding Sosmed -->
                 <div
-                    class="p-4 bg-yellow-50 text-yellow-600 rounded-full group-hover:bg-yellow-400 group-hover:text-gray-900 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8">
-                        <path
-                            d="M1 1.75A.75.75 0 0 1 1.75 1h1.628a1.75 1.75 0 0 1 1.734 1.51L5.18 3a65.25 65.25 0 0 1 13.36 1.412.75.75 0 0 1 .58.875 48.645 48.645 0 0 1-1.618 6.2.75.75 0 0 1-.712.513H6a2.503 2.503 0 0 0-2.292 1.5H17.25a.75.75 0 0 1 0 1.5H2.76a.75.75 0 0 1-.748-.807 4.002 4.002 0 0 1 2.716-3.486L3.626 2.716a.25.25 0 0 0-.248-.216H1.75A.75.75 0 0 1 1 1.75ZM6 17.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM15.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-                    </svg>
+                    class="relative rounded-2xl overflow-hidden group cursor-pointer bg-purple-900 aspect-square lg:aspect-auto">
+                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=600"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-50">
+                    <div class="absolute inset-0 bg-purple-500/20 group-hover:bg-purple-500/40 transition-colors"></div>
+                    <div class="relative p-4 lg:p-5 text-white h-full flex flex-col justify-end">
+                        <span class="text-[8px] font-black uppercase tracking-widest text-purple-300 mb-1">Content
+                            Strategy</span>
+                        <p class="text-xs lg:text-sm font-black leading-tight">Branding & Desain Sosial Media</p>
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-yellow-400">Pesan Sekarang</span>
+                            <div
+                                class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-white group-hover:text-purple-600 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-yellow-600 transition-colors">Keranjang
-                        Belanja</h3>
-                    <p class="text-sm text-gray-500 mt-1">Lihat layanan tersimpan</p>
+                <!-- Banner 3: Ads Digital -->
+                <div
+                    class="relative rounded-2xl overflow-hidden group cursor-pointer bg-emerald-900 aspect-square lg:aspect-auto">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-50">
+                    <div class="absolute inset-0 bg-emerald-500/20 group-hover:bg-emerald-500/40 transition-colors"></div>
+                    <div class="relative p-4 lg:p-5 text-white h-full flex flex-col justify-end">
+                        <span class="text-[8px] font-black uppercase tracking-widest text-emerald-300 mb-1">Growth
+                            Marketing</span>
+                        <p class="text-xs lg:text-sm font-black leading-tight">Iklan & Ads Digital Performa</p>
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-accent-400">Optimasi Ads</span>
+                            <div
+                                class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-white group-hover:text-emerald-600 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="absolute right-6 opacity-0 group-hover:opacity-100 transition-opacity text-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
+                <!-- Banner 4: Consulting -->
+                <div
+                    class="relative rounded-2xl overflow-hidden group cursor-pointer bg-amber-900 aspect-square lg:aspect-auto">
+                    <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=600"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-50">
+                    <div class="absolute inset-0 bg-amber-500/20 group-hover:bg-amber-500/40 transition-colors"></div>
+                    <div class="relative p-4 lg:p-5 text-white h-full flex flex-col justify-end">
+                        <span class="text-[8px] font-black uppercase tracking-widest text-amber-300 mb-1">Creative
+                            Advisory</span>
+                        <p class="text-xs lg:text-sm font-black leading-tight">Consulting Konten Kreator</p>
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-yellow-400">Konsultasi Privat</span>
+                            <div
+                                class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-white group-hover:text-amber-600 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </a>
+            </div>
+        </div>
 
+        {{-- SEARCH HERO SECTION (Fiverr Style) --}}
+        <div class="pt-16 pb-8 md:pt-24 md:pb-12 flex flex-col items-center justify-center text-center space-y-10">
+            <h1 class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight max-w-4xl px-4 leading-[1.1]">
+                Hanya satu pencarian menuju <span class="text-primary italic">branding terbaik</span> Anda
+            </h1>
+
+            <div class="w-full max-w-3xl px-4">
+                <div
+                    class="relative flex items-center bg-white rounded-full shadow-2xl border border-gray-100 p-2 focus-within:ring-4 focus-within:ring-primary/10 transition-all">
+                    <div class="pl-6 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" placeholder="Cari talenta di berbagai kategori..."
+                        class="flex-1 bg-transparent border-none focus:ring-0 text-gray-700 px-4 py-2 text-lg md:text-xl font-medium">
+                    <button
+                        class="bg-gray-900 text-white px-6 md:px-10 py-3 md:py-4 rounded-full font-black text-sm md:text-base hover:bg-gray-800 transition-all flex items-center gap-2 whitespace-nowrap group">
+                        Cari sekarang
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 px-4 overflow-hidden">
+                <p class="text-gray-400 font-bold text-sm w-full md:w-auto mb-2 md:mb-0">Branding Kami</p>
+                <a href="#"
+                    class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md">Politik</a>
+                <a href="#"
+                    class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md">Gaming</a>
+                <a href="#"
+                    class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md">Lifestyle</a>
+                <a href="#"
+                    class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md flex items-center gap-2">
+                    Kuliner & FnB
+                    <span
+                        class="bg-gray-900 text-white text-[9px] px-1.5 py-0.5 rounded-md uppercase leading-none font-black italic tracking-tighter">Trending</span>
+                </a>
+            </div>
         </div>
 
         {{-- MARKETPLACE SECTION (Merged from Order Layanan) --}}
-        <div class="pt-8 border-t border-gray-100 space-y-10">
+        <div class="pt-2 border-t border-gray-100 space-y-10">
 
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800">Layanan Populer</h2>
                     <p class="text-gray-500">Layanan pilihan untuk percepat pertumbuhan bisnis Anda.</p>
                 </div>
-
-                {{-- SEARCH (Moved to top of marketplace section) --}}
-                <div
-                    class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-200 w-full md:w-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input type="text" placeholder="Cari layanan..."
-                        class="bg-transparent border-none focus:ring-0 text-sm w-full md:w-64">
-                    <button class="text-sm font-semibold text-primary hover:text-green-700">Cari</button>
-                </div>
             </div>
 
             {{-- HORIZONTAL SCROLL SERVICES --}}
             <div x-data="{ 
-                                scrollNext() { this.$refs.container.scrollBy({ left: 300, behavior: 'smooth' }); },
-                                scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); }
-                            }" class="relative group">
+                                                                                                                                    scrollNext() { 
+                                                                                                                                        const container = this.$refs.container;
+                                                                                                                                        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+                                                                                                                                            container.scrollTo({ left: 0, behavior: 'smooth' });
+                                                                                                                                        } else {
+                                                                                                                                            container.scrollBy({ left: 300, behavior: 'smooth' });
+                                                                                                                                        }
+                                                                                                                                    },
+                                                                                                                                    scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); },
+                                                                                                                                    autoplayInterval: null,
+                                                                                                                                    startAutoplay() {
+                                                                                                                                        this.autoplayInterval = setInterval(() => {
+                                                                                                                                            this.scrollNext();
+                                                                                                                                        }, 4000);
+                                                                                                                                    },
+                                                                                                                                    stopAutoplay() {
+                                                                                                                                        if (this.autoplayInterval) {
+                                                                                                                                            clearInterval(this.autoplayInterval);
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                }"
+                x-init="startAutoplay()" @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" class="relative group">
 
                 {{-- Navigation Buttons --}}
                 <button @click="scrollPrev()"
@@ -149,82 +428,61 @@
 
                     @foreach($popularServices as $service)
                         <div
-                            class="flex-none w-64 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                            <div class="aspect-square bg-gray-50 relative">
-                                <!-- Real Thumbnail -->
+                            class="group flex-none w-72 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col relative">
+                            <div class="aspect-[3/2] bg-gray-50 relative overflow-hidden">
                                 <img src="{{ $service->thumbnail ?: 'https://ui-avatars.com/api/?name=' . urlencode($service->nama_layanan) . '&background=random' }}"
-                                    class="w-full h-full object-cover">
-                                <!-- Discount badge handled dynamically if exists, else removed -->
+                                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
                             </div>
-                            <div class="p-4 space-y-2">
-                                <div class="flex items-center gap-1">
-                                    <span class="text-sm font-bold text-gray-900">Rp
-                                        {{ number_format($service->harga, 0, ',', '.') }}</span>
-                                    <!-- Strike price logic if needed -->
+
+                            <div class="p-4 flex flex-col flex-1 space-y-3">
+                                {{-- Mitra Info --}}
+                                <div class="flex items-center gap-2">
+                                    <img src="{{ $service->mitra->foto_profil ? asset('uploads/profile_photos/' . $service->mitra->foto_profil) : 'https://ui-avatars.com/api/?name=' . urlencode($service->mitra->nama_mitra) . '&background=random' }}"
+                                        class="w-6 h-6 rounded-full object-cover border border-gray-100">
+                                    <span
+                                        class="text-xs font-bold text-gray-700 hover:text-primary transition-colors">{{ $service->mitra->nama_mitra }}</span>
                                 </div>
-                                <h4 class="text-sm text-gray-700 leading-snug line-clamp-2">{{ $service->nama_layanan }}</h4>
-                                <a href="{{ route('user.layanan.show', $service->id) }}"
-                                    class="text-xs text-primary font-bold hover:underline mt-2 block">Lihat Detail</a>
+
+                                <h4
+                                    class="text-sm font-bold text-gray-800 leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                                    {{ $service->nama_layanan }}
+                                </h4>
+
+                                {{-- Rating Simulation --}}
+                                <div class="flex items-center gap-1 mt-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-yellow-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <span class="text-xs font-black text-gray-900">5.0</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">(24)</span>
+                                </div>
+
+                                <div class="pt-2 border-t border-gray-50 flex items-center justify-between">
+                                    <span
+                                        class="text-[10px] items-center uppercase font-black tracking-widest text-gray-400">Mulai
+                                        dari</span>
+                                    <span class="text-sm font-black text-gray-900">Rp
+                                        {{ number_format($service->harga, 0, ',', '.') }}</span>
+                                </div>
                             </div>
+                            <a href="{{ route('user.layanan.show', $service->id) }}" class="absolute inset-0 z-10"></a>
                         </div>
                     @endforeach
 
                 </div>
             </div>
 
-            {{-- PROMOTIONAL BANNER --}}
-            <a href="/user/jaringan/jaringan1" class="block relative w-full h-32 md:h-40 rounded-3xl overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-r from-teal-500 via-teal-400 to-transparent z-10"></div>
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200"
-                    class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
-                <div class="relative z-20 h-full flex items-center justify-between px-8 md:px-12">
-                    <div class="text-white space-y-1">
-                        <h3 class="text-lg md:text-2xl font-black">Tetap Kreatif dan Stylish</h3>
-                        <p class="text-sm md:text-base text-gray-300 font-medium">Layanan Digital dari Jaringan Alpha</p>
-                    </div>
-                    <div class="flex items-center gap-4 md:gap-10">
-                        <div class="text-center">
-                            <div class="text-[10px] md:text-xs text-gray-400 line-through">Rp249.000</div>
-                            <div class="text-xl md:text-4xl font-black text-yellow-400">Rp165.700</div>
-                        </div>
-                        <div
-                            class="px-4 py-2 md:px-6 md:py-3 border border-white/30 rounded-xl text-white text-xs md:text-sm font-bold hover:bg-white hover:text-gray-900 transition-all">
-                            Cek Sekarang
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            {{-- JARINGAN LIST (Original Marketplace) --}}
-            <div class="space-y-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Marketplace Layanan</h2>
-                    <p class="text-gray-500">Temukan jaringan terbaik untuk kebutuhan branding Anda.</p>
-                </div>
-
-                {{-- GRID LAYANAN (MANUAL / HARDCODED CARDS) --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                    @foreach($mitraList as $mitra)
-                        {{-- CARD: {{ $mitra->nama_mitra }} --}}
-                        <a href="{{ route('user.mitra', $mitra->id) }}"
-                            class="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-                            <div class="h-40 bg-gray-100 flex items-center justify-center p-6 relative overflow-hidden">
-                                <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                </div>
-                                <!-- Placeholder or Mitra Image -->
-                                @if($mitra->foto_profil)
-                                    <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}"
-                                        alt="{{ $mitra->nama_mitra }}"
-                                        class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300">
-                                @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra) }}&background=random&size=200"
-                                        alt="{{ $mitra->nama_mitra }}"
-                                        class="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-300 mix-blend-multiply">
-                                @endif
-                            </div>
-                            <div class="px-4 pt-3 flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
+            {{-- JARINGAN LIST (Grouped by Mitra) --}}
+            <div class="space-y-12">
+                @foreach($mitraList as $mitra)
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-full bg-gray-100 overflow-hidden border-2 border-primary/10 shadow-sm">
                                     @if($mitra->foto_profil)
                                         <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}"
                                             class="w-full h-full object-cover">
@@ -233,26 +491,73 @@
                                             class="w-full h-full object-cover">
                                     @endif
                                 </div>
-                                <span class="text-xs font-semibold text-gray-700">{{ $mitra->nama_mitra }}</span>
-                            </div>
-                            <div class="p-4 flex flex-col flex-1">
-                                <h3 class="font-bold text-gray-800 group-hover:text-primary transition-colors">
-                                    {{ $mitra->deskripsi ?? 'Layanan Profesional' }}
-                                </h3>
-                                <div class="flex items-center gap-1 mb-3">
-                                    <span class="text-accent text-sm font-bold">★</span>
-                                    <span class="font-bold text-gray-800 text-sm">5.0</span>
-                                    <span class="text-gray-400 text-sm">(0)</span>
-                                </div>
-                                <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
-                                    <span class="text-xs text-gray-400 uppercase font-semibold">Lokasi</span>
-                                    <span class="text-gray-800 font-bold">{{ $mitra->kota ?? 'Indonesia' }}</span>
+                                <div>
+                                    <h3 class="font-black text-gray-900 text-lg leading-tight">{{ $mitra->nama_mitra }}</h3>
+                                    <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        {{ $mitra->kota ?? 'Indonesia' }}
+                                    </p>
                                 </div>
                             </div>
-                        </a>
-                    @endforeach
+                            <a href="{{ route('user.mitra', $mitra->id) }}"
+                                class="text-xs font-bold text-primary hover:text-primary-700 flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-lg transition-colors">
+                                Lihat Selengkapnya
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
 
-                </div>
+                        {{-- SERVICES GRID FOR THIS MITRA --}}
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                            @forelse($mitra->layanan->take(5) as $service)
+                                <div
+                                    class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative">
+                                    <div class="aspect-[3/2] bg-gray-50 flex items-center justify-center relative overflow-hidden">
+                                        <img src="{{ $service->thumbnail ?: 'https://ui-avatars.com/api/?name=' . urlencode($service->nama_layanan) . '&background=random' }}"
+                                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                    </div>
+                                    <div class="p-4 flex flex-col flex-1">
+                                        {{-- Title --}}
+                                        <h4
+                                            class="font-bold text-gray-800 text-[13px] line-clamp-2 group-hover:text-primary transition-colors leading-tight mb-2">
+                                            {{ $service->nama_layanan }}
+                                        </h4>
+
+                                        {{-- Rating --}}
+                                        <div class="flex items-center gap-1 mb-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-400"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                            <span class="text-[10px] font-black text-gray-900">5.0</span>
+                                        </div>
+
+                                        <div class="mt-auto pt-3 border-t border-gray-50 flex flex-col">
+                                            <span class="text-[9px] text-gray-400 font-black uppercase tracking-widest italic">Mulai
+                                                dari</span>
+                                            <span class="text-sm font-black text-gray-900">Rp
+                                                {{ number_format($service->harga, 0, ',', '.') }}</span>
+                                        </div>
+                                        <a href="{{ route('user.layanan.show', $service->id) }}" class="absolute inset-0 z-10"></a>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-span-full py-6 text-center text-gray-400 text-xs italic">
+                                    Belum ada layanan yang ditambahkan oleh mitra ini.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
 
