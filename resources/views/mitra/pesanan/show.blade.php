@@ -4,15 +4,15 @@
 
 @section('content')
     <div class="space-y-8" x-data="{ 
-                files: [],
-                addFiles(e) {
-                    const newFiles = Array.from(e.target.files);
-                    this.files = [...this.files, ...newFiles];
-                },
-                removeFile(index) {
-                    this.files = this.files.filter((_, i) => i !== index);
-                }
-            }">
+                        files: [],
+                        addFiles(e) {
+                            const newFiles = Array.from(e.target.files);
+                            this.files = [...this.files, ...newFiles];
+                        },
+                        removeFile(index) {
+                            this.files = this.files.filter((_, i) => i !== index);
+                        }
+                    }">
         {{-- BACK BUTTON & STATUS --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
@@ -26,7 +26,7 @@
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">Pesanan #{{ $order->order_number }}</h1>
                     <p class="text-sm text-gray-500 mt-0.5">Dipesan pada
-                        {{ is_string($order->created_at) ? $order->created_at : $order->created_at->format('d M Y, H:i') }}
+                        {{ is_string($order->created_at) ? $order->created_at : $order->created_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }}
                         WIB
                     </p>
                 </div>
@@ -82,7 +82,7 @@
                                 @endif
                             </p>
                             <p class="text-[10px] uppercase font-bold text-gray-400 mb-1">Bio User</p>
-                            <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap text-justify">
+                            <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-line text-justify">
                                 {{ $order->user->bio ?? 'Tidak ada bio.' }}
                             </p>
                         </div>
@@ -95,15 +95,73 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-4 border border-gray-100 rounded-xl">
-                                <p class="text-[10px] uppercase font-bold text-gray-400 mb-1">Layanan</p>
-                                <p class="text-sm font-bold text-gray-800">{{ $order->layanan->nama_layanan ?? 'N/A' }}</p>
-                            </div>
-                            <div class="p-4 border border-gray-100 rounded-xl">
-                                <p class="text-[10px] uppercase font-bold text-gray-400 mb-1">Status</p>
-                                <p class="text-sm font-bold text-gray-800 capitalize">{{ $order->status }}</p>
-                            </div>
+                        {{-- DETAIL ITEM PESANAN --}}
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                Rincian Item Pesanan
+                            </h4>
+                            @if($order->items && count($order->items) > 0)
+                                <div class="space-y-3">
+                                    @foreach($order->items as $item)
+                                        <div class="border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
+                                            {{-- Header: Nama Layanan --}}
+                                            <div class="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-2">
+                                                <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+                                                <span class="text-sm font-bold text-gray-800">
+                                                    {{ $item->layanan->nama_layanan ?? $order->layanan->nama_layanan ?? 'Layanan' }}
+                                                </span>
+                                            </div>
+                                            {{-- Grid: Tipe, Platform, Harga, Qty --}}
+                                            <div class="grid grid-cols-2 gap-px bg-gray-100">
+                                                <div class="bg-white px-4 py-2.5">
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Tipe / Paket</p>
+                                                    <p class="text-xs font-bold text-gray-700">{{ $item->jenis_layanan ?? '-' }}</p>
+                                                </div>
+                                                <div class="bg-white px-4 py-2.5">
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Platform / Kategori</p>
+                                                    <p class="text-xs font-bold text-gray-700">
+                                                        {{ $item->layanan->kategori ?? $order->layanan->kategori ?? '-' }}
+                                                    </p>
+                                                </div>
+                                                <div class="bg-white px-4 py-2.5">
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Harga Satuan</p>
+                                                    <p class="text-xs font-bold text-gray-700">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                                                </div>
+                                                <div class="bg-white px-4 py-2.5">
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Jumlah</p>
+                                                    <p class="text-xs font-bold text-gray-700">{{ $item->qty }} pcs</p>
+                                                </div>
+                                            </div>
+                                            {{-- Subtotal --}}
+                                            <div class="px-4 py-2.5 flex items-center justify-between bg-primary/5 border-t border-primary/10">
+                                                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subtotal</span>
+                                                <span class="text-sm font-black text-primary">Rp {{ number_format($item->harga * $item->qty, 0, ',', '.') }}</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                {{-- Fallback: show basic info from order --}}
+                                <div class="border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
+                                    <div class="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+                                        <span class="text-sm font-bold text-gray-800">{{ $order->layanan->nama_layanan ?? 'N/A' }}</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-px bg-gray-100">
+                                        <div class="bg-white px-4 py-2.5">
+                                            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Platform / Kategori</p>
+                                            <p class="text-xs font-bold text-gray-700">{{ $order->layanan->kategori ?? '-' }}</p>
+                                        </div>
+                                        <div class="bg-white px-4 py-2.5">
+                                            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Status</p>
+                                            <p class="text-xs font-bold text-gray-700 capitalize">{{ $order->status }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

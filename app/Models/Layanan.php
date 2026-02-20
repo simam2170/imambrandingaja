@@ -34,4 +34,9 @@ class Layanan extends Model
     {
         return $this->belongsTo(Mitra::class, 'mitra_id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'layanan_id');
+    }
 }

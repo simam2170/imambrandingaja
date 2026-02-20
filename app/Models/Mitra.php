@@ -47,4 +47,9 @@ class Mitra extends Authenticatable
     {
         return $this->hasMany(Order::class, 'mitra_id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'mitra_id');
+    }
 }

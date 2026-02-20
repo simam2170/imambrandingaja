@@ -27,10 +27,12 @@ class Order extends Model
         'metode_pembayaran',
         'expired_at',
         'catatan',
+        'reviewed_at',
     ];
 
     protected $casts = [
         'expired_at' => 'datetime',
+        'reviewed_at' => 'datetime',
     ];
 
     public function isExpired()
@@ -69,6 +71,11 @@ class Order extends Model
         return $this->hasOne(Payment::class, 'pesanan_id');
     }
 
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'order_id');
+    }
+
     /**
      * Get the timeline of the order.
      *
@@ -82,7 +89,7 @@ class Order extends Model
         $timeline[] = [
             'status' => 'Pesanan Dibuat',
             'desc' => 'Pesanan berhasil dibuat dan menunggu pembayaran.',
-            'time' => $this->created_at->format('d M H:i'),
+            'time' => $this->created_at->setTimezone('Asia/Jakarta')->format('d M H:i') . ' WIB',
             'active' => true,
         ];
 
@@ -92,7 +99,7 @@ class Order extends Model
             $timeline[] = [
                 'status' => 'Pembayaran Diupload',
                 'desc' => 'Bukti pembayaran telah diupload.',
-                'time' => $paymentTime ? $paymentTime->format('d M H:i') : '-',
+                'time' => $paymentTime ? $paymentTime->setTimezone('Asia/Jakarta')->format('d M H:i') . ' WIB' : '-',
                 'active' => true,
             ];
         }
@@ -102,7 +109,7 @@ class Order extends Model
             $timeline[] = [
                 'status' => 'Pesanan Diproses',
                 'desc' => 'Pesanan sedang dikerjakan oleh mitra.',
-                'time' => $this->updated_at->format('d M H:i'), // Approximation
+                'time' => $this->updated_at->setTimezone('Asia/Jakarta')->format('d M H:i') . ' WIB', // Approximation
                 'active' => true,
             ];
         }
@@ -112,7 +119,7 @@ class Order extends Model
             $timeline[] = [
                 'status' => 'Pesanan Selesai',
                 'desc' => 'Pesanan telah selesai dikerjakan.',
-                'time' => $this->updated_at->format('d M H:i'),
+                'time' => $this->updated_at->setTimezone('Asia/Jakarta')->format('d M H:i') . ' WIB',
                 'active' => true,
             ];
         }
@@ -122,7 +129,7 @@ class Order extends Model
             $timeline[] = [
                 'status' => 'Pesanan ' . ucfirst($this->status),
                 'desc' => 'Pesanan telah ' . $this->status . '.',
-                'time' => $this->updated_at->format('d M H:i'),
+                'time' => $this->updated_at->setTimezone('Asia/Jakarta')->format('d M H:i') . ' WIB',
                 'active' => true,
             ];
         }

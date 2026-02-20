@@ -90,9 +90,8 @@
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-gray-700">No. WhatsApp</label>
                             <div class="relative">
-                                <span class="absolute left-4 top-2.5 text-gray-500 font-medium">+62</span>
                                 <input type="tel" name="phone" value="{{ old('phone', $user->whatsapp) }}" {{ $isReadOnly ? 'readonly' : '' }}
-                                    class="w-full pl-12 pr-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 font-medium focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder-gray-400 {{ $isReadOnly ? 'bg-gray-50' : '' }}">
+                                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 font-medium focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder-gray-400 {{ $isReadOnly ? 'bg-gray-50' : '' }}">
                             </div>
                         </div>
 

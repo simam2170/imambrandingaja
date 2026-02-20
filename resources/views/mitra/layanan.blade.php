@@ -4,341 +4,341 @@
 
 @section('content')
     <div x-data="{ 
-            services: {{ json_encode($layanan) }},
-            openAddModal: false, 
-            openDetailModal: false,
-            selectedService: null,
-            step: 1,
-            newService: {
-                nama_layanan: '',
-                klasifikasi: '',
-                estimasi_hari: 1,
-                deskripsi: '',
-                thumbnail: '',
-                detail_klasifikasi: {
-                    info: {},
-                    tipe: [], // Fallback for non-platform specific
-                    platform_pricing: {} // New: { 'Instagram': [{nama:'', harga:''}], 'YouTube': [...] }
-                }
-            },
-            customInput: {},
-            showCustomInput: {},
-
-            klasifikasiList: [
-                { 
-                    key: 'berita', label: 'Berita', 
-                    icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'/></svg>`,
-                    color: 'from-blue-500 to-indigo-600',
-                    bgLight: 'bg-blue-50 border-blue-200 hover:border-blue-400',
-                    desc: 'Pembuatan konten berita, artikel, press release'
-                },
-                { 
-                    key: 'sosmed', label: 'Sosial Media',
-                    icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0h4a1 1 0 011 1v3a4 4 0 01-4 4h-1m-8 0H5a4 4 0 01-4-4V5a1 1 0 011-1h4m0 0V2m0 2h10M9 12v6m3-6v6m3-6v6'/></svg>`,
-                    color: 'from-pink-500 to-rose-600',
-                    bgLight: 'bg-pink-50 border-pink-200 hover:border-pink-400',
-                    desc: 'Manajemen akun, konten, dan pertumbuhan sosial media'
-                },
-                { 
-                    key: 'ads_digital', label: 'Ads Digital', 
-                    icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z'/><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z'/></svg>`,
-                    color: 'from-amber-500 to-orange-600',
-                    bgLight: 'bg-amber-50 border-amber-200 hover:border-amber-400',
-                    desc: 'Iklan digital di Google Ads, Meta Ads, TikTok Ads'
-                },
-                { 
-                    key: 'consulting', label: 'Consulting', 
-                    icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'/></svg>`,
-                    color: 'from-emerald-500 to-teal-600',
-                    bgLight: 'bg-emerald-50 border-emerald-200 hover:border-emerald-400',
-                    desc: 'Konsultasi branding, marketing, dan strategi konten'
-                }
-            ],
-
-            // Field definitions per classification
-            fieldDefs: {
-                'berita': {
-                    anchorField: 'platform_target',
-                    infoFields: [
-                        { key: 'platform_target', label: 'Platform Target', options: ['Portal Berita Online', 'Media Nasional', 'Media Lokal', 'Blog / Website'] },
-                        { key: 'jenis_konten', label: 'Jenis Konten', options: ['Artikel', 'Press Release', 'Advertorial', 'Listicle'] }
-                    ],
-                    tipeLabel: 'Tipe Penayangan'
-                },
-                'sosmed': {
-                    anchorField: 'platform',
-                    infoFields: [
-                        { key: 'platform', label: 'Platform', options: ['Instagram', 'TikTok', 'YouTube', 'Facebook', 'Twitter/X', 'LinkedIn'] },
-                        { key: 'jenis_layanan', label: 'Jenis Layanan', options: ['Pembuatan Konten', 'Manajemen Akun', 'Growth / Pertumbuhan', 'Content Strategy'] }
-                    ],
-                    tipeLabel: 'Tipe Kontrak'
-                },
-                'ads_digital': {
-                    anchorField: 'platform_iklan',
-                    infoFields: [
-                        { key: 'platform_iklan', label: 'Platform Iklan', options: ['Google Ads', 'Meta Ads (Facebook/Instagram)', 'TikTok Ads', 'LinkedIn Ads', 'Twitter/X Ads'] },
-                        { key: 'jenis_campaign', label: 'Jenis Campaign', options: ['Brand Awareness', 'Conversion', 'Retargeting', 'Lead Generation'] }
-                    ],
-                    tipeLabel: 'Tipe Campaign'
-                },
-                'consulting': {
-                    anchorField: 'bidang_konsultasi',
-                    infoFields: [
-                        { key: 'bidang_konsultasi', label: 'Bidang Konsultasi', options: ['Branding', 'Marketing Strategy', 'Content Strategy', 'Social Media Strategy', 'Business Development'] },
-                        { key: 'format', label: 'Format Konsultasi', options: ['Online (Video Call)', 'Offline (Tatap Muka)', 'Hybrid'] }
-                    ],
-                    tipeLabel: 'Tipe Konsultasi'
-                }
-            },
-
-            getKlasifikasiLabel(key) {
-                const item = this.klasifikasiList.find(k => k.key === key);
-                return item ? item.label : key;
-            },
-
-            getKlasifikasiBadgeClass(key) {
-                const map = {
-                    'berita': 'bg-blue-100 text-blue-700',
-                    'sosmed': 'bg-pink-100 text-pink-700',
-                    'ads_digital': 'bg-amber-100 text-amber-700',
-                    'consulting': 'bg-emerald-100 text-emerald-700'
-                };
-                return map[key] || 'bg-gray-100 text-gray-600';
-            },
-
-            selectKlasifikasi(key) {
-                this.newService.klasifikasi = key;
-                const def = this.fieldDefs[key];
-                const info = {};
-                (def.infoFields || []).forEach(f => { info[f.key] = []; });
-                this.newService.detail_klasifikasi = {
-                    info: info,
-                    tipe: [],
-                    platform_pricing: {}
-                };
-                this.customInput = {};
-                this.showCustomInput = {};
-                this.step = 2;
-            },
-
-            toggleInfoTag(fieldKey, value) {
-                const arr = this.newService.detail_klasifikasi.info[fieldKey];
-                const idx = arr.indexOf(value);
-                const anchorField = this.fieldDefs[this.newService.klasifikasi]?.anchorField;
-
-                if (idx >= 0) {
-                    arr.splice(idx, 1);
-                    // If this is anchor field (platform), remove its pricing block
-                    if (fieldKey === anchorField) {
-                        delete this.newService.detail_klasifikasi.platform_pricing[value];
-                    }
-                } else {
-                    arr.push(value);
-                    // If this is anchor field, initialize its pricing block
-                    if (fieldKey === anchorField) {
-                        this.newService.detail_klasifikasi.platform_pricing[value] = [{ nama: '', harga: '' }];
-                    }
-                }
-            },
-
-            isInfoSelected(fieldKey, value) {
-                return (this.newService.detail_klasifikasi.info[fieldKey] || []).includes(value);
-            },
-
-            addCustomInfo(fieldKey) {
-                const val = (this.customInput[fieldKey] || '').trim();
-                if (!val) return;
-                if (!this.newService.detail_klasifikasi.info[fieldKey].includes(val)) {
-                    this.newService.detail_klasifikasi.info[fieldKey].push(val);
-
-                    // Handle pricing block for custom anchor value
-                    const anchorField = this.fieldDefs[this.newService.klasifikasi]?.anchorField;
-                    if (fieldKey === anchorField) {
-                        this.newService.detail_klasifikasi.platform_pricing[val] = [{ nama: '', harga: '' }];
-                    }
-                }
-                this.customInput[fieldKey] = '';
-                this.showCustomInput[fieldKey] = false;
-            },
-
-            addTipe(platform = null) {
-                if (platform) {
-                    this.newService.detail_klasifikasi.platform_pricing[platform].push({ nama: '', harga: '' });
-                } else {
-                    this.newService.detail_klasifikasi.tipe.push({ nama: '', harga: '' });
-                }
-            },
-
-            removeTipe(index, platform = null) {
-                if (platform) {
-                    this.newService.detail_klasifikasi.platform_pricing[platform].splice(index, 1);
-                } else {
-                    this.newService.detail_klasifikasi.tipe.splice(index, 1);
-                }
-            },
-
-            async addService() {
-                if (!this.newService.nama_layanan || !this.newService.klasifikasi) return;
-
-                // Calculate base harga from minimum of all prices
-                let prices = [];
-
-                // From regular tipe
-                this.newService.detail_klasifikasi.tipe.forEach(t => {
-                    if (parseFloat(t.harga) > 0) prices.push(parseFloat(t.harga));
-                });
-
-                // From platform specific pricing
-                Object.values(this.newService.detail_klasifikasi.platform_pricing).forEach(list => {
-                    list.forEach(t => {
-                        if (parseFloat(t.harga) > 0) prices.push(parseFloat(t.harga));
-                    });
-                });
-
-                const baseHarga = prices.length > 0 ? Math.min(...prices) : 0;
-
-                try {
-                    const formData = new FormData();
-                    formData.append('nama_layanan', this.newService.nama_layanan);
-                    formData.append('klasifikasi', this.newService.klasifikasi);
-                    formData.append('harga', baseHarga);
-                    formData.append('estimasi_hari', this.newService.estimasi_hari);
-                    formData.append('deskripsi', this.newService.deskripsi);
-
-                    const fileInput = document.getElementById('thumbnail_file');
-                    if (fileInput && fileInput.files.length > 0) {
-                        formData.append('thumbnail', fileInput.files[0]);
-                    } else if (this.newService.thumbnail) {
-                        formData.append('thumbnail_url', this.newService.thumbnail);
-                    }
-
-                    // Append info fields
-                    Object.entries(this.newService.detail_klasifikasi.info).forEach(([key, values]) => {
-                        values.forEach((val, i) => {
-                            formData.append(`detail_klasifikasi[info][${key}][${i}]`, val);
-                        });
-                    });
-
-                    // Append platform specific pricing entries
-                    Object.entries(this.newService.detail_klasifikasi.platform_pricing).forEach(([platform, list]) => {
-                        list.forEach((tipe, i) => {
-                            formData.append(`detail_klasifikasi[platform_pricing][${platform}][${i}][nama]`, tipe.nama);
-                            formData.append(`detail_klasifikasi[platform_pricing][${platform}][${i}][harga]`, tipe.harga);
-                        });
-                    });
-
-                    // Append regular tipe entries (if any)
-                    this.newService.detail_klasifikasi.tipe.forEach((tipe, i) => {
-                        formData.append(`detail_klasifikasi[tipe][${i}][nama]`, tipe.nama);
-                        formData.append(`detail_klasifikasi[tipe][${i}][harga]`, tipe.harga);
-                    });
-
-                    const response = await fetch('{{ route('mitra.layanan.store') }}', {
-                        method: 'POST',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                        body: formData
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        alert(data.message || 'Gagal menambahkan layanan');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan koneksi');
-                }
-            },
-
-            resetForm() {
-                this.step = 1;
-                this.newService = {
+                services: {{ json_encode($layanan) }},
+                openAddModal: false, 
+                openDetailModal: false,
+                selectedService: null,
+                step: 1,
+                newService: {
                     nama_layanan: '',
                     klasifikasi: '',
                     estimasi_hari: 1,
                     deskripsi: '',
                     thumbnail: '',
-                    detail_klasifikasi: { info: {}, tipe: [], platform_pricing: {} }
-                };
-                this.customInput = {};
-                this.showCustomInput = {};
-            },
+                    detail_klasifikasi: {
+                        info: {},
+                        tipe: [], // Fallback for non-platform specific
+                        platform_pricing: {} // New: { 'Instagram': [{nama:'', harga:''}], 'YouTube': [...] }
+                    }
+                },
+                customInput: {},
+                showCustomInput: {},
 
-            formatRupiah(val) {
-                return 'Rp ' + new Intl.NumberFormat('id-ID').format(val);
-            },
+                klasifikasiList: [
+                    { 
+                        key: 'berita', label: 'Berita', 
+                        icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'/></svg>`,
+                        color: 'from-blue-500 to-indigo-600',
+                        bgLight: 'bg-blue-50 border-blue-200 hover:border-blue-400',
+                        desc: 'Pembuatan konten berita, artikel, press release'
+                    },
+                    { 
+                        key: 'sosmed', label: 'Sosial Media',
+                        icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0h4a1 1 0 011 1v3a4 4 0 01-4 4h-1m-8 0H5a4 4 0 01-4-4V5a1 1 0 011-1h4m0 0V2m0 2h10M9 12v6m3-6v6m3-6v6'/></svg>`,
+                        color: 'from-pink-500 to-rose-600',
+                        bgLight: 'bg-pink-50 border-pink-200 hover:border-pink-400',
+                        desc: 'Manajemen akun, konten, dan pertumbuhan sosial media'
+                    },
+                    { 
+                        key: 'ads_digital', label: 'Ads Digital', 
+                        icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z'/><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z'/></svg>`,
+                        color: 'from-amber-500 to-orange-600',
+                        bgLight: 'bg-amber-50 border-amber-200 hover:border-amber-400',
+                        desc: 'Iklan digital di Google Ads, Meta Ads, TikTok Ads'
+                    },
+                    { 
+                        key: 'consulting', label: 'Consulting', 
+                        icon: `<svg xmlns='http://www.w3.org/2000/svg' class='h-8 w-8' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'/></svg>`,
+                        color: 'from-emerald-500 to-teal-600',
+                        bgLight: 'bg-emerald-50 border-emerald-200 hover:border-emerald-400',
+                        desc: 'Konsultasi branding, marketing, dan strategi konten'
+                    }
+                ],
 
-            getMinHarga(service) {
-                const dk = service.detail_klasifikasi;
-                if (!dk) return service.harga || 0;
+                // Field definitions per classification
+                fieldDefs: {
+                    'berita': {
+                        anchorField: 'platform_target',
+                        infoFields: [
+                            { key: 'platform_target', label: 'Platform Target', options: ['Portal Berita Online', 'Media Nasional', 'Media Lokal', 'Blog / Website'] },
+                            { key: 'jenis_konten', label: 'Jenis Konten', options: ['Artikel', 'Press Release', 'Advertorial', 'Listicle'] }
+                        ],
+                        tipeLabel: 'Tipe Penayangan'
+                    },
+                    'sosmed': {
+                        anchorField: 'platform',
+                        infoFields: [
+                            { key: 'platform', label: 'Platform', options: ['Instagram', 'TikTok', 'YouTube', 'Facebook', 'Twitter/X', 'LinkedIn'] },
+                            { key: 'jenis_layanan', label: 'Jenis Layanan', options: ['Pembuatan Konten', 'Manajemen Akun', 'Growth / Pertumbuhan', 'Content Strategy'] }
+                        ],
+                        tipeLabel: 'Tipe Kontrak'
+                    },
+                    'ads_digital': {
+                        anchorField: 'platform_iklan',
+                        infoFields: [
+                            { key: 'platform_iklan', label: 'Platform Iklan', options: ['Google Ads', 'Meta Ads (Facebook/Instagram)', 'TikTok Ads', 'LinkedIn Ads', 'Twitter/X Ads'] },
+                            { key: 'jenis_campaign', label: 'Jenis Campaign', options: ['Brand Awareness', 'Conversion', 'Retargeting', 'Lead Generation'] }
+                        ],
+                        tipeLabel: 'Tipe Campaign'
+                    },
+                    'consulting': {
+                        anchorField: 'bidang_konsultasi',
+                        infoFields: [
+                            { key: 'bidang_konsultasi', label: 'Bidang Konsultasi', options: ['Branding', 'Marketing Strategy', 'Content Strategy', 'Social Media Strategy', 'Business Development'] },
+                            { key: 'format', label: 'Format Konsultasi', options: ['Online (Video Call)', 'Offline (Tatap Muka)', 'Hybrid'] }
+                        ],
+                        tipeLabel: 'Tipe Konsultasi'
+                    }
+                },
 
-                let prices = [];
-                if (dk.tipe && Array.isArray(dk.tipe)) {
-                    dk.tipe.forEach(t => {
+                getKlasifikasiLabel(key) {
+                    const item = this.klasifikasiList.find(k => k.key === key);
+                    return item ? item.label : key;
+                },
+
+                getKlasifikasiBadgeClass(key) {
+                    const map = {
+                        'berita': 'bg-blue-100 text-blue-700',
+                        'sosmed': 'bg-pink-100 text-pink-700',
+                        'ads_digital': 'bg-amber-100 text-amber-700',
+                        'consulting': 'bg-emerald-100 text-emerald-700'
+                    };
+                    return map[key] || 'bg-gray-100 text-gray-600';
+                },
+
+                selectKlasifikasi(key) {
+                    this.newService.klasifikasi = key;
+                    const def = this.fieldDefs[key];
+                    const info = {};
+                    (def.infoFields || []).forEach(f => { info[f.key] = []; });
+                    this.newService.detail_klasifikasi = {
+                        info: info,
+                        tipe: [],
+                        platform_pricing: {}
+                    };
+                    this.customInput = {};
+                    this.showCustomInput = {};
+                    this.step = 2;
+                },
+
+                toggleInfoTag(fieldKey, value) {
+                    const arr = this.newService.detail_klasifikasi.info[fieldKey];
+                    const idx = arr.indexOf(value);
+                    const anchorField = this.fieldDefs[this.newService.klasifikasi]?.anchorField;
+
+                    if (idx >= 0) {
+                        arr.splice(idx, 1);
+                        // If this is anchor field (platform), remove its pricing block
+                        if (fieldKey === anchorField) {
+                            delete this.newService.detail_klasifikasi.platform_pricing[value];
+                        }
+                    } else {
+                        arr.push(value);
+                        // If this is anchor field, initialize its pricing block
+                        if (fieldKey === anchorField) {
+                            this.newService.detail_klasifikasi.platform_pricing[value] = [{ nama: '', harga: '' }];
+                        }
+                    }
+                },
+
+                isInfoSelected(fieldKey, value) {
+                    return (this.newService.detail_klasifikasi.info[fieldKey] || []).includes(value);
+                },
+
+                addCustomInfo(fieldKey) {
+                    const val = (this.customInput[fieldKey] || '').trim();
+                    if (!val) return;
+                    if (!this.newService.detail_klasifikasi.info[fieldKey].includes(val)) {
+                        this.newService.detail_klasifikasi.info[fieldKey].push(val);
+
+                        // Handle pricing block for custom anchor value
+                        const anchorField = this.fieldDefs[this.newService.klasifikasi]?.anchorField;
+                        if (fieldKey === anchorField) {
+                            this.newService.detail_klasifikasi.platform_pricing[val] = [{ nama: '', harga: '' }];
+                        }
+                    }
+                    this.customInput[fieldKey] = '';
+                    this.showCustomInput[fieldKey] = false;
+                },
+
+                addTipe(platform = null) {
+                    if (platform) {
+                        this.newService.detail_klasifikasi.platform_pricing[platform].push({ nama: '', harga: '' });
+                    } else {
+                        this.newService.detail_klasifikasi.tipe.push({ nama: '', harga: '' });
+                    }
+                },
+
+                removeTipe(index, platform = null) {
+                    if (platform) {
+                        this.newService.detail_klasifikasi.platform_pricing[platform].splice(index, 1);
+                    } else {
+                        this.newService.detail_klasifikasi.tipe.splice(index, 1);
+                    }
+                },
+
+                async addService() {
+                    if (!this.newService.nama_layanan || !this.newService.klasifikasi) return;
+
+                    // Calculate base harga from minimum of all prices
+                    let prices = [];
+
+                    // From regular tipe
+                    this.newService.detail_klasifikasi.tipe.forEach(t => {
                         if (parseFloat(t.harga) > 0) prices.push(parseFloat(t.harga));
                     });
-                }
-                if (dk.platform_pricing) {
-                    Object.values(dk.platform_pricing).forEach(list => {
+
+                    // From platform specific pricing
+                    Object.values(this.newService.detail_klasifikasi.platform_pricing).forEach(list => {
                         list.forEach(t => {
                             if (parseFloat(t.harga) > 0) prices.push(parseFloat(t.harga));
                         });
                     });
-                }
 
-                if (prices.length > 0) return Math.min(...prices);
-                return service.harga || 0;
-            },
+                    const baseHarga = prices.length > 0 ? Math.min(...prices) : 0;
 
-            getDetailLabel(key) {
-                const labels = {
-                    'platform_target': 'Platform Target', 'jenis_konten': 'Jenis Konten',
-                    'platform': 'Platform', 'jenis_layanan': 'Jenis Layanan',
-                    'platform_iklan': 'Platform Iklan', 'jenis_campaign': 'Jenis Campaign',
-                    'bidang_konsultasi': 'Bidang Konsultasi', 'format': 'Format'
-                };
-                return labels[key] || key;
-            },
+                    try {
+                        const formData = new FormData();
+                        formData.append('nama_layanan', this.newService.nama_layanan);
+                        formData.append('klasifikasi', this.newService.klasifikasi);
+                        formData.append('harga', baseHarga);
+                        formData.append('estimasi_hari', this.newService.estimasi_hari);
+                        formData.append('deskripsi', this.newService.deskripsi);
 
-            getTipeLabel(klasifikasi) {
-                const def = this.fieldDefs[klasifikasi];
-                return def ? def.tipeLabel : 'Tipe';
-            },
+                        const fileInput = document.getElementById('thumbnail_file');
+                        if (fileInput && fileInput.files.length > 0) {
+                            formData.append('thumbnail', fileInput.files[0]);
+                        } else if (this.newService.thumbnail) {
+                            formData.append('thumbnail_url', this.newService.thumbnail);
+                        }
 
-            getServiceInfoEntries(service) {
-                const dk = service.detail_klasifikasi;
-                if (!dk) return [];
-                // New format with info object
-                if (dk.info) return Object.entries(dk.info).filter(([k, v]) => Array.isArray(v) && v.length > 0);
-                return [];
-            },
-
-            getServiceTipe(service) {
-                const dk = service.detail_klasifikasi;
-                if (!dk) return [];
-
-                let allTipe = [];
-                if (dk.tipe) {
-                    allTipe = [...dk.tipe.filter(t => t.nama)];
-                }
-
-                if (dk.platform_pricing) {
-                    Object.entries(dk.platform_pricing).forEach(([platform, list]) => {
-                        list.forEach(t => {
-                            if (t.nama) {
-                                allTipe.push({
-                                    ...t,
-                                    nama: `${platform} - ${t.nama}`
-                                });
-                            }
+                        // Append info fields
+                        Object.entries(this.newService.detail_klasifikasi.info).forEach(([key, values]) => {
+                            values.forEach((val, i) => {
+                                formData.append(`detail_klasifikasi[info][${key}][${i}]`, val);
+                            });
                         });
-                    });
-                }
 
-                return allTipe;
-            }
-        }" class="space-y-8">
+                        // Append platform specific pricing entries
+                        Object.entries(this.newService.detail_klasifikasi.platform_pricing).forEach(([platform, list]) => {
+                            list.forEach((tipe, i) => {
+                                formData.append(`detail_klasifikasi[platform_pricing][${platform}][${i}][nama]`, tipe.nama);
+                                formData.append(`detail_klasifikasi[platform_pricing][${platform}][${i}][harga]`, tipe.harga);
+                            });
+                        });
+
+                        // Append regular tipe entries (if any)
+                        this.newService.detail_klasifikasi.tipe.forEach((tipe, i) => {
+                            formData.append(`detail_klasifikasi[tipe][${i}][nama]`, tipe.nama);
+                            formData.append(`detail_klasifikasi[tipe][${i}][harga]`, tipe.harga);
+                        });
+
+                        const response = await fetch('{{ route('mitra.layanan.store') }}', {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Gagal menambahkan layanan');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan koneksi');
+                    }
+                },
+
+                resetForm() {
+                    this.step = 1;
+                    this.newService = {
+                        nama_layanan: '',
+                        klasifikasi: '',
+                        estimasi_hari: 1,
+                        deskripsi: '',
+                        thumbnail: '',
+                        detail_klasifikasi: { info: {}, tipe: [], platform_pricing: {} }
+                    };
+                    this.customInput = {};
+                    this.showCustomInput = {};
+                },
+
+                formatRupiah(val) {
+                    return 'Rp ' + new Intl.NumberFormat('id-ID').format(val);
+                },
+
+                getMinHarga(service) {
+                    const dk = service.detail_klasifikasi;
+                    if (!dk) return service.harga || 0;
+
+                    let prices = [];
+                    if (dk.tipe && Array.isArray(dk.tipe)) {
+                        dk.tipe.forEach(t => {
+                            if (parseFloat(t.harga) > 0) prices.push(parseFloat(t.harga));
+                        });
+                    }
+                    if (dk.platform_pricing) {
+                        Object.values(dk.platform_pricing).forEach(list => {
+                            list.forEach(t => {
+                                if (parseFloat(t.harga) > 0) prices.push(parseFloat(t.harga));
+                            });
+                        });
+                    }
+
+                    if (prices.length > 0) return Math.min(...prices);
+                    return service.harga || 0;
+                },
+
+                getDetailLabel(key) {
+                    const labels = {
+                        'platform_target': 'Platform Target', 'jenis_konten': 'Jenis Konten',
+                        'platform': 'Platform', 'jenis_layanan': 'Jenis Layanan',
+                        'platform_iklan': 'Platform Iklan', 'jenis_campaign': 'Jenis Campaign',
+                        'bidang_konsultasi': 'Bidang Konsultasi', 'format': 'Format'
+                    };
+                    return labels[key] || key;
+                },
+
+                getTipeLabel(klasifikasi) {
+                    const def = this.fieldDefs[klasifikasi];
+                    return def ? def.tipeLabel : 'Tipe';
+                },
+
+                getServiceInfoEntries(service) {
+                    const dk = service.detail_klasifikasi;
+                    if (!dk) return [];
+                    // New format with info object
+                    if (dk.info) return Object.entries(dk.info).filter(([k, v]) => Array.isArray(v) && v.length > 0);
+                    return [];
+                },
+
+                getServiceTipe(service) {
+                    const dk = service.detail_klasifikasi;
+                    if (!dk) return [];
+
+                    let allTipe = [];
+                    if (dk.tipe) {
+                        allTipe = [...dk.tipe.filter(t => t.nama)];
+                    }
+
+                    if (dk.platform_pricing) {
+                        Object.entries(dk.platform_pricing).forEach(([platform, list]) => {
+                            list.forEach(t => {
+                                if (t.nama) {
+                                    allTipe.push({
+                                        ...t,
+                                        nama: `${platform} - ${t.nama}`
+                                    });
+                                }
+                            });
+                        });
+                    }
+
+                    return allTipe;
+                }
+            }" class="space-y-8">
         {{-- HEADER --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -371,7 +371,7 @@
             </div>
 
             {{-- SERVICES GRID --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 <template x-for="item in services.filter(s => filter === 'semua' || s.klasifikasi === filter)"
                     :key="item.id">
                     <div @click="selectedService = item; openDetailModal = true"
@@ -555,8 +555,8 @@
                                                 <button type="button" @click="toggleInfoTag(field.key, opt)"
                                                     class="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
                                                     :class="isInfoSelected(field.key, opt) 
-                                                                ? 'bg-primary text-white border-primary shadow-sm' 
-                                                                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'"
+                                                                    ? 'bg-primary text-white border-primary shadow-sm' 
+                                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'"
                                                     x-text="opt">
                                                 </button>
                                             </template>

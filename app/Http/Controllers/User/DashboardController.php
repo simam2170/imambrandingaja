@@ -23,8 +23,8 @@ class DashboardController extends Controller
     public function index($id = null)
     {
         // Popular/Featured services
-        $popularServices = Layanan::with('mitra')->inRandomOrder()->take(5)->get();
-        $marketplaceServices = Layanan::with('mitra')->latest()->get();
+        $popularServices = Layanan::with(['mitra', 'reviews'])->inRandomOrder()->take(5)->get();
+        $marketplaceServices = Layanan::with(['mitra', 'reviews'])->latest()->get();
         $featuredMitra = Mitra::inRandomOrder()->first();
         $mitraList = Mitra::with(['layanan'])->take(6)->get();
 

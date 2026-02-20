@@ -12,26 +12,26 @@ class AdminOrderController extends Controller
     public function index()
     {
         $orders = Order::with(['user', 'mitra', 'layanan'])
-                    ->where('status', '!=', 'menunggu_pembayaran')
-                    ->latest()
-                    ->get();
+            ->where('status', '!=', 'menunggu_pembayaran')
+            ->latest()
+            ->get();
         return view('admin.pesanan.index', compact('orders'));
     }
 
     public function show($id)
     {
-        $order = Order::with(['user', 'mitra', 'layanan', 'payment', 'items'])->findOrFail($id);
+        $order = Order::with(['user', 'mitra', 'layanan', 'payment', 'items.layanan'])->findOrFail($id);
         return view('admin.pesanan.show', compact('order'));
     }
 
     public function verifyPayment($id, $status)
     {
         $order = Order::findOrFail($id);
-        
+
         // Allowed statuses from admin: diproses, ditolak
         if (in_array($status, ['diproses', 'ditolak'])) {
             $order->update(['status' => $status]);
-            
+
             // If there is an old payment record, sync it for backward compatibility
             if ($order->payment) {
                 $payStatus = ($status == 'diproses') ? 'diterima' : 'ditolak';
@@ -47,7 +47,7 @@ class AdminOrderController extends Controller
     public function uploadPayoutProof(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-        
+
         if ($order->status !== 'selesai') {
             return redirect()->back()->with('error', 'Pesanan belum selesai pengerjaannya oleh Mitra.');
         }
@@ -60,7 +60,7 @@ class AdminOrderController extends Controller
             $file = $request->file('bukti_transfer_mitra');
             $filename = 'transfer_' . time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/payouts'), $filename);
-            
+
             $order->update([
                 'bukti_transfer_mitra' => $filename
             ]);

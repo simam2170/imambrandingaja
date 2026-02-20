@@ -17,28 +17,30 @@ class UserOrderController extends Controller
     private function getUser($id = null)
     {
         // Prioritize ID from URL if provided, otherwise first record
-        if ($id) return User::findOrFail($id);
+        if ($id)
+            return User::findOrFail($id);
         return User::first();
     }
 
     public function index($id = null)
     {
         $user = $this->getUser($id);
-        if (!$user) return redirect('/')->with('error', 'No user found');
+        if (!$user)
+            return redirect('/')->with('error', 'No user found');
 
         $orders = Order::where('user_id', $user->id)
-                    ->with(['layanan', 'mitra', 'payment'])
-                    ->latest()
-                    ->get()
-                    ->groupBy('status');
-                    
+            ->with(['layanan', 'mitra', 'payment'])
+            ->latest()
+            ->get()
+            ->groupBy('status');
+
         return view('user.pesanan', compact('orders', 'user'));
     }
 
     public function store(Request $request)
     {
         $user = $this->getUser();
-        
+
         if (!$user) {
             return response()->json([
                 'message' => 'User tidak ditemukan. Silakan login.'
@@ -49,7 +51,7 @@ class UserOrderController extends Controller
         if (is_string($items)) {
             $items = json_decode($items, true);
         }
-        
+
         if (empty($items)) {
             return response()->json([
                 'message' => 'Keranjang kosong. Silakan tambahkan layanan terlebih dahulu.'
@@ -62,20 +64,22 @@ class UserOrderController extends Controller
             $paymentData = json_decode($paymentData, true);
         }
         $metodePembayaran = $paymentData['id'] ?? 'bank_transfer';
-        
+
         $orders = [];
-        
+
         try {
             foreach ($items as $item) {
                 $layananId = $item['id'] ?? $item['serviceId'] ?? null;
-                if (!$layananId) continue;
-                
+                if (!$layananId)
+                    continue;
+
                 $layanan = Layanan::find($layananId);
-                if (!$layanan) continue;
+                if (!$layanan)
+                    continue;
 
                 $orderNumber = 'ORD-' . strtoupper(Str::random(10));
                 $totalHarga = $item['price'] * $item['qty'];
-                
+
                 $order = Order::create([
                     'order_number' => $orderNumber,
                     'user_id' => $user->id,
@@ -85,7 +89,7 @@ class UserOrderController extends Controller
                     'jumlah' => $item['qty'],
                     'total_harga' => $totalHarga,
                     'status' => 'menunggu_pembayaran',
-                    'total' => $totalHarga, 
+                    'total' => $totalHarga,
                     'metode_pembayaran' => $metodePembayaran,
                     'expired_at' => now()->addHour(),
                     'catatan' => $request->input('user.note', '-'),
@@ -111,7 +115,7 @@ class UserOrderController extends Controller
                 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()
             ], 500);
         }
-        
+
         if (empty($orders)) {
             return response()->json([
                 'message' => 'Tidak ada pesanan yang dapat dibuat.'
@@ -130,8 +134,8 @@ class UserOrderController extends Controller
     {
         $user = $this->getUser();
         $order = Order::where('user_id', $user->id)
-                    ->with(['layanan', 'mitra', 'payment', 'items'])
-                    ->findOrFail($id);
+            ->with(['layanan', 'mitra', 'payment', 'items.layanan'])
+            ->findOrFail($id);
 
         return view('user.invoice', compact('order', 'user'));
     }

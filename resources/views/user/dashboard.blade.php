@@ -78,49 +78,50 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[450px]">
             {{-- MAIN CAROUSEL (2/3 width) --}}
             <div x-data="{ 
-                                                                                activeSlide: 0,
-                                                                                slides: [
-                                                                                    {
-                                                                                        title: 'Branding Politik & Personal Branding',
-                                                                                        desc: 'Bangun citra kepemimpinan yang kuat dan terpercaya untuk masa depan.',
-                                                                                        price: 'Layanan Eksklusif',
-                                                                                        discount: 'Konsultasi Sekarang',
-                                                                                        img: 'https://pin.it/3nyLwyYsc',
-                                                                                        cta: 'Pelajari Selengkapnya',
-                                                                                        features: ['Strategi Kemenangan', 'Manajemen Reputasi']
-                                                                                    },
-                                                                                    {
-                                                                                        title: 'Gaya Hidup & Fashion Branding',
-                                                                                        desc: 'Ciptakan tren dan koneksi emosional melalui identitas visual yang estetik.',
-                                                                                        price: 'Mulai dari Rp5jt',
-                                                                                        discount: 'Diskon 15%',
-                                                                                        img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200',
-                                                                                        cta: 'Lihat Portfolio',
-                                                                                        features: ['Visual Lookbook', 'Influencer Kit']
-                                                                                    },
-                                                                                    {
-                                                                                        title: 'Kuliner & F&B Branding',
-                                                                                        desc: 'Buat brand kuliner Anda menggugah selera dengan kemasan dan identitas ikonik.',
-                                                                                        price: 'Paket Komplit',
-                                                                                        discount: 'Rp2.500.200',
-                                                                                        img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200',
-                                                                                        cta: 'Pesan Paket',
-                                                                                        features: ['Food Photography', 'Menu Design']
-                                                                                    },
-                                                                                    {
-                                                                                        title: 'Gaming & E-Sports Branding',
-                                                                                        desc: 'Tampil dominan di dunia digital dengan identitas gaming yang dinamis.',
-                                                                                        price: 'Streamer Pack',
-                                                                                        discount: 'Mulai Rp850rb',
-                                                                                        img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200',
-                                                                                        cta: 'Cek Layanan',
-                                                                                        features: ['Overlay Custom', 'Motion Graphics']
-                                                                                    }
-                                                                                ],
-                                                                                next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },
-                                                                                prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length },
-                                                                                startAutoplay() { setInterval(() => this.next(), 6000) }
-                                                                            }" x-init="startAutoplay()"
+                                                                                                                        activeSlide: 0,
+                                                                                                                        slides: [
+                                                                                                                            {
+                                                                                                                                title: 'Branding Politik & Personal Branding',
+                                                                                                                                desc: 'Bangun citra kepemimpinan yang kuat dan terpercaya untuk masa depan.',
+                                                                                                                                price: 'Layanan Eksklusif',
+                                                                                                                                discount: 'Konsultasi Sekarang',
+                                                                                                                                img: 'https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&q=80&w=1200',
+                                                                                                                                cta: 'Pelajari Selengkapnya',
+                                                                                                                                features: ['Strategi Kemenangan', 'Manajemen Reputasi']
+                                                                                                                            },
+                                                                                                                            {
+                                                                                                                                title: 'Gaya Hidup & Fashion Branding',
+                                                                                                                                desc: 'Ciptakan tren dan koneksi emosional melalui identitas visual yang estetik.',
+                                                                                                                                price: 'Mulai dari Rp5jt',
+                                                                                                                                discount: 'Diskon 15%',
+                                                                                                                                img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200',
+                                                                                                                                cta: 'Lihat Portfolio',
+                                                                                                                                features: ['Visual Lookbook', 'Influencer Kit']
+                                                                                                                            },
+                                                                                                                            {
+                                                                                                                                title: 'Kuliner & F&B Branding',
+                                                                                                                                desc: 'Buat brand kuliner Anda menggugah selera dengan kemasan dan identitas ikonik.',
+                                                                                                                                price: 'Paket Komplit',
+                                                                                                                                discount: 'Rp2.500.200',
+                                                                                                                                img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200',
+                                                                                                                                cta: 'Pesan Paket',
+                                                                                                                                features: ['Food Photography', 'Menu Design']
+                                                                                                                            },
+                                                                                                                            {
+                                                                                                                                title: 'Gaming & E-Sports Branding',
+                                                                                                                                desc: 'Tampil dominan di dunia digital dengan identitas gaming yang dinamis.',
+                                                                                                                                price: 'Streamer Pack',
+                                                                                                                                discount: 'Mulai Rp850rb',
+                                                                                                                                img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200',
+                                                                                                                                cta: 'Cek Layanan',
+                                                                                                                                features: ['Overlay Custom', 'Motion Graphics']
+                                                                                                                            }
+                                                                                                                        ],
+                                                                                                                        next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },
+                                                                                                                        prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length },
+                                                                                                                        startAutoplay() { setInterval(() => this.next(), 6000) }
+                                                                                                                    }"
+                x-init="startAutoplay()"
                 class="lg:col-span-2 relative rounded-3xl overflow-hidden group h-80 lg:h-full bg-gray-100 shadow-sm border border-gray-100">
 
                 {{-- Slides --}}
@@ -374,27 +375,27 @@
 
             {{-- HORIZONTAL SCROLL SERVICES --}}
             <div x-data="{ 
-                                                                                                                                    scrollNext() { 
-                                                                                                                                        const container = this.$refs.container;
-                                                                                                                                        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
-                                                                                                                                            container.scrollTo({ left: 0, behavior: 'smooth' });
-                                                                                                                                        } else {
-                                                                                                                                            container.scrollBy({ left: 300, behavior: 'smooth' });
-                                                                                                                                        }
-                                                                                                                                    },
-                                                                                                                                    scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); },
-                                                                                                                                    autoplayInterval: null,
-                                                                                                                                    startAutoplay() {
-                                                                                                                                        this.autoplayInterval = setInterval(() => {
-                                                                                                                                            this.scrollNext();
-                                                                                                                                        }, 4000);
-                                                                                                                                    },
-                                                                                                                                    stopAutoplay() {
-                                                                                                                                        if (this.autoplayInterval) {
-                                                                                                                                            clearInterval(this.autoplayInterval);
-                                                                                                                                        }
-                                                                                                                                    }
-                                                                                                                                }"
+                                                                                                                                                                            scrollNext() { 
+                                                                                                                                                                                const container = this.$refs.container;
+                                                                                                                                                                                if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+                                                                                                                                                                                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                                                                                                                                                                                } else {
+                                                                                                                                                                                    container.scrollBy({ left: 300, behavior: 'smooth' });
+                                                                                                                                                                                }
+                                                                                                                                                                            },
+                                                                                                                                                                            scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); },
+                                                                                                                                                                            autoplayInterval: null,
+                                                                                                                                                                            startAutoplay() {
+                                                                                                                                                                                this.autoplayInterval = setInterval(() => {
+                                                                                                                                                                                    this.scrollNext();
+                                                                                                                                                                                }, 4000);
+                                                                                                                                                                            },
+                                                                                                                                                                            stopAutoplay() {
+                                                                                                                                                                                if (this.autoplayInterval) {
+                                                                                                                                                                                    clearInterval(this.autoplayInterval);
+                                                                                                                                                                                }
+                                                                                                                                                                            }
+                                                                                                                                                                        }"
                 x-init="startAutoplay()" @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" class="relative group">
 
                 {{-- Navigation Buttons --}}
@@ -436,28 +437,38 @@
                             </div>
 
                             <div class="p-4 flex flex-col flex-1 space-y-3">
-                                {{-- Mitra Info --}}
-                                <div class="flex items-center gap-2">
-                                    <img src="{{ $service->mitra->foto_profil ? asset('uploads/profile_photos/' . $service->mitra->foto_profil) : 'https://ui-avatars.com/api/?name=' . urlencode($service->mitra->nama_mitra) . '&background=random' }}"
+                                {{-- Mitra Info (clickable) --}}
+                                <a href="{{ route('user.mitra', $service->mitra->id) }}"
+                                    class="relative z-20 flex items-center gap-2 w-fit group/mitra">
+                                    <img src="{{ $service->mitra->foto_profil ? asset('uploads/profile_photos/' . $service->mitra->foto_profil) : 'https://ui-avatars.com/api/?name=' . urlencode($service->mitra->nama_mitra) . '&background=4ade80&color=fff' }}"
                                         class="w-6 h-6 rounded-full object-cover border border-gray-100">
                                     <span
-                                        class="text-xs font-bold text-gray-700 hover:text-primary transition-colors">{{ $service->mitra->nama_mitra }}</span>
-                                </div>
+                                        class="text-xs font-bold text-gray-700 group-hover/mitra:text-primary transition-colors">{{ $service->mitra->nama_mitra }}</span>
+                                </a>
 
                                 <h4
                                     class="text-sm font-bold text-gray-800 leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                                     {{ $service->nama_layanan }}
                                 </h4>
 
-                                {{-- Rating Simulation --}}
+                                {{-- Rating Real --}}
+                                @php
+                                    $svcAvg = $service->reviews->avg('rating') ?? 0;
+                                    $svcCount = $service->reviews->count();
+                                @endphp
                                 <div class="flex items-center gap-1 mt-auto">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-yellow-400"
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-3.5 w-3.5 {{ $svcCount > 0 ? 'text-yellow-400' : 'text-gray-300' }}"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path
                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
-                                    <span class="text-xs font-black text-gray-900">5.0</span>
-                                    <span class="text-[10px] text-gray-400 font-medium">(24)</span>
+                                    @if($svcCount > 0)
+                                        <span class="text-xs font-black text-gray-900">{{ number_format($svcAvg, 1) }}</span>
+                                        <span class="text-[10px] text-gray-400 font-medium">({{ $svcCount }})</span>
+                                    @else
+                                        <span class="text-[10px] text-gray-400 font-medium italic">Belum ada ulasan</span>
+                                    @endif
                                 </div>
 
                                 <div class="pt-2 border-t border-gray-50 flex items-center justify-between">
@@ -480,19 +491,21 @@
                 @foreach($mitraList as $mitra)
                     <div class="space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                            <div class="flex items-center gap-4">
+                            <a href="{{ route('user.mitra', $mitra->id) }}" class="flex items-center gap-4 group/mitra">
                                 <div
-                                    class="w-14 h-14 rounded-full bg-gray-100 overflow-hidden border-2 border-primary/10 shadow-sm">
+                                    class="w-14 h-14 rounded-full bg-gray-100 overflow-hidden border-2 border-primary/10 shadow-sm transition group-hover/mitra:border-primary/40">
                                     @if($mitra->foto_profil)
                                         <img src="{{ asset('uploads/profile_photos/' . $mitra->foto_profil) }}"
                                             class="w-full h-full object-cover">
                                     @else
-                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra) }}&background=random"
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($mitra->nama_mitra) }}&background=4ade80&color=fff"
                                             class="w-full h-full object-cover">
                                     @endif
                                 </div>
                                 <div>
-                                    <h3 class="font-black text-gray-900 text-lg leading-tight">{{ $mitra->nama_mitra }}</h3>
+                                    <h3
+                                        class="font-black text-gray-900 text-lg leading-tight group-hover/mitra:text-primary transition-colors">
+                                        {{ $mitra->nama_mitra }}</h3>
                                     <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
                                             stroke="currentColor">
@@ -504,7 +517,7 @@
                                         {{ $mitra->kota ?? 'Indonesia' }}
                                     </p>
                                 </div>
-                            </div>
+                            </a>
                             <a href="{{ route('user.mitra', $mitra->id) }}"
                                 class="text-xs font-bold text-primary hover:text-primary-700 flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-lg transition-colors">
                                 Lihat Selengkapnya
@@ -523,6 +536,7 @@
                                     <div class="aspect-[3/2] bg-gray-50 flex items-center justify-center relative overflow-hidden">
                                         <img src="{{ $service->thumbnail ?: 'https://ui-avatars.com/api/?name=' . urlencode($service->nama_layanan) . '&background=random' }}"
                                             class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                        <a href="{{ route('user.layanan.show', $service->id) }}" class="absolute inset-0 z-10"></a>
                                     </div>
                                     <div class="p-4 flex flex-col flex-1">
                                         {{-- Title --}}
@@ -531,14 +545,25 @@
                                             {{ $service->nama_layanan }}
                                         </h4>
 
-                                        {{-- Rating --}}
+                                        {{-- Rating Real --}}
+                                        @php
+                                            $svcAvg2 = $service->reviews->avg('rating') ?? 0;
+                                            $svcCount2 = $service->reviews->count();
+                                        @endphp
                                         <div class="flex items-center gap-1 mb-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-400"
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="h-3 w-3 {{ $svcCount2 > 0 ? 'text-yellow-400' : 'text-gray-300' }}"
                                                 viewBox="0 0 20 20" fill="currentColor">
                                                 <path
                                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                             </svg>
-                                            <span class="text-[10px] font-black text-gray-900">5.0</span>
+                                            @if($svcCount2 > 0)
+                                                <span
+                                                    class="text-[10px] font-black text-gray-900">{{ number_format($svcAvg2, 1) }}</span>
+                                                <span class="text-[10px] text-gray-400">({{ $svcCount2 }})</span>
+                                            @else
+                                                <span class="text-[10px] text-gray-400 italic">Belum ada ulasan</span>
+                                            @endif
                                         </div>
 
                                         <div class="mt-auto pt-3 border-t border-gray-50 flex flex-col">

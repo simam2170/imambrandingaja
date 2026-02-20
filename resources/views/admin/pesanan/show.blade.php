@@ -13,6 +13,11 @@
                 <div>
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Detail Pesanan #{{ $order->order_number }}</h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">Detail transaksi dan status pembayaran.</p>
+                    <p class="mt-1 text-xs text-gray-400">
+                        Dipesan pada
+                        {{ is_string($order->created_at) ? $order->created_at : $order->created_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }}
+                        WIB
+                    </p>
                 </div>
                 <div class="text-right">
                     <span
@@ -87,6 +92,70 @@
                         <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">Rp
                             {{ number_format($order->total, 0, ',', '.') }}
                         </dd>
+                    </div>
+
+                    {{-- Rincian Item Pesanan --}}
+                    <div class="bg-white px-4 py-5 sm:px-6 border-t border-gray-100">
+                        <h4 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            Rincian Item Pesanan
+                        </h4>
+                        @if($order->items && count($order->items) > 0)
+                            <div class="space-y-3">
+                                @foreach($order->items as $item)
+                                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                        {{-- Nama Layanan --}}
+                                        <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-200 flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-primary-500 shrink-0"></span>
+                                            <span class="text-sm font-bold text-gray-800">
+                                                {{ $item->layanan->nama_layanan ?? $order->layanan->nama_layanan ?? 'Layanan' }}
+                                            </span>
+                                        </div>
+                                        {{-- Detail grid --}}
+                                        <table class="w-full text-xs">
+                                            <tbody>
+                                                <tr class="border-b border-gray-100">
+                                                    <td class="px-4 py-2 font-bold text-gray-400 uppercase tracking-wider w-1/3">
+                                                        Tipe / Paket</td>
+                                                    <td class="px-4 py-2 font-semibold text-gray-800">
+                                                        {{ $item->jenis_layanan ?? '-' }}</td>
+                                                </tr>
+                                                <tr class="border-b border-gray-100">
+                                                    <td class="px-4 py-2 font-bold text-gray-400 uppercase tracking-wider">Platform
+                                                        / Kategori</td>
+                                                    <td class="px-4 py-2 font-semibold text-gray-800">
+                                                        {{ $item->layanan->kategori ?? $order->layanan->kategori ?? '-' }}</td>
+                                                </tr>
+                                                <tr class="border-b border-gray-100">
+                                                    <td class="px-4 py-2 font-bold text-gray-400 uppercase tracking-wider">Harga
+                                                        Satuan</td>
+                                                    <td class="px-4 py-2 font-semibold text-gray-800">Rp
+                                                        {{ number_format($item->harga, 0, ',', '.') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 font-bold text-gray-400 uppercase tracking-wider">Jumlah
+                                                    </td>
+                                                    <td class="px-4 py-2 font-semibold text-gray-800">{{ $item->qty }} pcs</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        {{-- Subtotal --}}
+                                        <div
+                                            class="px-4 py-2.5 bg-primary-50 flex items-center justify-between border-t border-primary-100">
+                                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Subtotal</span>
+                                            <span class="text-sm font-black text-primary-700">Rp
+                                                {{ number_format($item->harga * $item->qty, 0, ',', '.') }}</span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-sm text-gray-500 italic">Tidak ada rincian item pesanan.</p>
+                        @endif
                     </div>
 
                     <!-- Payment Verification -->

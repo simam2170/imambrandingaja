@@ -41,22 +41,6 @@
 
         {{-- HIGHLIGHT STATS --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group">
-                <div
-                    class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full group-hover:scale-110 transition-transform">
-                </div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pendapatan</p>
-                <h3 class="text-3xl font-black text-gray-800 mt-2">Rp
-                    {{ number_format($data->total_pendapatan, 0, ',', '.') }}</h3>
-                <p class="text-xs text-green-500 font-bold mt-2 flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                    +12% dari bulan lalu
-                </p>
-            </div>
 
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group">
                 <div
@@ -64,7 +48,8 @@
                 </div>
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Saldo Tertahan</p>
                 <h3 class="text-3xl font-black text-gray-800 mt-2">Rp
-                    {{ number_format($data->saldo_tertahan, 0, ',', '.') }}</h3>
+                    {{ number_format($data->saldo_tertahan, 0, ',', '.') }}
+                </h3>
                 <div class="mt-2 flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-accent-400 rounded-full animate-pulse"></span>
                     <p class="text-[10px] text-gray-500 font-medium italic">Sedang proses verifikasi admin</p>
@@ -78,6 +63,10 @@
                 <p class="text-xs font-bold text-white/70 uppercase tracking-wider">Telah Dibayarkan</p>
                 <h3 class="text-3xl font-black text-white mt-2">Rp {{ number_format($data->saldo_dibayarkan, 0, ',', '.') }}
                 </h3>
+                <div class="mt-2 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-accent-400 rounded-full animate-pulse"></span>
+                    <p class="text-[10px] text-gray-500 font-medium italic">Saldo yang sudah dikirim admin</p>
+                </div>
                 <p class="text-xs text-secondary font-bold mt-4 flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -86,6 +75,22 @@
                     </svg>
                     Terakhir: {{ $data->terakhir_dibayar }}
                 </p>
+
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group">
+                <div
+                    class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full group-hover:scale-110 transition-transform">
+                </div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pendapatan</p>
+                <h3 class="text-3xl font-black text-gray-800 mt-2">Rp
+                    {{ number_format($data->total_pendapatan, 0, ',', '.') }}
+                </h3>
+                <div class="mt-2 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-accent-400 rounded-full animate-pulse"></span>
+                    <p class="text-[10px] text-gray-500 font-medium italic">Total saldo tertahan dan yang sudah dibayarkan
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -110,7 +115,8 @@
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 <td class="px-6 py-4">
                                     <p class="font-bold text-gray-800">
-                                        {{ \Carbon\Carbon::parse($trx['tanggal'])->format('d M Y') }}</p>
+                                        {{ \Carbon\Carbon::parse($trx['tanggal'])->format('d M Y') }}
+                                    </p>
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="text-xs font-medium text-gray-600 flex items-center gap-2">

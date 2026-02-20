@@ -3,130 +3,130 @@
 
 @section('content')
     <div class="max-w-4xl mx-auto space-y-8" x-data="{
-                                order: {{ Js::from($order) }},
-                                showUpload: false,
-                                proofFile: null,
-                                proofPreview: null,
-                                uploadStatus: '', // '', 'uploading', 'success'
-                                timeLeft: '01:00:00',
-                                paymentMethods: [
-                                    { id: 'bca', name: 'BCA', desc: 'Transfer ke Rekening BCA', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
-                                    { id: 'mandiri', name: 'Mandiri', desc: 'Transfer ke Rekening Mandiri', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
-                                    { id: 'qris', name: 'QRIS', desc: 'Scan QR Code (OVO, Dana, etc)', active: true, logo: '🔳', type: 'ewallet', category: 'E-Wallet & QRIS' },
-                                    { id: 'dana', name: 'DANA', desc: 'Transfer ke DANA', active: true, logo: '📱', type: 'ewallet', category: 'E-Wallet & QRIS' }
-                                ],
+                                            order: {{ Js::from($order) }},
+                                            showUpload: false,
+                                            proofFile: null,
+                                            proofPreview: null,
+                                            uploadStatus: '', // '', 'uploading', 'success'
+                                            timeLeft: '01:00:00',
+                                            paymentMethods: [
+                                                { id: 'bca', name: 'BCA', desc: 'Transfer ke Rekening BCA', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
+                                                { id: 'mandiri', name: 'Mandiri', desc: 'Transfer ke Rekening Mandiri', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
+                                                { id: 'qris', name: 'QRIS', desc: 'Scan QR Code (OVO, Dana, etc)', active: true, logo: '🔳', type: 'ewallet', category: 'E-Wallet & QRIS' },
+                                                { id: 'dana', name: 'DANA', desc: 'Transfer ke DANA', active: true, logo: '📱', type: 'ewallet', category: 'E-Wallet & QRIS' }
+                                            ],
 
-                                init() {
-                                    if (['menunggu_pembayaran', 'direview'].includes(this.order.status) && !this.order.bukti_pembayaran) {
-                                        this.startTimer();
-                                    }
-                                },
-
-                                startTimer() {
-                                    const deadline = new Date(this.order.expired_at).getTime();
-
-                                    const update = () => {
-                                        const now = new Date().getTime();
-                                        const diff = deadline - now;
-
-                                        if (diff <= 0) {
-                                            this.timeLeft = '00:00:00';
-                                            return;
-                                        }
-
-                                        const h = Math.floor(diff / (1000 * 60 * 60));
-                                        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                                        const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-                                        this.timeLeft = [h, m, s].map(v => v.toString().padStart(2, '0')).join(':');
-                                        setTimeout(update, 1000);
-                                    };
-                                    update();
-                                },
-
-                                formatPrice(value) {
-                                    return value ? 'Rp' + Number(value).toLocaleString('id-ID') : 'Rp0';
-                                },
-
-                                get hasProof() {
-                                    return !!this.order.bukti_pembayaran;
-                                },
-
-                                handleFileUpload(event) {
-                                    const file = event.target.files[0];
-                                    if (!file) return;
-
-                                    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-                                    if (!allowedTypes.includes(file.type)) {
-                                        return alert('Hanya file JPG, PNG, atau PDF yang diperbolehkan.');
-                                    }
-                                    if (file.size > 2 * 1024 * 1024) {
-                                        return alert('Ukuran file maksimal 2MB.');
-                                    }
-
-                                    this.proofFile = file;
-                                    if (file.type.startsWith('image/')) {
-                                        const reader = new FileReader();
-                                        reader.onload = (e) => this.proofPreview = e.target.result;
-                                        reader.readAsDataURL(file);
-                                    } else {
-                                        this.proofPreview = 'pdf-icon'; 
-                                    }
-                                },
-
-                                async submitProof() {
-                                    if (!this.proofFile) return alert('Pilih file terlebih dahulu.');
-                                    this.uploadStatus = 'uploading';
-
-                                    const formData = new FormData();
-                                    formData.append('bukti_pembayaran', this.proofFile);
-                                    formData.append('_token', '{{ csrf_token() }}');
-
-                                    try {
-                                        const response = await fetch('{{ route('user.payment.upload', $order->id) }}', {
-                                            method: 'POST',
-                                            body: formData
-                                        });
-
-                                        if (response.ok) {
-                                            this.uploadStatus = 'success';
-                                            this.showUpload = false;
-                                            setTimeout(() => {
-                                                window.location.reload(); 
-                                            }, 1000);
-                                        } else {
-                                            const res = await response.json();
-                                            alert('Gagal mengupload: ' + (res.message || 'Unknown error'));
-                                            this.uploadStatus = '';
-                                        }
-                                    } catch (e) {
-                                        console.error(e);
-                                        alert('Terjadi kesalahan.');
-                                        this.uploadStatus = '';
-                                    }
-                                },
-
-                                async cancelOrder() {
-                                    if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
-                                        try {
-                                            const response = await fetch('{{ route('user.order.cancel', $order->id) }}', {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json',
-                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            init() {
+                                                if (['menunggu_pembayaran', 'direview'].includes(this.order.status) && !this.order.bukti_pembayaran) {
+                                                    this.startTimer();
                                                 }
-                                            });
-                                            if (response.ok) {
-                                                window.location.reload();
-                                            } else {
-                                                alert('Gagal membatalkan pesanan.');
+                                            },
+
+                                            startTimer() {
+                                                const deadline = new Date(this.order.expired_at).getTime();
+
+                                                const update = () => {
+                                                    const now = new Date().getTime();
+                                                    const diff = deadline - now;
+
+                                                    if (diff <= 0) {
+                                                        this.timeLeft = '00:00:00';
+                                                        return;
+                                                    }
+
+                                                    const h = Math.floor(diff / (1000 * 60 * 60));
+                                                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                                                    this.timeLeft = [h, m, s].map(v => v.toString().padStart(2, '0')).join(':');
+                                                    setTimeout(update, 1000);
+                                                };
+                                                update();
+                                            },
+
+                                            formatPrice(value) {
+                                                return value ? 'Rp' + Number(value).toLocaleString('id-ID') : 'Rp0';
+                                            },
+
+                                            get hasProof() {
+                                                return !!this.order.bukti_pembayaran;
+                                            },
+
+                                            handleFileUpload(event) {
+                                                const file = event.target.files[0];
+                                                if (!file) return;
+
+                                                const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                                                if (!allowedTypes.includes(file.type)) {
+                                                    return alert('Hanya file JPG, PNG, atau PDF yang diperbolehkan.');
+                                                }
+                                                if (file.size > 2 * 1024 * 1024) {
+                                                    return alert('Ukuran file maksimal 2MB.');
+                                                }
+
+                                                this.proofFile = file;
+                                                if (file.type.startsWith('image/')) {
+                                                    const reader = new FileReader();
+                                                    reader.onload = (e) => this.proofPreview = e.target.result;
+                                                    reader.readAsDataURL(file);
+                                                } else {
+                                                    this.proofPreview = 'pdf-icon'; 
+                                                }
+                                            },
+
+                                            async submitProof() {
+                                                if (!this.proofFile) return alert('Pilih file terlebih dahulu.');
+                                                this.uploadStatus = 'uploading';
+
+                                                const formData = new FormData();
+                                                formData.append('bukti_pembayaran', this.proofFile);
+                                                formData.append('_token', '{{ csrf_token() }}');
+
+                                                try {
+                                                    const response = await fetch('{{ route('user.payment.upload', $order->id) }}', {
+                                                        method: 'POST',
+                                                        body: formData
+                                                    });
+
+                                                    if (response.ok) {
+                                                        this.uploadStatus = 'success';
+                                                        this.showUpload = false;
+                                                        setTimeout(() => {
+                                                            window.location.reload(); 
+                                                        }, 1000);
+                                                    } else {
+                                                        const res = await response.json();
+                                                        alert('Gagal mengupload: ' + (res.message || 'Unknown error'));
+                                                        this.uploadStatus = '';
+                                                    }
+                                                } catch (e) {
+                                                    console.error(e);
+                                                    alert('Terjadi kesalahan.');
+                                                    this.uploadStatus = '';
+                                                }
+                                            },
+
+                                            async cancelOrder() {
+                                                if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+                                                    try {
+                                                        const response = await fetch('{{ route('user.order.cancel', $order->id) }}', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                            }
+                                                        });
+                                                        if (response.ok) {
+                                                            window.location.reload();
+                                                        } else {
+                                                            alert('Gagal membatalkan pesanan.');
+                                                        }
+                                                    } catch (e) {
+                                                        alert('Terjadi kesalahan.');
+                                                    }
+                                                }
                                             }
-                                        } catch (e) {
-                                            alert('Terjadi kesalahan.');
-                                        }
-                                    }
-                                }
-                            }">
+                                        }">
 
         {{-- SIMPLIFIED VIEW FOR UPLOADED PROOF (Only if status is still waiting payment) --}}
         <template x-if="hasProof && order.status === 'menunggu_pembayaran'">
@@ -202,22 +202,59 @@
                                 <div class="text-right">
                                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Order ID</p>
                                     <p class="font-bold text-gray-800" x-text="order.order_number"></p>
+                                    <p class="text-[10px] text-gray-400 mt-1">
+                                        Dipesan pada
+                                        {{ is_string($order->created_at) ? $order->created_at : $order->created_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }}
+                                        WIB
+                                    </p>
                                 </div>
                             </div>
                             <div class="space-y-4">
                                 <template x-for="item in order.items" :key="item.id">
-                                    <div
-                                        class="flex items-center gap-4 p-4 border bg-gray-50/50 rounded-2xl border-gray-50">
-                                        <div class="w-16 h-16 bg-gray-200 rounded-xl shrink-0"></div>
-                                        <div class="flex-1 min-w-0">
-                                            <h4 class="mb-1 text-sm font-bold text-gray-800 truncate"
+                                    <div class="border border-gray-100 rounded-2xl overflow-hidden">
+                                        {{-- Nama Layanan Header --}}
+                                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-accent-500 shrink-0"></span>
+                                            <h4 class="text-sm font-bold text-gray-800"
                                                 x-text="item.layanan?.nama_layanan || 'Layanan'"></h4>
-                                            <div class="flex items-center justify-between text-xs text-gray-500">
-                                                <span x-text="order.mitra?.nama_mitra || 'Mitra'"></span>
-                                                <span class="font-bold text-accent-600"
-                                                    x-text="item.qty + ' x ' + formatPrice(item.harga)"></span>
+                                        </div>
+                                        {{-- Detail Grid --}}
+                                        <div class="grid grid-cols-2 gap-px bg-gray-100">
+                                            <div class="bg-white px-4 py-3">
+                                                <p
+                                                    class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                                                    Tipe / Paket</p>
+                                                <p class="text-xs font-bold text-gray-700"
+                                                    x-text="item.jenis_layanan || '-'"></p>
                                             </div>
-                                            <p class="text-[10px] text-gray-400" x-text="item.jenis_layanan"></p>
+                                            <div class="bg-white px-4 py-3">
+                                                <p
+                                                    class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                                                    Platform / Kategori</p>
+                                                <p class="text-xs font-bold text-gray-700"
+                                                    x-text="item.layanan?.kategori || order.layanan?.kategori || '-'"></p>
+                                            </div>
+                                            <div class="bg-white px-4 py-3">
+                                                <p
+                                                    class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                                                    Harga Satuan</p>
+                                                <p class="text-xs font-bold text-gray-700" x-text="formatPrice(item.harga)">
+                                                </p>
+                                            </div>
+                                            <div class="bg-white px-4 py-3">
+                                                <p
+                                                    class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                                                    Jumlah</p>
+                                                <p class="text-xs font-bold text-gray-700" x-text="item.qty + ' pcs'"></p>
+                                            </div>
+                                        </div>
+                                        {{-- Subtotal --}}
+                                        <div
+                                            class="px-4 py-2.5 bg-accent-50 flex items-center justify-between border-t border-accent-100">
+                                            <span
+                                                class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subtotal</span>
+                                            <span class="text-sm font-black text-accent-600"
+                                                x-text="formatPrice(item.qty * item.harga)"></span>
                                         </div>
                                     </div>
                                 </template>
@@ -246,7 +283,8 @@
                                 <div>
                                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">WhatsApp</p>
                                     <p class="font-bold text-gray-800">
-                                        {{ $user->whatsapp ?? $order->user->whatsapp ?? '-' }}</p>
+                                        {{ $user->whatsapp ?? $order->user->whatsapp ?? '-' }}
+                                    </p>
                                 </div>
                                 <div class="col-span-2">
                                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Catatan</p>
@@ -442,6 +480,111 @@
         </template>
 
     </div>
+
+    {{-- ====================================================
+    REVIEW FORM — hanya tampil jika order selesai
+    ==================================================== --}}
+    @if($order->status === 'selesai')
+        <div class="max-w-4xl mx-auto mt-6">
+            @if(session('success'))
+                <div class="flex items-center gap-3 p-4 mb-4 text-green-800 border border-green-200 rounded-2xl bg-green-50">
+                    <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-sm font-medium">{{ session('success') }}</span>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="flex items-center gap-3 p-4 mb-4 text-red-800 border border-red-200 rounded-2xl bg-red-50">
+                    <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-sm font-medium">{{ session('error') }}</span>
+                </div>
+            @endif
+
+            @if($order->reviewed_at)
+                {{-- Already reviewed --}}
+                <div class="flex items-center gap-4 p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
+                    <div class="flex items-center justify-center w-12 h-12 text-2xl rounded-xl bg-yellow-50">⭐</div>
+                    <div>
+                        <h4 class="font-bold text-gray-800">Ulasan Sudah Dikirim</h4>
+                        <p class="text-sm text-gray-500 mt-0.5">
+                            Terima kasih atas ulasan Anda pada
+                            {{ $order->reviewed_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }} WIB.
+                        </p>
+                    </div>
+                    <span class="ml-auto px-4 py-1.5 text-xs font-bold text-green-700 bg-green-100 rounded-full">✓ Direview</span>
+                </div>
+            @else
+                {{-- Review Form --}}
+                <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl" x-data="{ rating: 0, hover: 0 }">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-yellow-50">
+                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Beri Rating & Ulasan</h4>
+                            <p class="text-xs text-gray-400 mt-0.5">Bagikan pengalaman Anda untuk membantu pengguna lain</p>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('user.review.store', $order->id) }}" method="POST">
+                        @csrf
+                        {{-- Star Rating --}}
+                        <div class="mb-5">
+                            <label class="block mb-2 text-sm font-semibold text-gray-700">Rating <span
+                                    class="text-red-500">*</span></label>
+                            <div class="flex items-center gap-1">
+                                @for($s = 1; $s <= 5; $s++)
+                                    <button type="button" @click="rating = {{ $s }}" @mouseenter="hover = {{ $s }}"
+                                        @mouseleave="hover = 0" class="p-0.5 transition-transform hover:scale-110 focus:outline-none">
+                                        <svg class="w-8 h-8 transition-colors"
+                                            :class="(hover || rating) >= {{ $s }} ? 'text-yellow-400' : 'text-gray-200'"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    </button>
+                                @endfor
+                                <input type="hidden" name="rating" :value="rating">
+                                <span class="ml-3 text-sm font-semibold text-gray-600"
+                                    x-text="rating > 0 ? ['', 'Buruk', 'Kurang', 'Cukup', 'Baik', 'Sangat Baik'][rating] + ' (' + rating + '/5)' : 'Pilih bintang'">
+                                </span>
+                            </div>
+                            @error('rating')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Review Text --}}
+                        <div class="mb-5">
+                            <label class="block mb-2 text-sm font-semibold text-gray-700" for="review_text">
+                                Ulasan <span class="text-gray-400 font-normal">(Opsional)</span>
+                            </label>
+                            <textarea id="review_text" name="review" rows="4" maxlength="1000"
+                                placeholder="Ceritakan pengalaman Anda menggunakan layanan ini..."
+                                class="w-full px-4 py-3 text-sm text-gray-700 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-colors">{{ old('review') }}</textarea>
+                            @error('review')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Submit --}}
+                        <button type="submit" :disabled="rating === 0"
+                            :class="rating === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600 shadow-lg shadow-green-200'"
+                            class="w-full py-3 text-sm font-bold text-white rounded-xl bg-primary transition-all">
+                            Kirim Ulasan ⭐
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </div>
+    @endif
 
     <style>
         [x-cloak] {

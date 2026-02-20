@@ -52,6 +52,7 @@ Route::prefix('user')->group(function () {
     Route::post('/invoice/{id}/cancel', [App\Http\Controllers\User\UserOrderController::class, 'cancel'])->name('user.order.cancel');
     Route::get('/mitra/{id}', [App\Http\Controllers\User\JaringanController::class, 'show'])->name('user.mitra');
     Route::get('/layanan/{id}', [App\Http\Controllers\User\LayananController::class, 'show'])->name('user.layanan.show');
+    Route::post('/orders/{id}/review', [App\Http\Controllers\User\UserReviewController::class, 'store'])->name('user.review.store');
 });
 
 /*
