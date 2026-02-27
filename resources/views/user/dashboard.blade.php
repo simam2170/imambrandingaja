@@ -74,125 +74,265 @@
             }
         </style>
 
-        {{-- REVISED BANNER SECTION --}}
+        {{-- BANNER SECTION --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[450px]">
             {{-- MAIN CAROUSEL (2/3 width) --}}
             <div x-data="{ 
-                                                                                                                        activeSlide: 0,
-                                                                                                                        slides: [
-                                                                                                                            {
-                                                                                                                                title: 'Branding Politik & Personal Branding',
-                                                                                                                                desc: 'Bangun citra kepemimpinan yang kuat dan terpercaya untuk masa depan.',
-                                                                                                                                price: 'Layanan Eksklusif',
-                                                                                                                                discount: 'Konsultasi Sekarang',
-                                                                                                                                img: 'https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&q=80&w=1200',
-                                                                                                                                cta: 'Pelajari Selengkapnya',
-                                                                                                                                features: ['Strategi Kemenangan', 'Manajemen Reputasi']
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                title: 'Gaya Hidup & Fashion Branding',
-                                                                                                                                desc: 'Ciptakan tren dan koneksi emosional melalui identitas visual yang estetik.',
-                                                                                                                                price: 'Mulai dari Rp5jt',
-                                                                                                                                discount: 'Diskon 15%',
-                                                                                                                                img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200',
-                                                                                                                                cta: 'Lihat Portfolio',
-                                                                                                                                features: ['Visual Lookbook', 'Influencer Kit']
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                title: 'Kuliner & F&B Branding',
-                                                                                                                                desc: 'Buat brand kuliner Anda menggugah selera dengan kemasan dan identitas ikonik.',
-                                                                                                                                price: 'Paket Komplit',
-                                                                                                                                discount: 'Rp2.500.200',
-                                                                                                                                img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200',
-                                                                                                                                cta: 'Pesan Paket',
-                                                                                                                                features: ['Food Photography', 'Menu Design']
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                title: 'Gaming & E-Sports Branding',
-                                                                                                                                desc: 'Tampil dominan di dunia digital dengan identitas gaming yang dinamis.',
-                                                                                                                                price: 'Streamer Pack',
-                                                                                                                                discount: 'Mulai Rp850rb',
-                                                                                                                                img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200',
-                                                                                                                                cta: 'Cek Layanan',
-                                                                                                                                features: ['Overlay Custom', 'Motion Graphics']
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },
-                                                                                                                        prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length },
-                                                                                                                        startAutoplay() { setInterval(() => this.next(), 6000) }
-                                                                                                                    }"
-                x-init="startAutoplay()"
+                                activeSlide: 0,
+                                totalSlides: 4,
+                                next() { this.activeSlide = (this.activeSlide + 1) % this.totalSlides },
+                                prev() { this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides },
+                                startAutoplay() { setInterval(() => this.next(), 6000) }
+                            }" x-init="startAutoplay()"
                 class="lg:col-span-2 relative rounded-3xl overflow-hidden group h-80 lg:h-full bg-gray-100 shadow-sm border border-gray-100">
 
-                {{-- Slides --}}
-                <template x-for="(slide, index) in slides" :key="index">
-                    <div x-show="activeSlide === index" x-transition:enter="transition ease-out duration-500"
-                        x-transition:enter-start="opacity-0 transform translate-x-4"
-                        x-transition:enter-end="opacity-100 transform translate-x-0"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100 transform translate-x-0"
-                        x-transition:leave-end="opacity-0 transform -translate-x-4" class="absolute inset-0">
-                        <img :src="slide.img" class="absolute inset-0 w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent">
-                        </div>
-
-                        <div class="relative h-full flex flex-col justify-center px-8 lg:px-16 text-white space-y-4">
-                            <span
-                                class="px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-primary-400 border border-primary/30 w-fit">
-                                Branding Scope
-                            </span>
-                            <h2 class="text-3xl lg:text-5xl font-black max-w-lg leading-tight" x-text="slide.title"></h2>
-                            <p class="text-sm lg:text-base text-gray-300 max-w-md opacity-90" x-text="slide.desc"></p>
-
-                            <div class="flex items-center gap-6 py-2">
-                                <div class="flex items-center gap-2">
-                                    <div
-                                        class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider opacity-80"
-                                        x-text="slide.features[0]"></span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div
-                                        class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider opacity-80"
-                                        x-text="slide.features[1]"></span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-0">
-                                <p class="text-xs lg:text-sm text-gray-400 font-medium opacity-70" x-text="slide.price"></p>
-                                <p class="text-2xl lg:text-3xl font-black text-accent-400" x-text="slide.discount"></p>
-                            </div>
-
-                            <a href="#"
-                                class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 rounded-xl font-bold text-sm transition-all hover:bg-primary hover:text-white group/btn w-fit">
-                                <span x-text="slide.cta"></span>
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
+                {{-- Slide 1 --}}
+                <div x-show="activeSlide === 0" x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter-start="opacity-0 transform translate-x-4"
+                    x-transition:enter-end="opacity-100 transform translate-x-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 transform translate-x-0"
+                    x-transition:leave-end="opacity-0 transform -translate-x-4" class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&q=80&w=1200"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent">
                     </div>
-                </template>
+
+                    <div class="relative h-full flex flex-col justify-center px-8 lg:px-16 text-white space-y-4">
+                        <span
+                            class="px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-primary-400 border border-primary/30 w-fit">
+                            Branding Scope
+                        </span>
+                        <h2 class="text-3xl lg:text-5xl font-black max-w-lg leading-tight">Branding Politik & Personal
+                            Branding</h2>
+                        <p class="text-sm lg:text-base text-gray-300 max-w-md opacity-90">Bangun citra kepemimpinan yang
+                            kuat dan terpercaya untuk masa depan.</p>
+
+                        <div class="flex items-center gap-6 py-2">
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Strategi
+                                    Kemenangan</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Manajemen
+                                    Reputasi</span>
+                            </div>
+                        </div>
+
+                        <a href="#"
+                            class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 rounded-xl font-bold text-sm transition-all hover:bg-primary hover:text-white group/btn w-fit">
+                            <span>Pelajari Selengkapnya</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Slide 2 --}}
+                <div x-show="activeSlide === 1" x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter-start="opacity-0 transform translate-x-4"
+                    x-transition:enter-end="opacity-100 transform translate-x-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 transform translate-x-0"
+                    x-transition:leave-end="opacity-0 transform -translate-x-4" class="absolute inset-0"
+                    style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent">
+                    </div>
+
+                    <div class="relative h-full flex flex-col justify-center px-8 lg:px-16 text-white space-y-4">
+                        <span
+                            class="px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-primary-400 border border-primary/30 w-fit">
+                            Branding Scope
+                        </span>
+                        <h2 class="text-3xl lg:text-5xl font-black max-w-lg leading-tight">Gaya Hidup & Fashion Branding
+                        </h2>
+                        <p class="text-sm lg:text-base text-gray-300 max-w-md opacity-90">Ciptakan tren dan koneksi
+                            emosional melalui identitas visual yang estetik.</p>
+
+                        <div class="flex items-center gap-6 py-2">
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Visual
+                                    Lookbook</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Influencer
+                                    Kit</span>
+                            </div>
+                        </div>
+
+                        <a href="#"
+                            class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 rounded-xl font-bold text-sm transition-all hover:bg-primary hover:text-white group/btn w-fit">
+                            <span>Lihat Portfolio</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Slide 3 --}}
+                <div x-show="activeSlide === 2" x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter-start="opacity-0 transform translate-x-4"
+                    x-transition:enter-end="opacity-100 transform translate-x-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 transform translate-x-0"
+                    x-transition:leave-end="opacity-0 transform -translate-x-4" class="absolute inset-0"
+                    style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent">
+                    </div>
+
+                    <div class="relative h-full flex flex-col justify-center px-8 lg:px-16 text-white space-y-4">
+                        <span
+                            class="px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-primary-400 border border-primary/30 w-fit">
+                            Branding Scope
+                        </span>
+                        <h2 class="text-3xl lg:text-5xl font-black max-w-lg leading-tight">Kuliner & F&B Branding</h2>
+                        <p class="text-sm lg:text-base text-gray-300 max-w-md opacity-90">Buat brand kuliner Anda menggugah
+                            selera dengan kemasan dan identitas ikonik.</p>
+
+                        <div class="flex items-center gap-6 py-2">
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Food
+                                    Photography</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Menu Design</span>
+                            </div>
+                        </div>
+
+                        <a href="#"
+                            class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 rounded-xl font-bold text-sm transition-all hover:bg-primary hover:text-white group/btn w-fit">
+                            <span>Pesan Paket</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Slide 4 --}}
+                <div x-show="activeSlide === 3" x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter-start="opacity-0 transform translate-x-4"
+                    x-transition:enter-end="opacity-100 transform translate-x-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 transform translate-x-0"
+                    x-transition:leave-end="opacity-0 transform -translate-x-4" class="absolute inset-0"
+                    style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent">
+                    </div>
+
+                    <div class="relative h-full flex flex-col justify-center px-8 lg:px-16 text-white space-y-4">
+                        <span
+                            class="px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-primary-400 border border-primary/30 w-fit">
+                            Branding Scope
+                        </span>
+                        <h2 class="text-3xl lg:text-5xl font-black max-w-lg leading-tight">Gaming & E-Sports Branding</h2>
+                        <p class="text-sm lg:text-base text-gray-300 max-w-md opacity-90">Tampil dominan di dunia digital
+                            dengan identitas gaming yang dinamis.</p>
+
+                        <div class="flex items-center gap-6 py-2">
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Overlay
+                                    Custom</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">Motion
+                                    Graphics</span>
+                            </div>
+                        </div>
+
+                        <a href="#"
+                            class="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 rounded-xl font-bold text-sm transition-all hover:bg-primary hover:text-white group/btn w-fit">
+                            <span>Cek Layanan</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
 
                 {{-- Navigation Buttons --}}
                 <div
-                    class="absolute inset-x-0 top-1/2 -translate-y-1/2 px-4 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    class="absolute inset-x-0 top-1/2 -translate-y-1/2 px-4 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                     <button @click="prev()"
                         class="p-2 lg:p-3 bg-white/10 backdrop-blur-md rounded-full text-white pointer-events-auto hover:bg-white/30 transition-colors border border-white/20">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -210,12 +350,15 @@
                 </div>
 
                 {{-- Indicators --}}
-                <div class="absolute bottom-6 right-8 flex gap-2">
-                    <template x-for="(slide, index) in slides" :key="index">
-                        <button @click="activeSlide = index"
-                            :class="activeSlide === index ? 'bg-primary w-8' : 'bg-white/40 w-2'"
-                            class="h-1.5 rounded-full transition-all duration-300"></button>
-                    </template>
+                <div class="absolute bottom-6 right-8 flex gap-2 z-10">
+                    <button @click="activeSlide = 0" :class="activeSlide === 0 ? 'bg-primary w-8' : 'bg-white/40 w-2'"
+                        class="h-1.5 rounded-full transition-all duration-300"></button>
+                    <button @click="activeSlide = 1" :class="activeSlide === 1 ? 'bg-primary w-8' : 'bg-white/40 w-2'"
+                        class="h-1.5 rounded-full transition-all duration-300"></button>
+                    <button @click="activeSlide = 2" :class="activeSlide === 2 ? 'bg-primary w-8' : 'bg-white/40 w-2'"
+                        class="h-1.5 rounded-full transition-all duration-300"></button>
+                    <button @click="activeSlide = 3" :class="activeSlide === 3 ? 'bg-primary w-8' : 'bg-white/40 w-2'"
+                        class="h-1.5 rounded-full transition-all duration-300"></button>
                 </div>
             </div>
 
@@ -348,13 +491,13 @@
 
             <div class="flex flex-wrap items-center justify-center gap-4 px-4 overflow-hidden">
                 <p class="text-gray-400 font-bold text-sm w-full md:w-auto mb-2 md:mb-0">Branding Kami</p>
-                <a href="#"
+                <a href="{{ route('user.katalog', ['kategori' => 'Politik']) }}"
                     class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md">Politik</a>
-                <a href="#"
+                <a href="{{ route('user.katalog', ['kategori' => 'Gaming']) }}"
                     class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md">Gaming</a>
-                <a href="#"
+                <a href="{{ route('user.katalog', ['kategori' => 'Lifestyle']) }}"
                     class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md">Lifestyle</a>
-                <a href="#"
+                <a href="{{ route('user.katalog', ['kategori' => 'Kuliner & FnB']) }}"
                     class="px-6 py-2.5 rounded-full border-2 border-gray-100 text-sm font-black text-gray-600 hover:border-primary hover:text-primary transition-all bg-white hover:shadow-md flex items-center gap-2">
                     Kuliner & FnB
                     <span
@@ -375,27 +518,27 @@
 
             {{-- HORIZONTAL SCROLL SERVICES --}}
             <div x-data="{ 
-                                                                                                                                                                            scrollNext() { 
-                                                                                                                                                                                const container = this.$refs.container;
-                                                                                                                                                                                if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
-                                                                                                                                                                                    container.scrollTo({ left: 0, behavior: 'smooth' });
-                                                                                                                                                                                } else {
-                                                                                                                                                                                    container.scrollBy({ left: 300, behavior: 'smooth' });
-                                                                                                                                                                                }
-                                                                                                                                                                            },
-                                                                                                                                                                            scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); },
-                                                                                                                                                                            autoplayInterval: null,
-                                                                                                                                                                            startAutoplay() {
-                                                                                                                                                                                this.autoplayInterval = setInterval(() => {
-                                                                                                                                                                                    this.scrollNext();
-                                                                                                                                                                                }, 4000);
-                                                                                                                                                                            },
-                                                                                                                                                                            stopAutoplay() {
-                                                                                                                                                                                if (this.autoplayInterval) {
-                                                                                                                                                                                    clearInterval(this.autoplayInterval);
-                                                                                                                                                                                }
-                                                                                                                                                                            }
-                                                                                                                                                                        }"
+                                                                                                                                                                                            scrollNext() { 
+                                                                                                                                                                                                const container = this.$refs.container;
+                                                                                                                                                                                                if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+                                                                                                                                                                                                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    container.scrollBy({ left: 300, behavior: 'smooth' });
+                                                                                                                                                                                                }
+                                                                                                                                                                                            },
+                                                                                                                                                                                            scrollPrev() { this.$refs.container.scrollBy({ left: -300, behavior: 'smooth' }); },
+                                                                                                                                                                                            autoplayInterval: null,
+                                                                                                                                                                                            startAutoplay() {
+                                                                                                                                                                                                this.autoplayInterval = setInterval(() => {
+                                                                                                                                                                                                    this.scrollNext();
+                                                                                                                                                                                                }, 4000);
+                                                                                                                                                                                            },
+                                                                                                                                                                                            stopAutoplay() {
+                                                                                                                                                                                                if (this.autoplayInterval) {
+                                                                                                                                                                                                    clearInterval(this.autoplayInterval);
+                                                                                                                                                                                                }
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }"
                 x-init="startAutoplay()" @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" class="relative group">
 
                 {{-- Navigation Buttons --}}
@@ -452,23 +595,23 @@
                                 </h4>
 
                                 {{-- Rating Real --}}
-                                @php
-                                    $svcAvg = $service->reviews->avg('rating') ?? 0;
-                                    $svcCount = $service->reviews->count();
-                                @endphp
-                                <div class="flex items-center gap-1 mt-auto">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="h-3.5 w-3.5 {{ $svcCount > 0 ? 'text-yellow-400' : 'text-gray-300' }}"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    @if($svcCount > 0)
-                                        <span class="text-xs font-black text-gray-900">{{ number_format($svcAvg, 1) }}</span>
-                                        <span class="text-[10px] text-gray-400 font-medium">({{ $svcCount }})</span>
-                                    @else
-                                        <span class="text-[10px] text-gray-400 font-medium italic">Belum ada ulasan</span>
-                                    @endif
+                                <div class="flex items-center gap-2 mt-auto">
+                                    <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-3.5 w-3.5 {{ $service->reviews_count > 0 ? 'text-yellow-400' : 'text-gray-300' }}"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        @if($service->reviews_count > 0)
+                                            <span
+                                                class="text-xs font-black text-gray-900">{{ number_format($service->reviews_avg_rating, 1) }}</span>
+                                        @else
+                                            <span class="text-xs font-black text-gray-400">0.0</span>
+                                        @endif
+                                    </div>
+                                    <span class="w-1 h-1 bg-gray-200 rounded-full"></span>
+                                    <span class="text-xs font-bold text-gray-500">{{ $service->sold_count ?? 0 }} Terjual</span>
                                 </div>
 
                                 <div class="pt-2 border-t border-gray-50 flex items-center justify-between">
@@ -505,7 +648,8 @@
                                 <div>
                                     <h3
                                         class="font-black text-gray-900 text-lg leading-tight group-hover/mitra:text-primary transition-colors">
-                                        {{ $mitra->nama_mitra }}</h3>
+                                        {{ $mitra->nama_mitra }}
+                                    </h3>
                                     <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
                                             stroke="currentColor">
@@ -546,24 +690,24 @@
                                         </h4>
 
                                         {{-- Rating Real --}}
-                                        @php
-                                            $svcAvg2 = $service->reviews->avg('rating') ?? 0;
-                                            $svcCount2 = $service->reviews->count();
-                                        @endphp
-                                        <div class="flex items-center gap-1 mb-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="h-3 w-3 {{ $svcCount2 > 0 ? 'text-yellow-400' : 'text-gray-300' }}"
-                                                viewBox="0 0 20 20" fill="currentColor">
-                                                <path
-                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                            </svg>
-                                            @if($svcCount2 > 0)
-                                                <span
-                                                    class="text-[10px] font-black text-gray-900">{{ number_format($svcAvg2, 1) }}</span>
-                                                <span class="text-[10px] text-gray-400">({{ $svcCount2 }})</span>
-                                            @else
-                                                <span class="text-[10px] text-gray-400 italic">Belum ada ulasan</span>
-                                            @endif
+                                        <div class="flex items-center gap-2 mb-4">
+                                            <div class="flex items-center gap-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-3 w-3 {{ $service->reviews_count > 0 ? 'text-yellow-400' : 'text-gray-300' }}"
+                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                                @if($service->reviews_count > 0)
+                                                    <span
+                                                        class="text-[10px] font-black text-gray-900">{{ number_format($service->reviews_avg_rating, 1) }}</span>
+                                                @else
+                                                    <span class="text-[10px] font-black text-gray-400">0.0</span>
+                                                @endif
+                                            </div>
+                                            <span class="w-1 h-1 bg-gray-200 rounded-full"></span>
+                                            <span class="text-[10px] font-bold text-gray-500">{{ $service->sold_count ?? 0 }}
+                                                Terjual</span>
                                         </div>
 
                                         <div class="mt-auto pt-3 border-t border-gray-50 flex flex-col">

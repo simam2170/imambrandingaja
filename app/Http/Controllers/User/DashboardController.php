@@ -23,10 +23,36 @@ class DashboardController extends Controller
     public function index($id = null)
     {
         // Popular/Featured services
-        $popularServices = Layanan::with(['mitra', 'reviews'])->inRandomOrder()->take(5)->get();
-        $marketplaceServices = Layanan::with(['mitra', 'reviews'])->latest()->get();
+        $popularServices = Layanan::with(['mitra', 'reviews'])
+            ->withCount([
+                'reviews',
+                'orders as sold_count' => function ($query) {
+                    $query->where('status', 'selesai');
+                }
+            ])
+            ->withAvg('reviews', 'rating')
+            ->inRandomOrder()->take(5)->get();
+
+        $marketplaceServices = Layanan::with(['mitra', 'reviews'])
+            ->withCount([
+                'reviews',
+                'orders as sold_count' => function ($query) {
+                    $query->where('status', 'selesai');
+                }
+            ])
+            ->withAvg('reviews', 'rating')
+            ->latest()->get();
         $featuredMitra = Mitra::inRandomOrder()->first();
-        $mitraList = Mitra::with(['layanan'])->take(6)->get();
+        $mitraList = Mitra::with([
+            'layanan' => function ($query) {
+                $query->withCount([
+                    'reviews',
+                    'orders as sold_count' => function ($q) {
+                        $q->where('status', 'selesai');
+                    }
+                ])->withAvg('reviews', 'rating');
+            }
+        ])->take(6)->get();
 
         // Recent orders for widget
         $recentOrders = [];

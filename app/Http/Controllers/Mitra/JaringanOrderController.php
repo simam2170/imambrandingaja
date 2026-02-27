@@ -66,6 +66,7 @@ class JaringanOrderController extends Controller
         if ($order->status == 'diproses') {
             $request->validate([
                 'bukti_selesai' => 'required|image|mimes:jpeg,png,jpg,pdf|max:2048',
+                'deskripsi_pekerjaan' => 'required|string|max:500',
             ]);
 
             if ($request->hasFile('bukti_selesai')) {
@@ -78,7 +79,16 @@ class JaringanOrderController extends Controller
                     'bukti_selesai' => $filename
                 ]);
 
-                return redirect()->back()->with('success', 'Pesanan diselesaikan dan bukti pekerjaan telah diupload.');
+                // Create Portfolio
+                \App\Models\Portofolio::create([
+                    'mitra_id' => $mitra->id,
+                    'order_id' => $order->id,
+                    'layanan_id' => $order->layanan_branding_id, // Ensure this column name matches DB
+                    'file_portofolio' => $filename,
+                    'deskripsi' => $request->deskripsi_pekerjaan,
+                ]);
+
+                return redirect()->back()->with('success', 'Pesanan diselesaikan dan portofolio berhasil ditambahkan.');
             }
         }
 

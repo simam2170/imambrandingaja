@@ -16,7 +16,7 @@ class JaringanController extends Controller
     public function show($id)
     {
         $user = $this->getUser();
-        $mitra = \App\Models\Jaringan::with(['layanan.reviews'])->findOrFail($id);
+        $mitra = \App\Models\Jaringan::with(['layanan.reviews', 'portofolios.layanan', 'portofolios.order.user', 'portofolios.order.review', 'reviews.user', 'reviews.layanan'])->findOrFail($id);
 
         // Calculate average rating and count for this mitra
         $avgRating = Review::where('mitra_id', $id)->avg('rating') ?? 0;

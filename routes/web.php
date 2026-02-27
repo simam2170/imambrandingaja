@@ -37,6 +37,7 @@ Route::prefix('user')->group(function () {
 
     // Maintain existing for UI compatibility
     Route::get('/dashboard/{id?}', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/katalog', [App\Http\Controllers\User\KatalogController::class, 'index'])->name('user.katalog');
     Route::get('/profile/{id?}', [App\Http\Controllers\User\ProfileController::class, 'index'])->name('user.profile');
     Route::post('/profile/{id?}', [App\Http\Controllers\User\ProfileController::class, 'update'])->name('user.profile.update');
     Route::get('/keranjang', [App\Http\Controllers\User\CartController::class, 'index'])->name('user.keranjang');
@@ -69,6 +70,8 @@ Route::prefix('mitra')->group(function () {
     Route::get('/pesanan/detail/{id}', [App\Http\Controllers\Mitra\JaringanOrderController::class, 'show'])->name('mitra.pesanan.show');
     Route::get('/layanan-saya', [App\Http\Controllers\Mitra\ProfilController::class, 'layanan'])->name('mitra.layanan');
     Route::post('/layanan-saya', [App\Http\Controllers\Mitra\ProfilController::class, 'storeLayanan'])->name('mitra.layanan.store');
+    Route::put('/layanan-saya/{id}', [App\Http\Controllers\Mitra\ProfilController::class, 'updateLayanan'])->name('mitra.layanan.update');
+    Route::delete('/layanan-saya/{id}', [App\Http\Controllers\Mitra\ProfilController::class, 'destroyLayanan'])->name('mitra.layanan.destroy');
     Route::get('/pendapatan', [App\Http\Controllers\Mitra\PendapatanController::class, 'index'])->name('mitra.pendapatan');
     Route::get('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'index'])->name('mitra.profil');
     Route::post('/profil', [App\Http\Controllers\Mitra\ProfilController::class, 'update'])->name('mitra.profil.update');

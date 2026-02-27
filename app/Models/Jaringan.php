@@ -48,4 +48,9 @@ class Jaringan extends Authenticatable
     {
         return $this->hasMany(Review::class, 'mitra_id');
     }
+
+    public function portofolios()
+    {
+        return $this->hasMany(Portofolio::class, 'mitra_id');
+    }
 }

@@ -76,6 +76,11 @@ class Order extends Model
         return $this->hasOne(Review::class, 'order_id');
     }
 
+    public function portofolio()
+    {
+        return $this->hasOne(Portofolio::class, 'order_id');
+    }
+
     /**
      * Get the timeline of the order.
      *

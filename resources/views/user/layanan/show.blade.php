@@ -4,75 +4,75 @@
 @section('content')
 
     <div class="mx-auto space-y-8 max-w-7xl" x-data="{
-                        tab: 'detail',
-                        pkg: null,
-                        qty: 1,
-                        // Parse packages from JSON or default
-                        packages: {{ $layanan->harga_json ? json_encode($layanan->harga_json) : json_encode($packages) }},
-                        detail_klasifikasi: {{ json_encode($layanan->detail_klasifikasi ?? []) }},
-                        init() {
-                            // Select first package by default
-                            const keys = Object.keys(this.packages);
-                            if (keys.length > 0) {
-                                this.pkg = keys[0];
-                            }
-                        },
-                        formatPrice(value) {
-                            return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                        },
-                        get selectedPkg() {
-                            return this.packages[this.pkg];
-                        },
-                        get subtotal() {
-                            if (!this.selectedPkg) return 0;
-                            return this.selectedPkg.price * this.qty;
-                        },
-                        async addToCart() {
-                            if (!this.selectedPkg) return;
+                                                                            tab: 'detail',
+                                                                                pkg: null,
+                                                                                qty: 1,
+                                                                                // Parse packages from JSON or default
+                                                                                packages: {{ $layanan->harga_json ? json_encode($layanan->harga_json) : json_encode($packages) }},
+                                                                                detail_klasifikasi: {{ json_encode($layanan->detail_klasifikasi ?? []) }},
+                                                                                init() {
+                                                                                    // Select first package by default
+                                                                                    const keys = Object.keys(this.packages);
+                                                                                    if (keys.length > 0) {
+                                                                                        this.pkg = keys[0];
+                                                                                    }
+                                                                                },
+                                                                                formatPrice(value) {
+                                                                                    return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                                                                                },
+                                                                                get selectedPkg() {
+                                                                                    return this.packages[this.pkg];
+                                                                                },
+                                                                                get subtotal() {
+                                                                                    if (!this.selectedPkg) return 0;
+                                                                                    return this.selectedPkg.price * this.qty;
+                                                                                },
+                                                                                async addToCart() {
+                                                                                    if (!this.selectedPkg) return;
 
-                            try {
-                                const response = await fetch('{{ route('user.cart.add') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify({
-                                        layanan_id: {{ $layanan->id }},
-                                        qty: this.qty,
-                                        pkg: this.pkg,
-                                        price: this.selectedPkg.price
-                                    })
-                                });
+                                                                                    try {
+                                                                                        const response = await fetch('{{ route('user.cart.add') }}', {
+                                                                                            method: 'POST',
+                                                                                            headers: {
+                                                                                                'Content-Type': 'application/json',
+                                                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                                                            },
+                                                                                            body: JSON.stringify({
+                                                                                                layanan_id: {{ $layanan->id }},
+                                                                                                qty: this.qty,
+                                                                                                pkg: this.pkg,
+                                                                                                price: this.selectedPkg.price
+                                                                                            })
+                                                                                        });
 
-                                if (response.ok) {
-                                    alert('Layanan berhasil ditambahkan ke keranjang!');
-                                } else {
-                                    alert('Gagal menambahkan ke keranjang. Silakan login terlebih dahulu.');
-                                }
-                            } catch (error) {
-                                console.error('Error adding to cart:', error);
-                                alert('Terjadi kesalahan saat menambahkan ke keranjang.');
-                            }
-                        },
-                        buyNow() {
-                            if (!this.selectedPkg) return;
-                            const item = {
-                                id: {{ $layanan->id }},
-                                serviceId: {{ $layanan->id }},
-                                mitraId: {{ $layanan->mitra_id }},
-                                seller: '{{ addslashes($layanan->mitra->nama_mitra ?? 'Mitra') }}',
-                                name: '{{ addslashes($layanan->nama_layanan) }}',
-                                pkg: this.pkg,
-                                pkgLabel: this.selectedPkg.label,
-                                price: this.selectedPkg.price,
-                                qty: this.qty,
-                                checked: true
-                            };
-                            localStorage.setItem('checkoutItems', JSON.stringify([item]));
-                            window.location.href = '{{ route('user.checkout') }}';
-                        }
-                     }">
+                                                                                        if (response.ok) {
+                                                                                            alert('Layanan berhasil ditambahkan ke keranjang!');
+                                                                                        } else {
+                                                                                            alert('Gagal menambahkan ke keranjang. Silakan login terlebih dahulu.');
+                                                                                        }
+                                                                                    } catch (error) {
+                                                                                        console.error('Error adding to cart:', error);
+                                                                                        alert('Terjadi kesalahan saat menambahkan ke keranjang.');
+                                                                                    }
+                                                                                },
+                                                                                buyNow() {
+                                                                                    if (!this.selectedPkg) return;
+                                                                                    const item = {
+                                                                                        id: {{ $layanan->id }},
+                                                                                        serviceId: {{ $layanan->id }},
+                                                                                        mitraId: {{ $layanan->mitra_id }},
+                                                                                        seller: '{{ addslashes($layanan->mitra->nama_mitra ?? 'Mitra') }}',
+                                                                                        name: '{{ addslashes($layanan->nama_layanan) }}',
+                                                                                        pkg: this.pkg,
+                                                                                        pkgLabel: this.selectedPkg.label,
+                                                                                        price: this.selectedPkg.price,
+                                                                                        qty: this.qty,
+                                                                                        checked: true
+                                                                                    };
+                                                                                    localStorage.setItem('checkoutItems', JSON.stringify([item]));
+                                                                                    window.location.href = '{{ route('user.checkout') }}';
+                                                                                }
+                                                                             }">
 
         {{-- BREADCRUMB --}}
         <nav class="flex text-sm text-gray-500">
@@ -89,66 +89,108 @@
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
             {{-- LEFT: INFO LAYANAN --}}
-            <div class="p-6 bg-white shadow-sm lg:col-span-2 rounded-xl">
-                <div class="flex gap-6">
+            <div class="p-8 bg-white shadow-sm lg:col-span-2 rounded-[32px] border border-gray-100">
+                <div class="flex flex-col md:flex-row gap-8">
                     <!-- Real Thumbnail -->
-                    <div class="flex-shrink-0 w-40 h-40 overflow-hidden rounded-xl bg-gray-50 border border-gray-100">
+                    <div
+                        class="flex-shrink-0 w-full md:w-72 aspect-square overflow-hidden rounded-2xl bg-gray-50 border border-gray-100 shadow-sm group">
                         <img src="{{ $layanan->thumbnail ?: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80' }}"
-                            alt="{{ $layanan->nama_layanan }}" class="object-cover w-full h-full">
+                            alt="{{ $layanan->nama_layanan }}"
+                            class="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110">
                     </div>
 
                     <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span
-                                class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[10px] font-bold rounded-md uppercase">{{ $layanan->kategori ?? 'Layanan' }}</span>
-                            @if($layanan->klasifikasi)
-                                @php
-                                    $badgeClasses = [
-                                        'berita' => 'bg-blue-100 text-blue-700',
-                                        'sosmed' => 'bg-pink-100 text-pink-700',
-                                        'ads_digital' => 'bg-amber-100 text-amber-700',
-                                        'consulting' => 'bg-emerald-100 text-emerald-700',
-                                    ];
-                                    $badgeLabels = [
-                                        'berita' => 'Berita',
-                                        'sosmed' => 'Sosial Media',
-                                        'ads_digital' => 'Ads Digital',
-                                        'consulting' => 'Consulting',
-                                    ];
-                                @endphp
-                                <span
-                                    class="px-2 py-0.5 text-[10px] font-bold rounded-md uppercase {{ $badgeClasses[$layanan->klasifikasi] ?? 'bg-gray-100 text-gray-600' }}">
-                                    {{ $badgeLabels[$layanan->klasifikasi] ?? $layanan->klasifikasi }}
-                                </span>
-                            @endif
-                        </div>
-                        <h1 class="text-xl font-bold">{{ $layanan->nama_layanan }}</h1>
-                        <p class="mb-3 text-sm text-gray-500"
-                            x-text="selectedPkg ? formatPrice(selectedPkg.price) : 'Rp 0'"></p>
+                        <div class="flex items-center gap-2 mb-3">
+                            @php
+                                $badgeClasses = [
+                                    'berita' => 'bg-blue-100 text-blue-700',
+                                    'sosmed' => 'bg-pink-100 text-pink-700',
+                                    'ads_digital' => 'bg-amber-100 text-amber-700',
+                                    'consulting' => 'bg-emerald-100 text-emerald-700',
+                                ];
+                                $badgeLabels = [
+                                    'berita' => 'Berita',
+                                    'sosmed' => 'Sosial Media',
+                                    'ads_digital' => 'Ads Digital',
+                                    'consulting' => 'Consulting',
+                                ];
+                                $currentKlasifikasi = $layanan->klasifikasi;
+                                $displayLabel = $currentKlasifikasi ? ($badgeLabels[$currentKlasifikasi] ?? $currentKlasifikasi) : ($layanan->kategori ?? 'Layanan');
+                                $displayClass = $currentKlasifikasi ? ($badgeClasses[$currentKlasifikasi] ?? 'bg-primary/10 text-primary') : 'bg-primary/10 text-primary';
+                                $showDk = is_array($layanan->detail_klasifikasi) ? $layanan->detail_klasifikasi : json_decode($layanan->detail_klasifikasi, true);
+                                $showKat = $showDk ? (collect([$showDk['info']['jenis_layanan'] ?? null, $showDk['info']['jenis_konten'] ?? null, $showDk['info']['jenis_campaign'] ?? null, $showDk['info']['format'] ?? null])->flatten()->filter()->first()) : null;
+                                $showKatColors = ['Politik' => 'bg-red-100 text-red-700', 'Gaming' => 'bg-purple-100 text-purple-700', 'Lifestyle' => 'bg-pink-100 text-pink-700', 'Kuliner & FnB' => 'bg-amber-100 text-amber-700'];
+                                $showKatClass = $showKatColors[$showKat] ?? 'bg-gray-100 text-gray-500';
+                            @endphp
+                            <span class="px-2 py-0.5 text-[10px] font-black rounded-md uppercase {{ $displayClass }}">
+                                {{ $displayLabel }}
+                            </span>
 
-                        {{-- TABS --}}
-                        <div class="flex gap-6 pb-1 mb-4 text-sm border-b border-gray-100">
-                            <button @click="tab = 'detail'" class="pb-2 font-semibold transition-colors border-b-2"
-                                :class="tab === 'detail' ? 'text-primary border-primary' : 'text-gray-400 border-transparent hover:text-primary'">
-                                Detail Layanan
+                            <div class="flex items-center gap-2 ml-auto">
+                                <div class="flex items-center gap-1 group/rating cursor-help">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <span class="text-xs font-black text-gray-800">{{ number_format($avgRating, 1) }}</span>
+                                    <span class="text-[10px] font-bold text-gray-400">({{ $reviewCount }} Rating)</span>
+                                </div>
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span>
+                                <span class="text-xs font-black text-gray-800">{{ $soldCount }} <span
+                                        class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Terjual</span></span>
+                            </div>
+                        </div>
+                        <h1 class="text-2xl font-black text-gray-900 leading-tight mb-2">{{ $layanan->nama_layanan }}</h1>
+                        <div class="flex items-baseline gap-2 mb-6 text-primary">
+                            <span class="text-3xl font-black"
+                                x-text="selectedPkg ? formatPrice(selectedPkg.price) : 'Rp 0'"></span>
+                            <span class="text-xs font-bold text-gray-400">/ Paket Terpilih</span>
+                        </div>
+
+                        {{-- TOKOPEDIA TABS --}}
+                        <div class="flex gap-8 mb-6 border-b border-gray-100 overflow-x-auto no-scrollbar">
+                            <button @click="tab = 'detail'"
+                                class="pb-3 text-sm font-black transition-all border-b-4 shrink-0"
+                                :class="tab === 'detail' ? 'text-primary border-primary' : 'text-gray-400 border-transparent hover:text-gray-600'">
+                                Detail Produk
                             </button>
-                            <button @click="tab = 'info'" class="pb-2 font-semibold transition-colors border-b-2"
-                                :class="tab === 'info' ? 'text-primary border-primary' : 'text-gray-400 border-transparent hover:text-primary'">
+                            <button @click="tab = 'spesifikasi'"
+                                class="pb-3 text-sm font-black transition-all border-b-4 shrink-0"
+                                :class="tab === 'spesifikasi' ? 'text-primary border-primary' : 'text-gray-400 border-transparent hover:text-gray-600'">
+                                Spesifikasi
+                            </button>
+                            <button @click="tab = 'info'" class="pb-3 text-sm font-black transition-all border-b-4 shrink-0"
+                                :class="tab === 'info' ? 'text-primary border-primary' : 'text-gray-400 border-transparent hover:text-gray-600'">
                                 Info Penting
                             </button>
                         </div>
 
                         {{-- TAB CONTENT --}}
-                        <div class="relative min-h-[100px]">
-                            {{-- Detail Layanan --}}
+                        <div class="relative min-h-[200px]">
+                            {{-- 1. DETAIL PRODUK --}}
                             <div x-show="tab === 'detail'" x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="opacity-0 translate-y-1"
-                                x-transition:enter-end="opacity-100 translate-y-0">
-                                <div class="text-sm leading-relaxed text-gray-600">
-                                    {!! nl2br(e($layanan->deskripsi)) !!}
+                                x-transition:enter-end="opacity-100 translate-y-0" class="space-y-4">
+                                <div class="flex gap-2 text-xs">
+                                    <span class="font-bold text-gray-400 w-24">Kondisi:</span>
+                                    <span class="font-black text-gray-800">Baru</span>
                                 </div>
+                                <div class="flex gap-2 text-xs">
+                                    <span class="font-bold text-gray-400 w-24">Waktu Kerja:</span>
+                                    <span class="font-black text-primary">{{ $layanan->estimasi_hari ?? '3' }} Hari</span>
+                                </div>
+                                <div class="pt-4 border-t border-gray-50">
+                                    <p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                                        {!! nl2br(e($layanan->deskripsi)) !!}
+                                    </p>
+                                </div>
+                            </div>
 
-                                {{-- Detail Klasifikasi --}}
+                            {{-- 2. SPESIFIKASI --}}
+                            <div x-show="tab === 'spesifikasi'" style="display: none;"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 translate-y-1"
+                                x-transition:enter-end="opacity-100 translate-y-0">
                                 @if($layanan->detail_klasifikasi)
                                     @php
                                         $detailLabels = [
@@ -161,52 +203,60 @@
                                             'bidang_konsultasi' => 'Bidang Konsultasi',
                                             'format' => 'Format',
                                         ];
-
                                         $infoEntries = $layanan->detail_klasifikasi['info'] ?? [];
-                                        // Fallback for old structure if info is missing
                                         if (empty($infoEntries) && !isset($layanan->detail_klasifikasi['platform_pricing'])) {
                                             $infoEntries = array_filter($layanan->detail_klasifikasi, fn($v) => !is_array($v));
                                         }
                                     @endphp
-
                                     @if(!empty($infoEntries))
-                                        <div class="mt-4 space-y-4">
+                                        <div class="space-y-6">
                                             @foreach($infoEntries as $key => $values)
-                                                @php
-                                                    $values = is_array($values) ? $values : [$values];
-                                                @endphp
+                                                @php $values = is_array($values) ? $values : [$values]; @endphp
                                                 @if(count($values) > 0)
-                                                    <div>
-                                                        <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-2">
+                                                    <div class="flex gap-4">
+                                                        <p class="text-xs font-bold text-gray-400 w-28 shrink-0 py-1">
                                                             {{ $detailLabels[$key] ?? $key }}
                                                         </p>
-                                                        <div class="flex flex-wrap gap-1.5">
+                                                        <div class="flex flex-wrap gap-2">
                                                             @foreach($values as $val)
                                                                 <span
-                                                                    class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-primary/5 text-primary border border-primary/10">
-                                                                    {{ $val }}
-                                                                </span>
+                                                                    class="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black rounded-lg border border-primary/10">{{ $val }}</span>
                                                             @endforeach
                                                         </div>
                                                     </div>
                                                 @endif
                                             @endforeach
                                         </div>
+                                    @else
+                                        <p class="text-xs text-gray-400 italic">Tidak ada spesifikasi tambahan.</p>
                                     @endif
+                                @else
+                                    <p class="text-xs text-gray-400 italic">Tidak ada spesifikasi tambahan.</p>
                                 @endif
                             </div>
 
-                            {{-- Info Penting --}}
+                            {{-- 3. INFO PENTING --}}
                             <div x-show="tab === 'info'" style="display: none;"
                                 x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="opacity-0 translate-y-1"
                                 x-transition:enter-end="opacity-100 translate-y-0">
-                                <div
-                                    class="p-4 space-y-3 text-sm text-gray-600 border border-primary-100 rounded-lg bg-primary-50">
-                                    <p class="font-semibold text-primary-800">📋 Syarat & Ketentuan:</p>
-                                    <ul class="ml-5 space-y-1 list-disc">
-                                        <li>Estimasi pengerjaan: {{ $layanan->estimasi_hari }} Hari.</li>
-                                        <li>Revisi sesuai kesepakatan.</li>
+                                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                                    <h5 class="text-sm font-black text-gray-800 mb-4 flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Kebijakan Layanan & Waktu Kerja
+                                    </h5>
+                                    <ul class="text-xs text-gray-500 space-y-3 list-disc list-inside">
+                                        <li>Estimasi pengerjaan: <span
+                                                class="font-black text-gray-700">{{ $layanan->estimasi_hari }} Hari
+                                                Kerja</span>.</li>
+                                        <li>Revisi dilakukan sesuai dengan paket yang dipilih.</li>
+                                        <li>Pastikan memberikan brief yang jelas sebelum pengerjaan dimulai.</li>
+                                        <li>Komunikasi hanya dilakukan melalui platform <span
+                                                class="font-black text-primary">BrandingAja</span>.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -220,8 +270,8 @@
                                     <button @click="pkg = key; qty = 1"
                                         class="px-4 py-2 text-xs font-semibold transition-all border rounded-full"
                                         :class="pkg === key 
-                                                            ? 'bg-primary text-white border-primary shadow-md transform scale-105' 
-                                                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100'">
+                                                                                                                    ? 'bg-primary text-white border-primary shadow-md transform scale-105' 
+                                                                                                                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100'">
                                         <span x-text="package.label"></span>
                                     </button>
                                 </template>
@@ -297,7 +347,7 @@
                     <h3 class="font-bold text-lg relative z-10">Butuh Bantuan?</h3>
                     <p class="text-sm text-white/80 mt-2 relative z-10 leading-relaxed">Hubungi admin jika Anda mengalami
                         kesulitan.</p>
-                    <a href="#"
+                    <a href="https://wa.me/6282328786328" target="_blank"
                         class="mt-4 inline-block px-6 py-2 bg-white text-primary font-bold text-sm rounded-xl relative z-10 hover:bg-gray-50 transition-colors">
                         Chat Admin
                     </a>

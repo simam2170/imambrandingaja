@@ -16,8 +16,8 @@
                 @foreach (['menunggu_pembayaran' => 'Belum Bayar', 'direview' => 'Direview', 'diproses' => 'Diproses', 'selesai' => 'Selesai', 'ditolak' => 'Ditolak', 'dibatalkan' => 'Dibatalkan'] as $key => $label)
                     <button @click="activeStatus = '{{ $key }}'"
                         :class="activeStatus === '{{ $key }}' 
-                                                                                    ? 'border-primary text-primary' 
-                                                                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                                                                            ? 'border-primary text-primary' 
+                                                                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                         class="relative px-1 py-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap">
                         {{ $label }}
 
@@ -63,12 +63,12 @@
                 {{-- STATUS HEADER (Dynamic based on Tab) --}}
                 <div class="mb-6">
                     <span class="px-6 py-2 text-sm font-bold text-white capitalize rounded-full shadow-sm" :class="{
-                                                          'bg-gray-500': activeStatus === 'menunggu_pembayaran',
-                                                          'bg-accent-500': activeStatus === 'direview',
-                                                          'bg-primary': activeStatus === 'diproses',
-                                                          'bg-green-500': activeStatus === 'selesai',
-                                                          'bg-red-500': activeStatus === 'ditolak' || activeStatus === 'dibatalkan'
-                                                      }"
+                                                              'bg-gray-500': activeStatus === 'menunggu_pembayaran',
+                                                              'bg-accent-500': activeStatus === 'direview',
+                                                              'bg-primary': activeStatus === 'diproses',
+                                                              'bg-green-500': activeStatus === 'selesai',
+                                                              'bg-red-500': activeStatus === 'ditolak' || activeStatus === 'dibatalkan'
+                                                          }"
                         x-text="activeStatus === 'menunggu_pembayaran' ? 'Menunggu Pembayaran' : (activeStatus === 'direview' ? 'Menunggu Review Admin' : activeStatus)">
                     </span>
                 </div>
@@ -82,15 +82,22 @@
                                 <div
                                     class="relative flex items-center gap-6 p-6 overflow-hidden transition-all bg-white border border-gray-100 shadow-sm cursor-pointer group rounded-xl hover:shadow-md hover:border-primary/50">
                                     <div class="flex flex-col gap-4 sm:flex-row w-full">
-                                        <div
-                                            class="w-24 h-24 overflow-hidden bg-gray-100 rounded-lg shrink-0 flex items-center justify-center">
-                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($order->layanan->nama_layanan ?? 'Service') }}&background=f3f4f6&color=666"
-                                                class="w-full h-full object-cover">
-                                        </div>
+                                        <a href="{{ route('user.layanan.show', $order->layanan->id ?? 0) }}"
+                                            class="w-24 h-24 overflow-hidden bg-gray-100 rounded-lg shrink-0 flex items-center justify-center hover:opacity-80 transition-opacity">
+                                            @if($order->layanan && $order->layanan->thumbnail)
+                                                <img src="{{ $order->layanan->thumbnail }}" class="w-full h-full object-cover">
+                                            @else
+                                                <img src="https://ui-avatars.com/api/?name={{ urlencode($order->layanan->nama_layanan ?? 'Service') }}&background=f3f4f6&color=666"
+                                                    class="w-full h-full object-cover">
+                                            @endif
+                                        </a>
                                         <div class="flex flex-col justify-between flex-1">
                                             <div>
                                                 <h3 class="text-base font-bold text-gray-800">
-                                                    {{ $order->layanan->nama_layanan ?? 'Layanan Tidak Diketahui' }}
+                                                    <a href="{{ route('user.layanan.show', $order->layanan->id ?? 0) }}"
+                                                        class="hover:text-primary transition-colors">
+                                                        {{ $order->layanan->nama_layanan ?? 'Layanan Tidak Diketahui' }}
+                                                    </a>
                                                     <span class="text-sm font-normal text-gray-600 block sm:inline sm:ml-2">
                                                         @if($order->isExpired() && !$order->bukti_pembayaran)
                                                             <span class="text-red-500 font-bold">Waktu Pembayaran Habis (Hangus)</span>

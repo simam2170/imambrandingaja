@@ -39,4 +39,14 @@ class Layanan extends Model
     {
         return $this->hasMany(Review::class, 'layanan_id');
     }
+
+    public function portofolios()
+    {
+        return $this->hasMany(Portofolio::class, 'layanan_id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'layanan_branding_id');
+    }
 }

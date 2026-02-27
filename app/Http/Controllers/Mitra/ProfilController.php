@@ -70,7 +70,15 @@ class ProfilController extends Controller
         if (!$mitra)
             return redirect('/')->with('error', 'Mitra tidak ditemukan');
 
-        $layanan = \App\Models\Layanan::where('mitra_id', $mitra->id)->get();
+        $layanan = \App\Models\Layanan::where('mitra_id', $mitra->id)
+            ->withCount([
+                'reviews',
+                'orders as sold_count' => function ($query) {
+                    $query->where('status', 'selesai');
+                }
+            ])
+            ->withAvg('reviews', 'rating')
+            ->get();
 
         return view('mitra.layanan', compact('layanan', 'mitra'));
     }
@@ -170,5 +178,114 @@ class ProfilController extends Controller
         ]);
 
         return response()->json(['message' => 'Layanan berhasil ditambahkan!']);
+    }
+
+    public function updateLayanan(Request $request, $id)
+    {
+        $mitra = $this->getMitra();
+        if (!$mitra)
+            return response()->json(['message' => 'Mitra tidak ditemukan'], 404);
+
+        $layanan = \App\Models\Layanan::where('mitra_id', $mitra->id)->findOrFail($id);
+
+        $request->validate([
+            'nama_layanan' => 'required|string|max:255',
+            'klasifikasi' => 'required|string|in:berita,sosmed,ads_digital,consulting',
+            'estimasi_hari' => 'required|integer|min:1',
+            'deskripsi' => 'required|string',
+            'thumbnail' => 'nullable|file|image|max:2048',
+            'thumbnail_url' => 'nullable|string',
+            'detail_klasifikasi' => 'nullable|array',
+        ]);
+
+        // Auto-generate packages from detail_klasifikasi entries
+        $packages = [];
+        $detailData = $request->detail_klasifikasi ?? [];
+        $tipeEntries = $detailData['tipe'] ?? [];
+        $platformPricing = $detailData['platform_pricing'] ?? [];
+        $prices = [];
+
+        // Handle platform specific pricing
+        foreach ($platformPricing as $platform => $list) {
+            foreach ($list as $index => $tipe) {
+                $nama = $tipe['nama'] ?? '';
+                $harga = (float) ($tipe['harga'] ?? 0);
+
+                if (!empty($nama) && $harga > 0) {
+                    $key = 'pkg_' . md5($platform . $nama . $index);
+                    $packages[$key] = [
+                        'label' => "$platform - $nama",
+                        'price' => $harga,
+                        'viewLabel' => "$platform - $nama",
+                        'deskripsi' => '',
+                    ];
+                    $prices[] = $harga;
+                }
+            }
+        }
+
+        // Handle regular tipe entries
+        foreach ($tipeEntries as $index => $tipe) {
+            $nama = $tipe['nama'] ?? '';
+            $harga = (float) ($tipe['harga'] ?? 0);
+
+            if (!empty($nama) && $harga > 0) {
+                $key = 'tipe_' . $index;
+                $packages[$key] = [
+                    'label' => $nama,
+                    'price' => $harga,
+                    'viewLabel' => $nama,
+                    'deskripsi' => '',
+                ];
+                $prices[] = $harga;
+            }
+        }
+
+        // Base harga = minimum of all tipe prices, or from request
+        $baseHarga = count($prices) > 0 ? min($prices) : ($request->harga ?? 0);
+
+        $thumbnailPath = $layanan->thumbnail;
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filename = 'service_' . time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/service_thumbnails'), $filename);
+            $thumbnailPath = asset('uploads/service_thumbnails/' . $filename);
+        } elseif ($request->filled('thumbnail_url')) {
+            $thumbnailPath = $request->thumbnail_url;
+        }
+
+        // Map klasifikasi to kategori label
+        $kategoriMap = [
+            'berita' => 'Berita',
+            'sosmed' => 'Sosial Media',
+            'ads_digital' => 'Ads Digital',
+            'consulting' => 'Consulting',
+        ];
+
+        $layanan->update([
+            'nama_layanan' => $request->nama_layanan,
+            'klasifikasi' => $request->klasifikasi,
+            'kategori' => $kategoriMap[$request->klasifikasi] ?? $request->klasifikasi,
+            'deskripsi' => $request->deskripsi,
+            'thumbnail' => $thumbnailPath,
+            'harga' => $baseHarga,
+            'harga_json' => $packages,
+            'detail_klasifikasi' => $detailData,
+            'estimasi_hari' => $request->estimasi_hari,
+        ]);
+
+        return response()->json(['message' => 'Layanan berhasil diperbarui!']);
+    }
+
+    public function destroyLayanan($id)
+    {
+        $mitra = $this->getMitra();
+        if (!$mitra)
+            return response()->json(['message' => 'Mitra tidak ditemukan'], 404);
+
+        $layanan = \App\Models\Layanan::where('mitra_id', $mitra->id)->findOrFail($id);
+        $layanan->delete();
+
+        return response()->json(['message' => 'Layanan berhasil dihapus!']);
     }
 }

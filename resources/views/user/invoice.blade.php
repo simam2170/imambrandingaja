@@ -3,130 +3,130 @@
 
 @section('content')
     <div class="max-w-4xl mx-auto space-y-8" x-data="{
-                                            order: {{ Js::from($order) }},
-                                            showUpload: false,
-                                            proofFile: null,
-                                            proofPreview: null,
-                                            uploadStatus: '', // '', 'uploading', 'success'
-                                            timeLeft: '01:00:00',
-                                            paymentMethods: [
-                                                { id: 'bca', name: 'BCA', desc: 'Transfer ke Rekening BCA', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
-                                                { id: 'mandiri', name: 'Mandiri', desc: 'Transfer ke Rekening Mandiri', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
-                                                { id: 'qris', name: 'QRIS', desc: 'Scan QR Code (OVO, Dana, etc)', active: true, logo: '🔳', type: 'ewallet', category: 'E-Wallet & QRIS' },
-                                                { id: 'dana', name: 'DANA', desc: 'Transfer ke DANA', active: true, logo: '📱', type: 'ewallet', category: 'E-Wallet & QRIS' }
-                                            ],
+                                                order: {{ Js::from($order) }},
+                                                showUpload: false,
+                                                proofFile: null,
+                                                proofPreview: null,
+                                                uploadStatus: '', // '', 'uploading', 'success'
+                                                timeLeft: '01:00:00',
+                                                paymentMethods: [
+                                                    { id: 'bca', name: 'BCA', desc: 'Transfer ke Rekening BCA', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
+                                                    { id: 'mandiri', name: 'Mandiri', desc: 'Transfer ke Rekening Mandiri', active: true, logo: '🏦', type: 'bank', category: 'Transfer Bank' },
+                                                    { id: 'qris', name: 'QRIS', desc: 'Scan QR Code (OVO, Dana, etc)', active: true, logo: '🔳', type: 'ewallet', category: 'E-Wallet & QRIS' },
+                                                    { id: 'dana', name: 'DANA', desc: 'Transfer ke DANA', active: true, logo: '📱', type: 'ewallet', category: 'E-Wallet & QRIS' }
+                                                ],
 
-                                            init() {
-                                                if (['menunggu_pembayaran', 'direview'].includes(this.order.status) && !this.order.bukti_pembayaran) {
-                                                    this.startTimer();
-                                                }
-                                            },
+                                                init() {
+                                                    if (['menunggu_pembayaran', 'direview'].includes(this.order.status) && !this.order.bukti_pembayaran) {
+                                                        this.startTimer();
+                                                    }
+                                                },
 
-                                            startTimer() {
-                                                const deadline = new Date(this.order.expired_at).getTime();
+                                                startTimer() {
+                                                    const deadline = new Date(this.order.expired_at).getTime();
 
-                                                const update = () => {
-                                                    const now = new Date().getTime();
-                                                    const diff = deadline - now;
+                                                    const update = () => {
+                                                        const now = new Date().getTime();
+                                                        const diff = deadline - now;
 
-                                                    if (diff <= 0) {
-                                                        this.timeLeft = '00:00:00';
-                                                        return;
+                                                        if (diff <= 0) {
+                                                            this.timeLeft = '00:00:00';
+                                                            return;
+                                                        }
+
+                                                        const h = Math.floor(diff / (1000 * 60 * 60));
+                                                        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                                        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                                                        this.timeLeft = [h, m, s].map(v => v.toString().padStart(2, '0')).join(':');
+                                                        setTimeout(update, 1000);
+                                                    };
+                                                    update();
+                                                },
+
+                                                formatPrice(value) {
+                                                    return value ? 'Rp' + Number(value).toLocaleString('id-ID') : 'Rp0';
+                                                },
+
+                                                get hasProof() {
+                                                    return !!this.order.bukti_pembayaran;
+                                                },
+
+                                                handleFileUpload(event) {
+                                                    const file = event.target.files[0];
+                                                    if (!file) return;
+
+                                                    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                                                    if (!allowedTypes.includes(file.type)) {
+                                                        return alert('Hanya file JPG, PNG, atau PDF yang diperbolehkan.');
+                                                    }
+                                                    if (file.size > 2 * 1024 * 1024) {
+                                                        return alert('Ukuran file maksimal 2MB.');
                                                     }
 
-                                                    const h = Math.floor(diff / (1000 * 60 * 60));
-                                                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                                                    const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-                                                    this.timeLeft = [h, m, s].map(v => v.toString().padStart(2, '0')).join(':');
-                                                    setTimeout(update, 1000);
-                                                };
-                                                update();
-                                            },
-
-                                            formatPrice(value) {
-                                                return value ? 'Rp' + Number(value).toLocaleString('id-ID') : 'Rp0';
-                                            },
-
-                                            get hasProof() {
-                                                return !!this.order.bukti_pembayaran;
-                                            },
-
-                                            handleFileUpload(event) {
-                                                const file = event.target.files[0];
-                                                if (!file) return;
-
-                                                const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-                                                if (!allowedTypes.includes(file.type)) {
-                                                    return alert('Hanya file JPG, PNG, atau PDF yang diperbolehkan.');
-                                                }
-                                                if (file.size > 2 * 1024 * 1024) {
-                                                    return alert('Ukuran file maksimal 2MB.');
-                                                }
-
-                                                this.proofFile = file;
-                                                if (file.type.startsWith('image/')) {
-                                                    const reader = new FileReader();
-                                                    reader.onload = (e) => this.proofPreview = e.target.result;
-                                                    reader.readAsDataURL(file);
-                                                } else {
-                                                    this.proofPreview = 'pdf-icon'; 
-                                                }
-                                            },
-
-                                            async submitProof() {
-                                                if (!this.proofFile) return alert('Pilih file terlebih dahulu.');
-                                                this.uploadStatus = 'uploading';
-
-                                                const formData = new FormData();
-                                                formData.append('bukti_pembayaran', this.proofFile);
-                                                formData.append('_token', '{{ csrf_token() }}');
-
-                                                try {
-                                                    const response = await fetch('{{ route('user.payment.upload', $order->id) }}', {
-                                                        method: 'POST',
-                                                        body: formData
-                                                    });
-
-                                                    if (response.ok) {
-                                                        this.uploadStatus = 'success';
-                                                        this.showUpload = false;
-                                                        setTimeout(() => {
-                                                            window.location.reload(); 
-                                                        }, 1000);
+                                                    this.proofFile = file;
+                                                    if (file.type.startsWith('image/')) {
+                                                        const reader = new FileReader();
+                                                        reader.onload = (e) => this.proofPreview = e.target.result;
+                                                        reader.readAsDataURL(file);
                                                     } else {
-                                                        const res = await response.json();
-                                                        alert('Gagal mengupload: ' + (res.message || 'Unknown error'));
-                                                        this.uploadStatus = '';
+                                                        this.proofPreview = 'pdf-icon'; 
                                                     }
-                                                } catch (e) {
-                                                    console.error(e);
-                                                    alert('Terjadi kesalahan.');
-                                                    this.uploadStatus = '';
-                                                }
-                                            },
+                                                },
 
-                                            async cancelOrder() {
-                                                if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+                                                async submitProof() {
+                                                    if (!this.proofFile) return alert('Pilih file terlebih dahulu.');
+                                                    this.uploadStatus = 'uploading';
+
+                                                    const formData = new FormData();
+                                                    formData.append('bukti_pembayaran', this.proofFile);
+                                                    formData.append('_token', '{{ csrf_token() }}');
+
                                                     try {
-                                                        const response = await fetch('{{ route('user.order.cancel', $order->id) }}', {
+                                                        const response = await fetch('{{ route('user.payment.upload', $order->id) }}', {
                                                             method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json',
-                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                                            }
+                                                            body: formData
                                                         });
+
                                                         if (response.ok) {
-                                                            window.location.reload();
+                                                            this.uploadStatus = 'success';
+                                                            this.showUpload = false;
+                                                            setTimeout(() => {
+                                                                window.location.reload(); 
+                                                            }, 1000);
                                                         } else {
-                                                            alert('Gagal membatalkan pesanan.');
+                                                            const res = await response.json();
+                                                            alert('Gagal mengupload: ' + (res.message || 'Unknown error'));
+                                                            this.uploadStatus = '';
                                                         }
                                                     } catch (e) {
+                                                        console.error(e);
                                                         alert('Terjadi kesalahan.');
+                                                        this.uploadStatus = '';
+                                                    }
+                                                },
+
+                                                async cancelOrder() {
+                                                    if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+                                                        try {
+                                                            const response = await fetch('{{ route('user.order.cancel', $order->id) }}', {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json',
+                                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                                }
+                                                            });
+                                                            if (response.ok) {
+                                                                window.location.reload();
+                                                            } else {
+                                                                alert('Gagal membatalkan pesanan.');
+                                                            }
+                                                        } catch (e) {
+                                                            alert('Terjadi kesalahan.');
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        }">
+                                            }">
 
         {{-- SIMPLIFIED VIEW FOR UPLOADED PROOF (Only if status is still waiting payment) --}}
         <template x-if="hasProof && order.status === 'menunggu_pembayaran'">
@@ -213,10 +213,25 @@
                                 <template x-for="item in order.items" :key="item.id">
                                     <div class="border border-gray-100 rounded-2xl overflow-hidden">
                                         {{-- Nama Layanan Header --}}
-                                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-accent-500 shrink-0"></span>
-                                            <h4 class="text-sm font-bold text-gray-800"
-                                                x-text="item.layanan?.nama_layanan || 'Layanan'"></h4>
+                                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center gap-3">
+                                            <a :href="'/user/layanan/' + (item.layanan?.id || order.layanan?.id || 0)"
+                                                class="w-10 h-10 overflow-hidden bg-white border border-gray-100 rounded-lg shrink-0 flex items-center justify-center hover:opacity-80 transition-opacity">
+                                                <template x-if="item.layanan?.thumbnail || order.layanan?.thumbnail">
+                                                    <img :src="item.layanan?.thumbnail || order.layanan?.thumbnail"
+                                                        class="w-full h-full object-cover">
+                                                </template>
+                                                <template x-if="!item.layanan?.thumbnail && !order.layanan?.thumbnail">
+                                                    <img :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(item.layanan?.nama_layanan || order.layanan?.nama_layanan || 'Service') + '&background=f3f4f6&color=666'"
+                                                        class="w-full h-full object-cover">
+                                                </template>
+                                            </a>
+                                            <div class="flex-1 min-w-0">
+                                                <h4 class="text-sm font-bold text-gray-800">
+                                                    <a :href="'/user/layanan/' + (item.layanan?.id || order.layanan?.id || 0)"
+                                                        class="hover:text-primary transition-colors"
+                                                        x-text="item.layanan?.nama_layanan || order.layanan?.nama_layanan || 'Layanan'"></a>
+                                                </h4>
+                                            </div>
                                         </div>
                                         {{-- Detail Grid --}}
                                         <div class="grid grid-cols-2 gap-px bg-gray-100">

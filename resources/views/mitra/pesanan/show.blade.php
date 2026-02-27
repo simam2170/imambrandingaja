@@ -4,15 +4,15 @@
 
 @section('content')
     <div class="space-y-8" x-data="{ 
-                        files: [],
-                        addFiles(e) {
-                            const newFiles = Array.from(e.target.files);
-                            this.files = [...this.files, ...newFiles];
-                        },
-                        removeFile(index) {
-                            this.files = this.files.filter((_, i) => i !== index);
-                        }
-                    }">
+                                        files: [],
+                                        addFiles(e) {
+                                            const newFiles = Array.from(e.target.files);
+                                            this.files = [...this.files, ...newFiles];
+                                        },
+                                        removeFile(index) {
+                                            this.files = this.files.filter((_, i) => i !== index);
+                                        }
+                                    }">
         {{-- BACK BUTTON & STATUS --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
@@ -98,8 +98,10 @@
                         {{-- DETAIL ITEM PESANAN --}}
                         <div>
                             <h4 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                 </svg>
                                 Rincian Item Pesanan
                             </h4>
@@ -108,37 +110,65 @@
                                     @foreach($order->items as $item)
                                         <div class="border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
                                             {{-- Header: Nama Layanan --}}
-                                            <div class="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-2">
-                                                <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
-                                                <span class="text-sm font-bold text-gray-800">
-                                                    {{ $item->layanan->nama_layanan ?? $order->layanan->nama_layanan ?? 'Layanan' }}
-                                                </span>
+                                            <div class="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-3">
+                                                <a href="{{ route('user.layanan.show', $item->layanan->id ?? $order->layanan->id ?? 0) }}"
+                                                    class="w-10 h-10 overflow-hidden bg-gray-100 rounded-lg shrink-0 flex items-center justify-center hover:opacity-80 transition-opacity border border-gray-100">
+                                                    @if(($item->layanan && $item->layanan->thumbnail) || ($order->layanan && $order->layanan->thumbnail))
+                                                        <img src="{{ $item->layanan->thumbnail ?? $order->layanan->thumbnail }}"
+                                                            class="w-full h-full object-cover">
+                                                    @else
+                                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($item->layanan->nama_layanan ?? $order->layanan->nama_layanan ?? 'Service') }}&background=f3f4f6&color=666"
+                                                            class="w-full h-full object-cover">
+                                                    @endif
+                                                </a>
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="text-sm font-bold text-gray-800">
+                                                        <a href="{{ route('user.layanan.show', $item->layanan->id ?? $order->layanan->id ?? 0) }}"
+                                                            class="hover:text-primary transition-colors">
+                                                            {{ $item->layanan->nama_layanan ?? $order->layanan->nama_layanan ?? 'Layanan' }}
+                                                        </a>
+                                                    </h4>
+                                                </div>
                                             </div>
                                             {{-- Grid: Tipe, Platform, Harga, Qty --}}
                                             <div class="grid grid-cols-2 gap-px bg-gray-100">
                                                 <div class="bg-white px-4 py-2.5">
-                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Tipe / Paket</p>
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">
+                                                        Tipe / Paket</p>
                                                     <p class="text-xs font-bold text-gray-700">{{ $item->jenis_layanan ?? '-' }}</p>
                                                 </div>
                                                 <div class="bg-white px-4 py-2.5">
-                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Platform / Kategori</p>
-                                                    <p class="text-xs font-bold text-gray-700">
-                                                        {{ $item->layanan->kategori ?? $order->layanan->kategori ?? '-' }}
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">
+                                                        Platform / Kategori</p>
+                                                    @php
+                                                        $itDk = $item->layanan ? (is_array($item->layanan->detail_klasifikasi) ? $item->layanan->detail_klasifikasi : json_decode($item->layanan->detail_klasifikasi, true)) : null;
+                                                        $itKat = $itDk ? (collect([$itDk['info']['jenis_layanan'] ?? null, $itDk['info']['jenis_konten'] ?? null, $itDk['info']['jenis_campaign'] ?? null, $itDk['info']['format'] ?? null])->flatten()->filter()->first()) : null;
+                                                        $itKatColors = ['Politik' => 'text-red-600', 'Gaming' => 'text-purple-600', 'Lifestyle' => 'text-pink-600', 'Kuliner & FnB' => 'text-amber-600'];
+                                                    @endphp
+                                                    <p class="text-xs font-bold {{ $itKatColors[$itKat] ?? 'text-gray-700' }}">
+                                                        {{ $itKat ?? ($item->layanan->kategori ?? $order->layanan->kategori ?? '-') }}
                                                     </p>
                                                 </div>
                                                 <div class="bg-white px-4 py-2.5">
-                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Harga Satuan</p>
-                                                    <p class="text-xs font-bold text-gray-700">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">
+                                                        Harga Satuan</p>
+                                                    <p class="text-xs font-bold text-gray-700">Rp
+                                                        {{ number_format($item->harga, 0, ',', '.') }}
+                                                    </p>
                                                 </div>
                                                 <div class="bg-white px-4 py-2.5">
-                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Jumlah</p>
+                                                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">
+                                                        Jumlah</p>
                                                     <p class="text-xs font-bold text-gray-700">{{ $item->qty }} pcs</p>
                                                 </div>
                                             </div>
                                             {{-- Subtotal --}}
-                                            <div class="px-4 py-2.5 flex items-center justify-between bg-primary/5 border-t border-primary/10">
-                                                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subtotal</span>
-                                                <span class="text-sm font-black text-primary">Rp {{ number_format($item->harga * $item->qty, 0, ',', '.') }}</span>
+                                            <div
+                                                class="px-4 py-2.5 flex items-center justify-between bg-primary/5 border-t border-primary/10">
+                                                <span
+                                                    class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Subtotal</span>
+                                                <span class="text-sm font-black text-primary">Rp
+                                                    {{ number_format($item->harga * $item->qty, 0, ',', '.') }}</span>
                                             </div>
                                         </div>
                                     @endforeach
@@ -148,15 +178,25 @@
                                 <div class="border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
                                     <div class="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-2">
                                         <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
-                                        <span class="text-sm font-bold text-gray-800">{{ $order->layanan->nama_layanan ?? 'N/A' }}</span>
+                                        <span
+                                            class="text-sm font-bold text-gray-800">{{ $order->layanan->nama_layanan ?? 'N/A' }}</span>
                                     </div>
                                     <div class="grid grid-cols-2 gap-px bg-gray-100">
                                         <div class="bg-white px-4 py-2.5">
-                                            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Platform / Kategori</p>
-                                            <p class="text-xs font-bold text-gray-700">{{ $order->layanan->kategori ?? '-' }}</p>
+                                            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">
+                                                Platform / Kategori</p>
+                                            @php
+                                                $fbDk = $order->layanan ? (is_array($order->layanan->detail_klasifikasi) ? $order->layanan->detail_klasifikasi : json_decode($order->layanan->detail_klasifikasi, true)) : null;
+                                                $fbKat = $fbDk ? (collect([$fbDk['info']['jenis_layanan'] ?? null, $fbDk['info']['jenis_konten'] ?? null, $fbDk['info']['jenis_campaign'] ?? null, $fbDk['info']['format'] ?? null])->flatten()->filter()->first()) : null;
+                                                $fbKatColors = ['Politik' => 'text-red-600', 'Gaming' => 'text-purple-600', 'Lifestyle' => 'text-pink-600', 'Kuliner & FnB' => 'text-amber-600'];
+                                            @endphp
+                                            <p class="text-xs font-bold {{ $fbKatColors[$fbKat] ?? 'text-gray-700' }}">
+                                                {{ $fbKat ?? ($order->layanan->kategori ?? '-') }}
+                                            </p>
                                         </div>
                                         <div class="bg-white px-4 py-2.5">
-                                            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Status</p>
+                                            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">
+                                                Status</p>
                                             <p class="text-xs font-bold text-gray-700 capitalize">{{ $order->status }}</p>
                                         </div>
                                     </div>
@@ -204,6 +244,14 @@
                                             <p id="file-name-display" class="text-sm text-primary font-bold mt-2"></p>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">Deskripsi Singkat
+                                        Pekerjaan</label>
+                                    <textarea name="deskripsi_pekerjaan" rows="4" required maxlength="500"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring focus:ring-primary/20 transition-all text-sm"
+                                        placeholder="Jelaskan secara singkat apa yang telah Anda kerjakan... (Maksimal 500 karakter)"></textarea>
                                 </div>
 
                                 <button type="submit"
@@ -323,7 +371,7 @@
                     <h3 class="font-bold text-lg relative z-10">Butuh Bantuan?</h3>
                     <p class="text-sm text-white/80 mt-2 relative z-10 leading-relaxed">Hubungi admin jika Anda mengalami
                         kesulitan dalam pengerjaan atau upload file.</p>
-                    <a href="#"
+                    <a href="https://wa.me/6282328786328" target="_blank"
                         class="mt-4 inline-block px-6 py-2 bg-white text-primary font-bold text-sm rounded-xl relative z-10 hover:bg-gray-50 transition-colors">
                         Chat Admin
                     </a>
